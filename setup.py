@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='minitwit',
-    packages=['minitwit'],
+    name='laotu',
+    packages=['laotu'],
     include_package_data=True,
     install_requires=[
         'flask',

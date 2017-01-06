@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    MiniTwit
+    laotu
     ~~~~~~~~
 
     A microblogging application written with Flask and sqlite3.
@@ -19,7 +19,8 @@ from werkzeug import check_password_hash, generate_password_hash
 
 
 # configuration
-DATABASE = '/tmp/minitwit.db'
+#DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -27,7 +28,7 @@ SECRET_KEY = 'development key'
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
+app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 
 def get_db():

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    MiniTwit Tests
+    LaoTu Tests
     ~~~~~~~~~~~~~~
 
-    Tests the MiniTwit application.
+    Tests the laotu application.
 
     :copyright: (c) 2015 by Armin Ronacher.
     :license: BSD, see LICENSE for more details.
@@ -11,20 +11,20 @@
 import os
 import tempfile
 import pytest
-from minitwit import minitwit
+from laotu import laotu
 
 
 @pytest.fixture
 def client(request):
-    db_fd, minitwit.app.config['DATABASE'] = tempfile.mkstemp()
-    client = minitwit.app.test_client()
-    with minitwit.app.app_context():
-        minitwit.init_db()
+    db_fd, laotu.app.config['DATABASE'] = tempfile.mkstemp()
+    client = laotu.app.test_client()
+    with laotu.app.app_context():
+        laotu.init_db()
 
     def teardown():
         """Get rid of the database again after each test."""
         os.close(db_fd)
-        os.unlink(minitwit.app.config['DATABASE'])
+        os.unlink(laotu.app.config['DATABASE'])
     request.addfinalizer(teardown)
     return client
 
