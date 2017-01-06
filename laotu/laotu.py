@@ -106,8 +106,28 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
-
+#pages are below .................................................................
+                          
 @app.route('/')
+def home():
+    """Home page"""
+    return render_template('home.html')
+                          
+
+"""
+Login page
+registration page
+
+Blog homepage
+blog -> external interface...  
+
+
+"""                          
+                          
+                          
+                          
+                          
+@app.route('/timeline')
 def timeline():
     """Shows a users timeline or if no user is logged in it will
     redirect to the public timeline.  This timeline shows the user's
@@ -230,8 +250,12 @@ def register():
         return redirect(url_for('timeline'))
     error = None
     if request.method == 'POST':
-        if not request.form['username']:
-            error = 'You have to enter a username'
+        if not request.form['name']:
+            error = 'You have to enter a name'
+        elif not request.form['address']:
+            error = 'You have to enter an address'
+        elif not request.form['phone']:
+            error = 'You have to enter a phone number'
         elif not request.form['email'] or \
                 '@' not in request.form['email']:
             error = 'You have to enter a valid email address'
@@ -244,9 +268,9 @@ def register():
         else:
             db = get_db()
             db.execute('''insert into user (
-              username, email, pw_hash) values (?, ?, ?)''',
-              [request.form['username'], request.form['email'],
-               generate_password_hash(request.form['password'])])
+              email, pw_hash, name, address, phone) values (?, ?, ?, ?, ?)''',
+              [request.form['email'],
+               generate_password_hash(request.form['password']),request.form['name'], request.form['address'], ,request.form['phone'], ])
             db.commit()
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))
