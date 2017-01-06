@@ -20,8 +20,12 @@ import stripe
 import os
 
 # configuration
-#DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
+
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# DATABASE = os.path.join(BASE_DIR, "laotu.db")
+
+# DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -107,26 +111,26 @@ def before_request():
                           [session['user_id']], one=True)
 
 #pages are below .................................................................
-                          
+
 @app.route('/')
 def home():
     """Home page"""
     return render_template('home.html')
-                          
+
 
 """
 Login page
 registration page
 
 Blog homepage
-blog -> external interface...  
+blog -> external interface...
 
 
-"""                          
-                          
-                          
-                          
-                          
+"""
+
+
+
+
 @app.route('/timeline')
 def timeline():
     """Shows a users timeline or if no user is logged in it will
@@ -270,7 +274,7 @@ def register():
             db.execute('''insert into user (
               email, pw_hash, name, address, phone) values (?, ?, ?, ?, ?)''',
               [request.form['email'],
-               generate_password_hash(request.form['password']),request.form['name'], request.form['address'], ,request.form['phone'], ])
+               generate_password_hash(request.form['password']),request.form['name'], request.form['address'], request.form['phone']])
             db.commit()
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))
