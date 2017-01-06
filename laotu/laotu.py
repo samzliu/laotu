@@ -97,8 +97,23 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
-
+#pages are below .................................................................
+                          
 @app.route('/')
+def home():
+    """Home page"""
+    return render_template('home.html')
+                          
+
+"""
+
+
+"""                          
+                          
+                          
+                          
+                          
+@app.route('/timeline')
 def timeline():
     """Shows a users timeline or if no user is logged in it will
     redirect to the public timeline.  This timeline shows the user's
