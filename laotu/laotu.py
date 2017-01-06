@@ -16,7 +16,8 @@ from datetime import datetime
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack
 from werkzeug import check_password_hash, generate_password_hash
-
+import stripe
+import os
 
 # configuration
 #DATABASE = '/tmp/laotu.db'
@@ -24,6 +25,14 @@ DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
+
+
+stripe_keys = {
+  'secret_key': os.environ['SECRET_KEY'],
+  'publishable_key': os.environ['PUBLISHABLE_KEY']
+}
+
+stripe.api_key = stripe_keys['secret_key']
 
 # create our little application :)
 app = Flask(__name__)
@@ -252,8 +261,46 @@ def logout():
     return redirect(url_for('public_timeline'))
 
 @app.route('/pay')
-def new_page():
-    return render_template('pay.html')
+def pay():
+    return render_template('pay.html', key=stripe_keys['publishable_key'])
+
+@app.route('/charge', methods=['POST'])
+def charge():
+    # Amount in cents
+    amount = 500
+
+
+    # customer = stripe.Customer.create(
+    #     source=request.form['stripeToken']
+    # )
+
+    token = stripe.Token.create(
+      email="maidongxi@example.com",
+      alipay_account={
+        # Create an Alipay account token with reusable account access
+        "reusable": 'false'
+      },
+    )
+
+    # charge = stripe.Charge.create(
+    #     customer=customer.id,
+    #     amount=amount,
+    #     currency='usd',
+    #     description='Flask Charge'
+    # )
+    try:
+      charge = stripe.Charge.create(
+          amount=1000, # Amount in cents
+          currency="cny",
+          source=token,
+          description="Example Alipay charge"
+      )
+    except stripe.error.CardError as e:
+      # The Alipay account has been declined
+      pass
+
+    # return render_template('charge.html', amount=amount)
+    return redirect(url_for('timeline'))
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime

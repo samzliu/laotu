@@ -14,12 +14,11 @@ export FLASK_APP=minitwit
 
 python -m flask initdb
 
-5. now you can run minitwit:
+5. now you can run application in test mode:
 
-python -m flask run
+PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7 python -m flask run
 
-the application will greet you on
-http://localhost:5000/
+the application will greet you onhttp://localhost:5000/
 
 ~ Is it tested?
 
