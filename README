@@ -1,24 +1,16 @@
 
-                        / MiniTwit /
-
-           because writing todo lists is not fun
+                         LaoTu 
 
 
-    ~ What is MiniTwit?
+    ~ How do I run this?
 
-      A SQLite and Flask powered twitter clone
-
-    ~ How do I use it?
-
-      1. edit the configuration in the minitwit.py file or
-         export an MINITWIT_SETTINGS environment variable
-         pointing to a configuration file.
+      1. Make sure the database path in laotu.py is appropriate for your OS 
 
       2. install the app from the root of the project directory
 
          pip install --editable .
 
-      3. tell flask about the right application:
+      3. tell flask about the right application (if windows, use set instead of export):
 
          export FLASK_APP=minitwit
 
@@ -33,7 +25,11 @@
          the application will greet you on
          http://localhost:5000/
 
-    ~ Is it tested?
 
-      You betcha.  Run the `python setup.py test` file to
-      see the tests pass.
+         Tests:
+         
+        Run the `python setup.py test` file to
+            see the tests pass.
+
+            
+         
