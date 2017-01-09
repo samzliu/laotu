@@ -54,3 +54,9 @@ create table message (
   text text not null,
   pub_date integer
 );
+
+drop table if exists cart;
+create table cart (
+  user_id integer,
+  product_id integer
+);

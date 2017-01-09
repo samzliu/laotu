@@ -288,9 +288,22 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('public_timeline'))
 #
-@app.route('/example_product')
+@app.route('/product')
 def product():
     return render_template('product.html')
+
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    """Adds a product to the cart."""
+    if 'user_id' not in session:
+        abort(401)
+    if request.form['text']:
+        db = get_db()
+        db.execute('''insert into cart (user_id, product_id)
+          values (?, ?)''', (session['user_id'], product_id))
+        db.commit()
+        flash('The product has been added to the cart.')
+    return redirect(url_for('product'))
 
 @app.route('/cart')
 def cart():
