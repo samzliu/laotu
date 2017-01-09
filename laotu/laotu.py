@@ -293,7 +293,7 @@ def product():
     return render_template('product.html')
 
 @app.route('/add_product', methods=['POST'])
-def add_product():
+def add_to_cart():
     """Adds a product to the cart."""
     if 'user_id' not in session:
         abort(401)
