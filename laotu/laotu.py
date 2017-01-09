@@ -261,7 +261,7 @@ def register():
             db.execute('''insert into user (
               email, pw_hash, name, address, phone) values (?, ?, ?, ?, ?)''',
               [request.form['email'],
-               generate_password_hash(request.form['password']),request.form['name'], request.form['address'], ,request.form['phone'], ])
+               generate_password_hash(request.form['password']),request.form['name'], request.form['address'],request.form['phone'] ])
             db.commit()
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))

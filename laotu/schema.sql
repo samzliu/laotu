@@ -26,7 +26,7 @@ create table product (
     price decimal(7,2) not null,
     location text not null,
     description text not null,
-    producer_id integer not null
+    producer_id integer not null,
     FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
 );
 
@@ -36,11 +36,10 @@ create table trans (
     product_id integer not null,
     user_id integer not null,
     trans_date date not null,
-    amount decimal(7,2) not null
-    FOREIGN KEY (product_id) REFERENCES product(producer_id)
+    amount decimal(7,2) not null,
+    FOREIGN KEY (product_id) REFERENCES product(producer_id),
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
-
 
 drop table if exists follower;
 create table follower (
