@@ -41,7 +41,6 @@ create table trans (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
-
 drop table if exists follower;
 create table follower (
   who_id integer,
