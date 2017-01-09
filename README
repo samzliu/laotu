@@ -12,7 +12,7 @@
 
       3. tell flask about the right application (if windows, use set instead of export):
 
-         export FLASK_APP=minitwit
+         export FLASK_APP=laotu
 
       4. fire up a shell and run this:
 
