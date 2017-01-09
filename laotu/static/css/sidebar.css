@@ -52,6 +52,20 @@
     margin-right: -250px;
 }
 
+/**
+ * hamburger
+ */
+.btn-hamburger {
+  border: none;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  outline:none;
+  background: url('/static/images/menu.png') no-repeat center;
+  width: 50px;
+  height: 50px;
+}
+
 /* Sidebar Styles */
 
 .sidebar-nav {
