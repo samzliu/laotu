@@ -30,7 +30,7 @@
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-    background: #000;
+    background: #77AA44;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -52,19 +52,30 @@
     margin-right: -250px;
 }
 
+/* Button */
+
 /**
  * hamburger
  */
+/*
 .btn-hamburger {
   border: none;
   position: absolute;
   top: 12px;
   left: 12px;
   outline:none;
-  background: url('/static/images/menu.png') no-repeat center;
+  background: url('assets/menu.png') no-repeat center;
   width: 50px;
   height: 50px;
-}
+}*/
+
+/*#btn-hamburger {
+    border: none;
+    outline: none;
+    width: 50px;
+    height: 50px;
+    background: url("{{ url_for('static', filename='images/menu.png') }}") no-repeat center;
+}*/
 
 /* Sidebar Styles */
 
@@ -85,7 +96,7 @@
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #999999;
+    color: #fff;
 }
 
 .sidebar-nav li a:hover {
@@ -106,7 +117,7 @@
 }
 
 .sidebar-nav > .sidebar-brand a {
-    color: #999999;
+    color: #fff;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {
