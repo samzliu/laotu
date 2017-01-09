@@ -21,8 +21,8 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
-DATABASE = '/tmp/laotu.db'
-# DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -299,16 +299,26 @@ def add_to_cart():
         abort(401)
     if request.form['text']:
         db = get_db()
-        db.execute('''insert into cart (user_id, product_id)
-          values (?, ?)''', (session['user_id'], product_id))
+        db.execute('''insert into cart (user_id, product_id, quantity)
+          values (?, ?, ?)''', (session['user_id'], product_id, 1))
         db.commit()
         flash('The product has been added to the cart.')
     return redirect(url_for('product'))
 
 @app.route('/cart')
 def cart():
+    #select product_id, quantity from cart where user_id = asdfsaf;
     return render_template('cart.html')
 
+#delete all elements in cart 
+    #delete from cart where user_id = safdsafsaf;
+
+#update card 
+    #delete from card where user_id= sdfsaf and product_id = safsadf;
+    #update cart set quantity = safsafsafsa where user_id = safdsafd and product_id = safsadf;
+
+
+    
 @app.route('/pay')
 def pay():
     # change amount here
