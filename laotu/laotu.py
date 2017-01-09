@@ -20,7 +20,7 @@ from werkzeug import check_password_hash, generate_password_hash
 
 # configuration
 #DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/Users/nataliapacheco-tallaj/Documents/TITW/laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
