@@ -57,6 +57,8 @@ create table message (
 
 drop table if exists cart;
 create table cart (
-  user_id integer,
-  product_id integer
+  item_id integer primary key autoincrement,
+  product_id integer,
+  title text,
+  price decimal(7,2) not null
 );
