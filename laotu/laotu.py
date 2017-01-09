@@ -18,19 +18,17 @@ from flask import Flask, request, session, url_for, redirect, \
 from werkzeug import check_password_hash, generate_password_hash
 import stripe
 import os
+from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
 DATABASE = '/tmp/laotu.db'
-
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# DATABASE = os.path.join(BASE_DIR, "laotu.db")
-
 # DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
 
+# test keys right now
 stripe_keys = {
   'secret_key': os.environ['SECRET_KEY'],
   'publishable_key': os.environ['PUBLISHABLE_KEY']
@@ -38,11 +36,13 @@ stripe_keys = {
 
 stripe.api_key = stripe_keys['secret_key']
 
+
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
-
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = '/tmp/laotu.db')
+app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -85,10 +85,10 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-def get_user_id(username):
-    """Convenience method to look up the id for a username."""
-    rv = query_db('select user_id from user where username = ?',
-                  [username], one=True)
+def get_user_id(email):
+    """Convenience method to look up the id for a email."""
+    rv = query_db('select user_id from user where email = ?',
+                  [email], one=True)
     return rv[0] if rv else None
 
 
@@ -158,11 +158,11 @@ def public_timeline():
         order by message.pub_date desc limit ?''', [PER_PAGE]))
 
 
-@app.route('/<username>')
-def user_timeline(username):
+@app.route('/<email>')
+def user_timeline(email):
     """Display's a users tweets."""
-    profile_user = query_db('select * from user where username = ?',
-                            [username], one=True)
+    profile_user = query_db('select * from user where email = ?',
+                            [email], one=True)
     if profile_user is None:
         abort(404)
     followed = False
@@ -179,36 +179,36 @@ def user_timeline(username):
             profile_user=profile_user)
 
 
-@app.route('/<username>/follow')
-def follow_user(username):
+@app.route('/<email>/follow')
+def follow_user(email):
     """Adds the current user as follower of the given user."""
     if not g.user:
         abort(401)
-    whom_id = get_user_id(username)
+    whom_id = get_user_id(email)
     if whom_id is None:
         abort(404)
     db = get_db()
     db.execute('insert into follower (who_id, whom_id) values (?, ?)',
               [session['user_id'], whom_id])
     db.commit()
-    flash('You are now following "%s"' % username)
-    return redirect(url_for('user_timeline', username=username))
+    flash('You are now following "%s"' % email)
+    return redirect(url_for('user_timeline', email=email))
 
 
-@app.route('/<username>/unfollow')
-def unfollow_user(username):
+@app.route('/<email>/unfollow')
+def unfollow_user(email):
     """Removes the current user as follower of the given user."""
     if not g.user:
         abort(401)
-    whom_id = get_user_id(username)
+    whom_id = get_user_id(email)
     if whom_id is None:
         abort(404)
     db = get_db()
     db.execute('delete from follower where who_id=? and whom_id=?',
               [session['user_id'], whom_id])
     db.commit()
-    flash('You are no longer following "%s"' % username)
-    return redirect(url_for('user_timeline', username=username))
+    flash('You are no longer following "%s"' % email)
+    return redirect(url_for('user_timeline', email=email))
 
 
 @app.route('/add_message', methods=['POST'])
@@ -234,9 +234,9 @@ def login():
     error = None
     if request.method == 'POST':
         user = query_db('''select * from user where
-            username = ?''', [request.form['username']], one=True)
+            email = ?''', [request.form['email']], one=True)
         if user is None:
-            error = 'Invalid username'
+            error = 'Invalid email'
         elif not check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = 'Invalid password'
@@ -267,8 +267,8 @@ def register():
             error = 'You have to enter a password'
         elif request.form['password'] != request.form['password2']:
             error = 'The two passwords do not match'
-        elif get_user_id(request.form['username']) is not None:
-            error = 'The username is already taken'
+        elif get_user_id(request.form['email']) is not None:
+            error = 'The email is already taken'
         else:
             db = get_db()
             db.execute('''insert into user (
@@ -287,47 +287,48 @@ def logout():
     flash('You were logged out')
     session.pop('user_id', None)
     return redirect(url_for('public_timeline'))
+#
+@app.route('/example_product')
+def product():
+    return render_template('product.html')
+
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
 
 @app.route('/pay')
 def pay():
-    return render_template('pay.html', key=stripe_keys['publishable_key'])
+    # change amount here
+    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=600) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])
 def charge():
     # Amount in cents
-    amount = 500
-
+    amount=600 # the amount in the cart
 
     # customer = stripe.Customer.create(
     #     source=request.form['stripeToken']
     # )
-
-    token = stripe.Token.create(
-      email="maidongxi@example.com",
-      alipay_account={
-        # Create an Alipay account token with reusable account access
-        "reusable": 'false'
-      },
-    )
-
-    # charge = stripe.Charge.create(
-    #     customer=customer.id,
-    #     amount=amount,
-    #     currency='usd',
-    #     description='Flask Charge'
+    #
+    # token = stripe.Token.create(
+    #   email="maidongxi@example.com",
+    #   alipay_account={
+    #     # Create an Alipay account token with nonreusable account access
+    #     "reusable": 'false'
+    #   },
     # )
+
     try:
       charge = stripe.Charge.create(
-          amount=1000, # Amount in cents
+          amount=amount, # Amount in cents
           currency="cny",
-          source=token,
+          source=request.form['stripeToken'],
           description="Example Alipay charge"
       )
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
 
-    # return render_template('charge.html', amount=amount)
     return redirect(url_for('timeline'))
 
 # add some filters to jinja
