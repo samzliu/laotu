@@ -8,8 +8,10 @@
     My Timeline
   {% endif %}
 {% endblock %}
+{% block header %} 
+  {{ self.title() }}
+{% endblock %}
 {% block main %}
-  <h2>{{ self.title() }}</h2>
   {% if g.user %}
     {% if request.endpoint == 'user_timeline' %}
       <div class="followstatus">
