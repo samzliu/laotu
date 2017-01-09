@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     laotu
-    ~~~~~~~~
-
-    A microblogging application written with Flask and sqlite3.
-
-    :copyright: (c) 2015 by Armin Ronacher.
-    :license: BSD, see LICENSE for more details.
+  
 """
 
 import time
@@ -22,6 +17,7 @@ from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
 #DATABASE = '/tmp/laotu.db'
+#DATABASE = '/Users/nataliapacheco-tallaj/Documents/TITW/laotu.db'
 DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
