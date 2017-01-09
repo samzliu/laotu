@@ -1,6 +1,11 @@
 <!doctype html>
 <title>{% block title %}Welcome{% endblock %} | LaoTu</title>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
+</head>
+
 <div class="page">
   <h1>LaoTu</h1>
   <div class="navigation">
@@ -11,7 +16,8 @@
   {% else %}
     <a href="{{ url_for('public_timeline') }}">public timeline</a> |
     <a href="{{ url_for('register') }}">sign up</a> |
-    <a href="{{ url_for('login') }}">sign in</a>
+    <a href="{{ url_for('login') }}">sign in</a> |
+    <a href="{{ url_for('products') }}">products</a>
   {% endif %}
   </div>
   {% with flashes = get_flashed_messages() %}
@@ -30,3 +36,4 @@
     MiniTwit &mdash; A Flask Application
   </div>
 </div>
+

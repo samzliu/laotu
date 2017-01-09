@@ -20,7 +20,7 @@ from werkzeug import check_password_hash, generate_password_hash
 
 # configuration
 #DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\harvard\\fall 2016\\d4d\\laotu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -123,6 +123,11 @@ def public_timeline():
         select message.*, user.* from message, user
         where message.author_id = user.user_id
         order by message.pub_date desc limit ?''', [PER_PAGE]))
+
+@app.route('/products')
+def products():
+    """Displays the products."""
+    return render_template('products.html')
 
 
 @app.route('/<username>')
