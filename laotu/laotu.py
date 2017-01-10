@@ -14,6 +14,8 @@ from werkzeug import check_password_hash, generate_password_hash
 import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
+from flaskext.uploads import (UploadSet, configure_uploads, IMAGES,
+                              UploadNotAllowed)
 
 # configuration
 #DATABASE = '/tmp/laotu.db'
@@ -21,6 +23,7 @@ DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 
 # test keys right now
 stripe_keys = {
@@ -37,6 +40,10 @@ app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE)
 app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
+
+uploaded_photos = UploadSet('photos', IMAGES)
+configure_uploads(app, uploaded_photos)
+
 
 if __name__ == '__main__':
     app.run()
@@ -294,6 +301,25 @@ def logout():
 def about():
     return render_template('about.html')
 
+@app.route('/upload_photo', methods=['GET', 'POST'])
+def upload_photo():
+    if request.method == 'POST':
+        photo = request.files.get('photo')
+        title = request.form.get('title')
+        if not (photo and title):
+            flash("You must fill in all the fields")
+        else:
+            try:
+                filename = uploaded_photos.save(photo)
+            except UploadNotAllowed:
+                flash("The upload was not allowed")
+            else:
+                photo = Photo(title=title, filename=filename)
+                photo.store()
+                flash("Upload successful")
+                return redirect(url_for('show_products_list'))
+    return redirect(url_for('show_products_list'))
+    
 @app.route('/products_list')
 def show_products_list():
     return render_template('products_list.html', products=query_db('''
@@ -315,8 +341,6 @@ def add_product(product_id):
     # not showing up on the page
     flash('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
-
-
 
 @app.route('/cart')
 def get_cart():
