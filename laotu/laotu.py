@@ -284,13 +284,32 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('public_timeline'))
 #
-@app.route('/product')
-def product():
-    return render_template('product.html')
+@app.route('/products_list')
+def show_products_list():
+    return render_template('products_list.html', products=query_db('''
+    select * from product'''))
 
-@app.route('/add_product', methods=['POST'])
-def add_to_cart():
+@app.route('/<int:product_id>')
+def show_product(product_id):
+    product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
+    return render_template('product.html', product=product)
+
+@app.route('/<int:product_id>/add_product')
+def add_product(product_id):
     """Adds a product to the cart."""
+    if product_id is None:
+        abort(404)
+    price, title = query_db('select price, title from product where product_id = ?', [product_id], one=True)
+    print price
+    db = get_db()
+    db.execute('''insert into cart (product_id, title, price) values (?, ?, ?)''', (str(product_id), title, str(price)))
+    db.commit()
+    # not showing up on the page
+    flash('The product has been added to the cart.')
+    return redirect(url_for('show_products_list'))
+
+@app.route('/cart')
+def cart():
     if 'user_id' not in session:
         flash('You need to sign in first to access this functionality')
         return render_template('login.html')
@@ -354,31 +373,21 @@ def update_cart():
 @app.route('/pay')
 def pay():
     # change amount here
-    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=600) # the amount in the cart
+    amount = query_db('select sum(price) from cart', one=True)[0]
+    print amount
+    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])
 def charge():
-    # Amount in cents
-    amount=600 # the amount in the cart
 
-    # customer = stripe.Customer.create(
-    #     source=request.form['stripeToken']
-    # )
-    #
-    # token = stripe.Token.create(
-    #   email="maidongxi@example.com",
-    #   alipay_account={
-    #     # Create an Alipay account token with nonreusable account access
-    #     "reusable": 'false'
-    #   },
-    # )
-
+    # ideally, want to just keep this variable from the pay function
+    # also, the currency is in jiao, so 350 is just 3.50 yuan
+    amount = query_db('select sum(price) from cart', one=True)[0]*100
     try:
       charge = stripe.Charge.create(
           amount=amount, # Amount in cents
           currency="cny",
-          source=request.form['stripeToken'],
-          description="Example Alipay charge"
+          source=request.form['stripeToken']
       )
     except stripe.error.CardError as e:
       # The Alipay account has been declined
