@@ -329,7 +329,7 @@ def get_cart():
     """Displays cart"""
     if not g.user:
         flash('You need to sign in first to access this functionality')
-        return redirect(url_for('public_timeline'))
+        return redirect(url_for('register'))
     return render_template('cart.html', items=query_db('''
        select product_id, quantity from cart where user_id = ?''',
         [session['user_id']]))
