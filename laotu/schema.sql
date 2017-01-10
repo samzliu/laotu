@@ -46,7 +46,6 @@ create table cart (
     user_id integer not null references user(user_id),
     product_id integer not null references product(product_id),
     quantity integer not null,
-    price decimal(7,2) not null,
     PRIMARY KEY (user_id, product_id)
 );
 
