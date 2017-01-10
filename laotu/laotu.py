@@ -283,7 +283,11 @@ def logout():
     flash('You were logged out')
     session.pop('user_id', None)
     return redirect(url_for('public_timeline'))
-#
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/products_list')
 def show_products_list():
     return render_template('products_list.html', products=query_db('''
@@ -305,20 +309,8 @@ def add_product(product_id):
     db.execute('''insert into cart (product_id, title, price) values (?, ?, ?)''', (str(product_id), title, str(price)))
     db.commit()
     # not showing up on the page
-    flash('The product has been added to the cart.')
+    flash.keep('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
-
-# @app.route('/cart')
-# def cart():
-#     if 'user_id' not in session:
-#         abort(401)
-#     if request.form['text']:
-#         db = get_db()
-#         db.execute('''insert into cart (user_id, product_id, quantity)
-#           values (?, ?, ?)''', (session['user_id'], product_id, 1))
-#         db.commit()
-#         flash('The product has been added to the cart.')
-#     return redirect(url_for('product'))
 
 @app.route('/cart')
 def cart():
@@ -345,8 +337,9 @@ def pay():
 def charge():
 
     # ideally, want to just keep this variable from the pay function
-    # also, the currency is in jiao, so 350 is just 3.50 yuan
+    # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
     amount = query_db('select sum(price) from cart', one=True)[0]*100
+
     try:
       charge = stripe.Charge.create(
           amount=amount, # Amount in cents
@@ -356,7 +349,7 @@ def charge():
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-
+      flash.keep('Your purchase was successful.')
     return redirect(url_for('timeline'))
 
 # add some filters to jinja
