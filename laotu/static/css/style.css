@@ -1,7 +1,14 @@
 body {
     background: #fff;
     font-family: 'Trebuchet MS', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
+}
+
+/* small devices */
+@media only screen and (max-device-width: 480px) {
+    body {
+        font-size: 14px;
+    }
 }
 
 /*a {
@@ -10,32 +17,110 @@ body {
 
 a:hover {
     color: #333;
+}*/
+
+/*input[type="text"],
+input[type="password"]
+*/
+input {
+    ::-webkit-input-placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+    ::-moz-placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+    :-ms-input-placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+    &:focus {
+        outline: 0 transparent solid;
+        ::-webkit-input-placeholder {
+            color: rgba(0,0,0,0.7);
+        }
+        ::-moz-placeholder {
+            color: rgba(0,0,0,0.7);
+        }
+        :-ms-input-placeholder {
+            color: rgba(0,0,0,0.7);
+        }
+    }
 }
 
-input[type="text"],
-input[type="password"] {
-    background: white;
-    border: 1px solid #BFE6E2;
-    padding: 2px;
-    font-family: 'Trebuchet MS', sans-serif;
-    font-size: 14px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    color: #105751;
+.sleek-form {
+    /*position: relative;*/
+    min-height: 10rem;
+    margin: auto;
+    /*max-width: 50%;*/
+    padding: .5rem;
+}
+/*.login-text {
+    color: black;
+    font-size: 1.5rem;
+    margin: 0 auto;
+    max-width: 50%;
+    padding: .5rem;
+    text-align: center;
+    .fa-stack-lx {
+        color: black;
+    }
+}*/
+.form-text, .form-password {
+    background: transparent;
+    outline: none;
+    border: 0 solid;
+    border-bottom: 1px solid green;
+    color: black;
+    display: block;
+    margin: 1rem auto;
+    padding: .5rem;
+    transition: 250ms background ease-in;
+    width: calc(100% - 3rem);
+    max-width: 460px;
+/*    &:focus {
+        background: green;
+        color: white;
+        transition: 250ms background ease-in;
+    }*/
 }
 
-input[type="submit"] {
-    background: #105751;
-    border: 1px solid #073B36;
-    padding: 1px 3px;
-    font-family: 'Trebuchet MS', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
+.form-text:focus, .form-password:focus {
+    background: #CCCCCC;
+    color: black;
+    transition: 250ms background ease-in;
+}
+
+.form-submit {
+    border: 1px solid green;
+    background: transparent;
+    color: green;
+    display: block;
+    width: 50%; 
+    height: 60px; 
+    font-size: 22px;
+    margin: 1rem auto;
+    min-width: 3px;
+    max-width: 460px;
+    padding: .25rem;
+    transition: 250ms background ease-in;
+}
+
+.form-submit:hover, .form-submit:focus {
+    background: green;
     color: white;
+    transition: 250ms background ease-in;
 }
 
+div.error {
+    margin: 10px 0;
+    background: #FAE4E4;
+    border: 1px solid #DD6F6F;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    padding: 4px;
+    font-size: 13px;
+}
+
+/*
 div.page {
     background: white;
     border: 1px solid #6ECCC4;
@@ -166,14 +251,6 @@ ul.flashes li {
     padding: 4px;
     font-size: 13px;
 }
-
-div.error {
-    margin: 10px 0;
-    background: #FAE4E4;
-    border: 1px solid #DD6F6F;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    padding: 4px;
-    font-size: 13px;
-}
 */
+
+

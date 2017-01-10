@@ -3,13 +3,11 @@
 {% block header %}Sign In{% endblock %}
 {% block main %}
   {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
-  <form action="" method="post">
-    <dl>
-      <dt>Email:
-      <dd><input type="text" name="email" size="30" value="{{ request.form.email }}">
-      <dt>Password:
-      <dd><input type="password" name="password" size="30">
-    </dl>
-    <div class="actions"><input type="submit" value="Sign In"></div>
+  <form action="" method="post" class="sleek-form">
+    <input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+    
+    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+
+    <input type="submit" name="Login" class="form-submit" value="Sign In">
   </form>
 {% endblock %}
