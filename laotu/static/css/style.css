@@ -1,7 +1,14 @@
 body {
     background: #fff;
     font-family: 'Trebuchet MS', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
+}
+
+/* small devices */
+@media only screen and (max-device-width: 480px) {
+    body {
+        font-size: 14px;
+    }
 }
 
 /*a {
@@ -10,7 +17,7 @@ body {
 
 a:hover {
     color: #333;
-}
+}*/
 
 input[type="text"],
 input[type="password"] {
@@ -36,6 +43,7 @@ input[type="submit"] {
     color: white;
 }
 
+/*
 div.page {
     background: white;
     border: 1px solid #6ECCC4;
