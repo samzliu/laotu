@@ -1,32 +1,109 @@
-<!doctype html>
-<title>{% block title %}Welcome{% endblock %} | LaoTu</title>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<div class="page">
-  <h1>LaoTu</h1>
-  <div class="navigation">
-  {% if g.user %}
-    <a href="{{ url_for('timeline') }}">my timeline</a> |
-    <a href="{{ url_for('public_timeline') }}">public timeline</a> |
-    <a href="{{ url_for('logout') }}">sign out [{{ g.user.username }}]</a>
-  {% else %}
-    <a href="{{ url_for('public_timeline') }}">public timeline</a> |
-    <a href="{{ url_for('register') }}">sign up</a> |
-    <a href="{{ url_for('login') }}">sign in</a>
-  {% endif %}
-  </div>
-  {% with flashes = get_flashed_messages() %}
-    {% if flashes %}
-      <ul class="flashes">
-      {% for message in flashes %}
-        <li>{{ message }}
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-  <div class="body">
-  {% block body %}{% endblock %}
-  </div>
-  <div class="footer">
-    MiniTwit &mdash; A Flask Application
-  </div>
-</div>
+<!DOCTYPE html><html lang="en">
+
+<head>
+    <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1"><meta name="description" content=""><meta name="author" content="">
+
+    <title>{% block title %}Welcome{% endblock %} | LaoTu</title>
+
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link href="{{url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
+
+    <meta content="initial-scale=1, width=device-width" name="viewport"/>
+</head>
+
+<body>
+    <div class="container">
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                {% if g.user %}
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="{{ url_for('timeline') }}">
+                            老土LAOTU
+                        </a>
+                    </li>
+                    <li><a href="{{ url_for('timeline') }}">My Timeline</a></li>
+                    <li><a href="{{ url_for('public_timeline') }}">Public Timeline</a></li>
+                    <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
+                </ul>
+                            
+                {% else %}
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="{{ url_for('timeline') }}">
+                            老土LAOTU
+                        </a>
+                    </li>
+                    <li><a href="{{ url_for('public_timeline') }}">Public Timeline</a></li>
+                    <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+                    <li><a href="{{ url_for('login') }}">Sign In</a></li>
+                </ul>
+                {% endif %}
+            </div>
+            <!-- /#sidebar-wrapper -->
+
+
+            <!-- //ext 
+            {% if get_flashed_messages() %}
+                <header>
+                    <div class="alert alert-info" role="alert">
+                        {{ get_flashed_messages() | join(" ") }}
+                    </div>
+                </header>
+            {% endif %} -->
+
+            {% with flashes = get_flashed_messages() %}
+                {% if flashes %}
+                  <ul class="flashes">
+                  {% for message in flashes %}
+                    <li>{{ message }}
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+            {% endwith %}
+
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <a href="#menu-toggle" class="btn btn-default" id="menu-toggle" style="z-index:2000;position:absolute;left:10px;top:10px;"><img src="{{ url_for('static', filename='images/menu.png') }}" style="height:30px;"></a>
+                            
+                            <div style="position:absolute;top:0px;left:0px;width:100%;text-align:center;"><h2>{% block header %}{% endblock %}</h2></div>
+                            
+                            <div style="position:absolute;top:10px;right:60px;z-index:3000;"><img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="height:40px;"></div>
+
+                            <br>
+                            <br>
+                            <main>
+                                {% block main %}{% endblock %}
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{url_for('static', filename='jquery.js')}}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{url_for('static', filename='bootstrap.js')}}"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>

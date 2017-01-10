@@ -41,6 +41,13 @@ create table trans (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
+drop table if exists cart;
+create table cart (
+    user_id integer not null references user(user_id),
+    product_id integer not null references product(product_id),
+    quantity integer not null 
+);
+
 drop table if exists follower;
 create table follower (
   who_id integer,
