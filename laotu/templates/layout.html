@@ -1,7 +1,11 @@
 <!DOCTYPE html><html lang="en">
 
 <head>
-    <meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1"><meta name="description" content=""><meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
     <title>{% block title %}Welcome{% endblock %} | LaoTu</title>
 
@@ -21,7 +25,7 @@
                 {% if g.user %}
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
-                        <a href="{{ url_for('timeline') }}">
+                        <a href="{{ url_for('home') }}">
                             老土LAOTU
                         </a>
                     </li>
@@ -33,7 +37,7 @@
                 {% else %}
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
-                        <a href="{{ url_for('timeline') }}">
+                        <a href="{{ url_for('home') }}">
                             老土LAOTU
                         </a>
                     </li>
@@ -55,16 +59,6 @@
                     </div>
                 </header>
             {% endif %} -->
-
-            {% with flashes = get_flashed_messages() %}
-                {% if flashes %}
-                  <ul class="flashes">
-                  {% for message in flashes %}
-                    <li>{{ message }}
-                  {% endfor %}
-                  </ul>
-                {% endif %}
-            {% endwith %}
 
 
             <!-- Page Content -->

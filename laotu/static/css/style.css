@@ -66,14 +66,16 @@ input {
 }*/
 .form-text, .form-password {
     background: transparent;
+    outline: none;
     border: 0 solid;
     border-bottom: 1px solid green;
-    color: #A0A0A0;
+    color: black;
     display: block;
-    margin: 1rem;
+    margin: 1rem auto;
     padding: .5rem;
     transition: 250ms background ease-in;
     width: calc(100% - 3rem);
+    max-width: 460px;
 /*    &:focus {
         background: green;
         color: white;
@@ -97,6 +99,7 @@ input {
     font-size: 22px;
     margin: 1rem auto;
     min-width: 3px;
+    max-width: 460px;
     padding: .25rem;
     transition: 250ms background ease-in;
 }
