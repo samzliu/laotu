@@ -309,25 +309,14 @@ def add_product(product_id):
     """Adds a product to the cart."""
     if product_id is None:
         abort(404)
-    price, title = query_db('select price, title from product where product_id = ?', [product_id], one=True)
     db = get_db()
-    db.execute('''insert into cart (product_id, title, price) values (?, ?, ?)''', (str(product_id), title, str(price)))
+    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, 1))
     db.commit()
     # not showing up on the page
     flash('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
 
-# @app.route('/cart')
-# def cart():
-#     #select product_id, quantity from cart where user_id = asdfsaf;
-#     return render_template('cart.html', items=query_db('select * from cart'))
 
-#delete all elements in cart
-    #delete from cart where user_id = safdsafsaf;
-
-#update card
-    #delete from card where user_id= sdfsaf and product_id = safsadf;
-    #update cart set quantity = safsafsafsa where user_id = safdsafd and product_id = safsadf;
 
 @app.route('/cart')
 def get_cart():
