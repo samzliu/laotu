@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     laotu
-    ~~~~~~~~
-
-    A microblogging application written with Flask and sqlite3.
-
-    :copyright: (c) 2015 by Armin Ronacher.
-    :license: BSD, see LICENSE for more details.
+  
 """
 
 import time
@@ -27,7 +22,6 @@ PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
-
 # test keys right now
 stripe_keys = {
   'secret_key': os.environ['SECRET_KEY'],
@@ -43,6 +37,9 @@ app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = '/tmp/laotu.db')
 app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
+
+if __name__ == '__main__':
+    app.run()
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -304,16 +301,26 @@ def add_to_cart():
         abort(401)
     if request.form['text']:
         db = get_db()
-        db.execute('''insert into cart (user_id, product_id)
-          values (?, ?)''', (session['user_id'], product_id))
+        db.execute('''insert into cart (user_id, product_id, quantity)
+          values (?, ?, ?)''', (session['user_id'], product_id, 1))
         db.commit()
         flash('The product has been added to the cart.')
     return redirect(url_for('product'))
 
 @app.route('/cart')
 def cart():
+    #select product_id, quantity from cart where user_id = asdfsaf;
     return render_template('cart.html')
 
+#delete all elements in cart 
+    #delete from cart where user_id = safdsafsaf;
+
+#update card 
+    #delete from card where user_id= sdfsaf and product_id = safsadf;
+    #update cart set quantity = safsafsafsa where user_id = safdsafd and product_id = safsadf;
+
+
+    
 @app.route('/pay')
 def pay():
     # change amount here
