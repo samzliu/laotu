@@ -6,7 +6,7 @@
     <li><strong><a href="{{ url_for('show_product', product_id=product.product_id)
     }}">{{ product.title }}</a></strong>
   {% else %}
-    <li><em>There are no products so far.</em>
+    <em>There are no products so far.</em>
   {% endfor %}
   </ul>
   <a href="{{ url_for('get_cart')}}">Go to cart</a>
