@@ -45,7 +45,8 @@ drop table if exists cart;
 create table cart (
     user_id integer not null references user(user_id),
     product_id integer not null references product(product_id),
-    quantity integer not null 
+    quantity integer not null,
+    PRIMARY KEY (user_id, product_id)
 );
 
 drop table if exists follower;
@@ -60,12 +61,4 @@ create table message (
   author_id integer not null,
   text text not null,
   pub_date integer
-);
-
-drop table if exists cart;
-create table cart (
-  item_id integer primary key autoincrement,
-  product_id integer,
-  title text,
-  price decimal(7,2) not null
 );
