@@ -21,7 +21,7 @@
                 {% if g.user %}
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
-                        <a href="{{ url_for('timeline') }}">
+                        <a href="{{ url_for('home') }}">
                             老土LAOTU
                         </a>
                     </li>
@@ -33,7 +33,7 @@
                 {% else %}
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
-                        <a href="{{ url_for('timeline') }}">
+                        <a href="{{ url_for('home') }}">
                             老土LAOTU
                         </a>
                     </li>
@@ -57,16 +57,6 @@
                     </div>
                 </header>
             {% endif %} -->
-
-            {% with flashes = get_flashed_messages() %}
-                {% if flashes %}
-                  <ul class="flashes">
-                  {% for message in flashes %}
-                    <li>{{ message }}
-                  {% endfor %}
-                  </ul>
-                {% endif %}
-            {% endwith %}
 
 
             <!-- Page Content -->
