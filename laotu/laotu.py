@@ -310,7 +310,6 @@ def add_product(product_id):
     if product_id is None:
         abort(404)
     price, title = query_db('select price, title from product where product_id = ?', [product_id], one=True)
-    print price
     db = get_db()
     db.execute('''insert into cart (product_id, title, price) values (?, ?, ?)''', (str(product_id), title, str(price)))
     db.commit()
