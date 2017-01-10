@@ -292,6 +292,7 @@ def product():
 def add_to_cart():
     """Adds a product to the cart."""
     if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
         return render_template('login.html')
     if request.form['text']:
         db = get_db()
@@ -311,9 +312,11 @@ def get_cart():
        select product_id, quantity from cart where user_id = ?''',
         [session['user_id']]))
 
+@app.route('/remove_product', methods=['POST'])
 def remove_from_cart():
     """Removes a product from cart"""
     if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
         return render_template('login.html')
     if request.form['text']:
         db = get_db()
@@ -322,9 +325,11 @@ def remove_from_cart():
         flash('The product has been removed from cart.')
     return redirect(url_for('cart'))
 
+@app.route('/clear_cart', methods=['POST'])
 def clear_cart():
     """Removes a product from cart"""
     if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
         return render_template('login.html')
     if request.form['text']:
         db = get_db()
@@ -333,6 +338,7 @@ def clear_cart():
         flash('The cart has been cleared')
     return redirect(url_for('cart'))
 
+@app.route('/update_product', methods=['POST'])
 def update_cart():
     """Updates a product from cart"""
     if 'user_id' not in session:
