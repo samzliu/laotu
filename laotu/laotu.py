@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     laotu
-  
+
 """
 
 import time
@@ -16,7 +16,7 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
-DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\Fall 2016\\D4D\\laotu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
 # DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
@@ -289,71 +289,120 @@ def logout():
     flash('You were logged out')
     session.pop('user_id', None)
     return redirect(url_for('public_timeline'))
-#
-@app.route('/product')
-def product():
-    return render_template('product.html')
 
-@app.route('/add_product', methods=['POST'])
-def add_to_cart():
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/products_list')
+def show_products_list():
+    return render_template('products_list.html', products=query_db('''
+    select * from product'''))
+
+@app.route('/<int:product_id>')
+def show_product(product_id):
+    product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
+    return render_template('product.html', product=product)
+
+@app.route('/<int:product_id>/add_product')
+def add_product(product_id):
     """Adds a product to the cart."""
-    if 'user_id' not in session:
-        abort(401)
-    if request.form['text']:
-        db = get_db()
-        db.execute('''insert into cart (user_id, product_id, quantity)
-          values (?, ?, ?)''', (session['user_id'], product_id, 1))
-        db.commit()
-        flash('The product has been added to the cart.')
-    return redirect(url_for('product'))
+    if product_id is None:
+        abort(404)
+    price, title = query_db('select price, title from product where product_id = ?', [product_id], one=True)
+    print price
+    db = get_db()
+    db.execute('''insert into cart (product_id, title, price) values (?, ?, ?)''', (str(product_id), title, str(price)))
+    db.commit()
+    # not showing up on the page
+    flash('The product has been added to the cart.')
+    return redirect(url_for('show_products_list'))
 
-@app.route('/cart')
-def cart():
-    #select product_id, quantity from cart where user_id = asdfsaf;
-    return render_template('cart.html')
+# @app.route('/cart')
+# def cart():
+#     #select product_id, quantity from cart where user_id = asdfsaf;
+#     return render_template('cart.html', items=query_db('select * from cart'))
 
-#delete all elements in cart 
+#delete all elements in cart
     #delete from cart where user_id = safdsafsaf;
 
-#update card 
+#update card
     #delete from card where user_id= sdfsaf and product_id = safsadf;
     #update cart set quantity = safsafsafsa where user_id = safdsafd and product_id = safsadf;
 
+@app.route('/cart')
+def get_cart():
+    """Displays cart"""
+    if not g.user:
+        flash('You need to sign in first to access this functionality')
+        return redirect(url_for('public_timeline'))
+    return render_template('cart.html', items=query_db('''
+       select product_id, quantity from cart where user_id = ?''',
+        [session['user_id']]))
 
-    
+@app.route('/remove_product', methods=['POST'])
+def remove_from_cart():
+    """Removes a product from cart"""
+    if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
+        db.commit()
+        flash('The product has been removed from cart.')
+    return redirect(url_for('cart'))
+
+@app.route('/clear_cart', methods=['POST'])
+def clear_cart():
+    """Removes a product from cart"""
+    if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''delete from cart where user_id = ?''', (session['user_id']))
+        db.commit()
+        flash('The cart has been cleared')
+    return redirect(url_for('cart'))
+
+@app.route('/update_product', methods=['POST'])
+def update_cart():
+    """Updates a product from cart"""
+    if 'user_id' not in session:
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
+        db.commit()
+        flash('The cart has been updated')
+    return redirect(url_for('cart'))
+
+
 @app.route('/pay')
 def pay():
     # change amount here
-    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=600) # the amount in the cart
+    amount = query_db('select sum(price) from cart', one=True)[0]
+    print amount
+    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])
 def charge():
-    # Amount in cents
-    amount=600 # the amount in the cart
 
-    # customer = stripe.Customer.create(
-    #     source=request.form['stripeToken']
-    # )
-    #
-    # token = stripe.Token.create(
-    #   email="maidongxi@example.com",
-    #   alipay_account={
-    #     # Create an Alipay account token with nonreusable account access
-    #     "reusable": 'false'
-    #   },
-    # )
+    # ideally, want to just keep this variable from the pay function
+    # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
+    amount = query_db('select sum(price) from cart', one=True)[0]*100
 
     try:
       charge = stripe.Charge.create(
           amount=amount, # Amount in cents
           currency="cny",
-          source=request.form['stripeToken'],
-          description="Example Alipay charge"
+          source=request.form['stripeToken']
       )
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-
+      flash('Your purchase was successful.')
     return redirect(url_for('timeline'))
 
 # add some filters to jinja

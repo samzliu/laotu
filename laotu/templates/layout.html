@@ -25,11 +25,11 @@
                             老土LAOTU
                         </a>
                     </li>
-                    <li><a href="{{ url_for('timeline') }}">My Timeline</a></li>
-                    <li><a href="{{ url_for('public_timeline') }}">Public Timeline</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
                     <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
                 </ul>
-                            
+
                 {% else %}
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
@@ -37,7 +37,8 @@
                             老土LAOTU
                         </a>
                     </li>
-                    <li><a href="{{ url_for('public_timeline') }}">Public Timeline</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
                     <li><a href="{{ url_for('register') }}">Sign Up</a></li>
                     <li><a href="{{ url_for('login') }}">Sign In</a></li>
                 </ul>
@@ -46,7 +47,7 @@
             <!-- /#sidebar-wrapper -->
 
 
-            <!-- //ext 
+            <!-- //ext
             {% if get_flashed_messages() %}
                 <header>
                     <div class="alert alert-info" role="alert">
@@ -72,9 +73,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <a href="#menu-toggle" class="btn btn-default" id="menu-toggle" style="z-index:2000;position:absolute;left:10px;top:10px;"><img src="{{ url_for('static', filename='images/menu.png') }}" style="height:30px;"></a>
-                            
+
                             <div style="position:absolute;top:0px;left:0px;width:100%;text-align:center;"><h2>{% block header %}{% endblock %}</h2></div>
-                            
+
                             <div style="position:absolute;top:10px;right:60px;z-index:3000;"><img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="height:40px;"></div>
 
                             <br>
@@ -87,7 +88,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
     <!-- jQuery -->
