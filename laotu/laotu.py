@@ -312,7 +312,6 @@ def add_product(product_id):
     db = get_db()
     db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, 1))
     db.commit()
-    # not showing up on the page
     flash('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
 
@@ -399,7 +398,7 @@ def search():
 @app.route('/search_results/<query>')
 def search_results(query):
     return redirect(url_for('show_products_list'))
-    
+
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
