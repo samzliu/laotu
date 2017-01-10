@@ -376,7 +376,6 @@ def pay():
 
 @app.route('/charge', methods=['POST'])
 def charge():
-
     # ideally, want to just keep this variable from the pay function
     # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
     amount = query_db('select sum(price) from cart', one=True)[0]*100
@@ -392,6 +391,15 @@ def charge():
       pass
       flash('Your purchase was successful.')
     return redirect(url_for('home'))
+
+@app.route('/search', methods=['POST'])
+def search():
+    return redirect(url_for('search_results', query=request.form['search']))
+
+@app.route('/search_results/<query>')
+def search_results(query):
+    return redirect(url_for('show_products_list'))
+    
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
