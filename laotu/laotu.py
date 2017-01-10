@@ -16,8 +16,8 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
-DATABASE = '/tmp/laotu.db'
-# DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -35,7 +35,7 @@ stripe.api_key = stripe_keys['secret_key']
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = '/tmp/laotu.db')
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE)
 app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
 
 if __name__ == '__main__':
