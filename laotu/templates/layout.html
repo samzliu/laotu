@@ -11,6 +11,10 @@
     <link href="{{url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
 
     <meta content="initial-scale=1, width=device-width" name="viewport"/>
+
+    <!-- React.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
 </head>
 
 <body>
@@ -103,6 +107,36 @@
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+    </script>
+
+    <script type="text/jsx">
+        var Product = React.createClass({
+          render: function() {
+              return (
+                <div className="product">
+                  <span className="category">
+                    {this.props.category}
+                  </span>
+                  <span className="quantity">
+                    {this.props.quantity}
+                  </span>
+                  <span className="price">
+                    {this.props.price}
+                  </span>
+                  <span className="location">
+                    {this.props.location}
+                  </span>
+                  <span className="producer_id">
+                    {this.props.producer_id}
+                  </span>
+                  <span className="description">
+                    {this.props.children}
+                  </span>
+                  <img src="{{ url_for('static', filename='thinking.jpg') }}" width="50" height="50"/>
+                </div>
+              );
+          }
+        });
     </script>
 
 </body>
