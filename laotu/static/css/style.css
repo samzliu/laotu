@@ -47,6 +47,7 @@ input {
 }
 
 .sleek-form {
+    /*position: relative;*/
     min-height: 10rem;
     margin: auto;
     /*max-width: 50%;*/
@@ -91,6 +92,9 @@ input {
     background: transparent;
     color: green;
     display: block;
+    width: 50%; 
+    height: 60px; 
+    font-size: 22px;
     margin: 1rem auto;
     min-width: 3px;
     padding: .25rem;
@@ -98,9 +102,19 @@ input {
 }
 
 .form-submit:hover, .form-submit:focus {
-    background: #CCCCCC;
+    background: green;
     color: white;
     transition: 250ms background ease-in;
+}
+
+div.error {
+    margin: 10px 0;
+    background: #FAE4E4;
+    border: 1px solid #DD6F6F;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    padding: 4px;
+    font-size: 13px;
 }
 
 /*
@@ -236,12 +250,4 @@ ul.flashes li {
 }
 */
 
-div.error {
-    margin: 10px 0;
-    background: #FAE4E4;
-    border: 1px solid #DD6F6F;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    padding: 4px;
-    font-size: 13px;
-}
+
