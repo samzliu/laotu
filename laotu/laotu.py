@@ -125,107 +125,10 @@ blog -> external interface...
 
 """
 
-
-
-
-# @app.route('/timeline')
-# def timeline():
-#     """Shows a users timeline or if no user is logged in it will
-#     redirect to the public timeline.  This timeline shows the user's
-#     messages as well as all the messages of followed users.
-#     """
-#     if not g.user:
-#         return redirect(url_for('public_timeline'))
-#     return render_template('timeline.html', messages=query_db('''
-#         select message.*, user.* from message, user
-#         where message.author_id = user.user_id and (
-#             user.user_id = ? or
-#             user.user_id in (select whom_id from follower
-#                                     where who_id = ?))
-#         order by message.pub_date desc limit ?''',
-#         [session['user_id'], session['user_id'], PER_PAGE]))
-
-
-# @app.route('/public')
-# def public_timeline():
-#     """Displays the latest messages of all users."""
-#     return render_template('timeline.html', messages=query_db('''
-#         select message.*, user.* from message, user
-#         where message.author_id = user.user_id
-#         order by message.pub_date desc limit ?''', [PER_PAGE]))
-
 @app.route('/products')
 def products():
     """Displays the products."""
     return render_template('products.html')
-
-
-# @app.route('/<email>')
-# def user_timeline(email):
-#     """Display's a users tweets."""
-#     profile_user = query_db('select * from user where email = ?',
-#                             [email], one=True)
-#     if profile_user is None:
-#         abort(404)
-#     followed = False
-#     if g.user:
-#         followed = query_db('''select 1 from follower where
-#             follower.who_id = ? and follower.whom_id = ?''',
-#             [session['user_id'], profile_user['user_id']],
-#             one=True) is not None
-#     return render_template('timeline.html', messages=query_db('''
-#             select message.*, user.* from message, user where
-#             user.user_id = message.author_id and user.user_id = ?
-#             order by message.pub_date desc limit ?''',
-#             [profile_user['user_id'], PER_PAGE]), followed=followed,
-#             profile_user=profile_user)
-
-
-# @app.route('/<email>/follow')
-# def follow_user(email):
-#     """Adds the current user as follower of the given user."""
-#     if not g.user:
-#         abort(401)
-#     whom_id = get_user_id(email)
-#     if whom_id is None:
-#         abort(404)
-#     db = get_db()
-#     db.execute('insert into follower (who_id, whom_id) values (?, ?)',
-#               [session['user_id'], whom_id])
-#     db.commit()
-#     flash('You are now following "%s"' % email)
-#     return redirect(url_for('user_timeline', email=email))
-#
-#
-# @app.route('/<email>/unfollow')
-# def unfollow_user(email):
-#     """Removes the current user as follower of the given user."""
-#     if not g.user:
-#         abort(401)
-#     whom_id = get_user_id(email)
-#     if whom_id is None:
-#         abort(404)
-#     db = get_db()
-#     db.execute('delete from follower where who_id=? and whom_id=?',
-#               [session['user_id'], whom_id])
-#     db.commit()
-#     flash('You are no longer following "%s"' % email)
-#     return redirect(url_for('user_timeline', email=email))
-#
-#
-# @app.route('/add_message', methods=['POST'])
-# def add_message():
-#     """Registers a new message for the user."""
-#     if 'user_id' not in session:
-#         abort(401)
-#     if request.form['text']:
-#         db = get_db()
-#         db.execute('''insert into message (author_id, text, pub_date)
-#           values (?, ?, ?)''', (session['user_id'], request.form['text'],
-#                                 int(time.time())))
-#         db.commit()
-#         flash('Your message was recorded')
-#     return redirect(url_for('timeline'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -398,7 +301,13 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    return redirect(url_for('show_products_list'))
+    print query
+    products = query_db("""select * from product where title like ?""", 
+        ('%' + query + '%',))
+        
+    results = products # this will be more general later
+    print(products)
+    return render_template('search_results.html', results=results)
     
 
 # add some filters to jinja
