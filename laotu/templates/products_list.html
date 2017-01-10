@@ -1,32 +1,15 @@
 {% extends "layout.html" %}
 {% block main %}
   All the products!
-  <ul class="products">
   {% for product in products %}
-    <div className="product">
-      <span className="category">
-        {{ product.category }}
-      </span>
-      <span className="quantity">
-        {{ product.quantity }}
-      </span>
-      <span className="price">
-        {{ product.price }}
-      </span>
-      <span className="location">
-        {{ product.location }}
-      </span>
-      <span className="producer_id">
-        {{ product.producer_id }}
-      </span>
-      <span className="description">
-        {{ product.children }}
-      </span>
-    </div>
-    <li><strong><a href="{{ url_for('show_product', product_id=product.product_id)}}">{{ product.title }}</a></strong>
+    <div class="product" onclick="handleProductClick('{{ url_for('show_product', product_id=product.product_id)}}')">
+      <div style="height: 30px; font-size: 14px;">
+        <h1>{{ product.title }}</h1>
+        <h2 style="font-size: 15px;">${{ product.price }}</h2>
+      </div>
+    </div> 
   {% else %}
-    <li><em>There are no products so far.</em>
+    <em>There are no products so far.</em>
   {% endfor %}
-  </ul>
   <a href="{{ url_for('get_cart')}}">Go to cart</a>
 {% endblock %}
