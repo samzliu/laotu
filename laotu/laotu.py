@@ -81,6 +81,7 @@ def query_db(query, args=(), one=False):
     rv = cur.fetchall()
     return (rv[0] if rv else None) if one else rv
 
+
 def get_user_id(email):
     """Convenience method to look up the id for a email."""
     rv = query_db('select user_id from user where email = ?',
@@ -365,6 +366,7 @@ def update_cart():
         flash('The cart has been updated')
     return redirect(url_for('cart'))
 
+
 @app.route('/pay')
 def pay():
     # change amount here
@@ -374,6 +376,7 @@ def pay():
 
 @app.route('/charge', methods=['POST'])
 def charge():
+
     # ideally, want to just keep this variable from the pay function
     # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
     amount = query_db('select sum(price) from cart', one=True)[0]*100
@@ -389,22 +392,6 @@ def charge():
       pass
       flash('Your purchase was successful.')
     return redirect(url_for('home'))
-
-@app.route('/search', methods=['POST'])
-def search():
-    return redirect(url_for('search_results', query=request.form['search']))
-
-@app.route('/search_results/<query>')
-def search_results(query):
-    return render_template('search_results.html', results=query_db('''
-        select message.*, user.* from message, user
-        where message.author_id = user.user_id
-        order by message.pub_date desc limit ?''', [PER_PAGE]))
-
-    return redirect('public')
-
-
-
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime

@@ -44,10 +44,8 @@
                 </ul>
                 {% endif %}
             </div>
+            <!-- /#sidebar-wrapper -->
 
-            <form action="{{ url_for('search') }}" method="post">
-                <input placeholder="Search..." name="search">
-            </form>
 
             <!-- //ext
             {% if get_flashed_messages() %}
@@ -80,6 +78,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- jQuery -->
@@ -95,6 +94,7 @@
         $("#wrapper").toggleClass("toggled");
     });
     </script>
+
 </body>
 
 </html>
