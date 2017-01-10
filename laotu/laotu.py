@@ -309,13 +309,13 @@ def add_product(product_id):
     db.execute('''insert into cart (product_id, title, price) values (?, ?, ?)''', (str(product_id), title, str(price)))
     db.commit()
     # not showing up on the page
-    flash.keep('The product has been added to the cart.')
+    flash('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
 
-@app.route('/cart')
-def cart():
-    #select product_id, quantity from cart where user_id = asdfsaf;
-    return render_template('cart.html', items=query_db('select * from cart'))
+# @app.route('/cart')
+# def cart():
+#     #select product_id, quantity from cart where user_id = asdfsaf;
+#     return render_template('cart.html', items=query_db('select * from cart'))
 
 #delete all elements in cart
     #delete from cart where user_id = safdsafsaf;
@@ -330,7 +330,7 @@ def get_cart():
     if not g.user:
         flash('You need to sign in first to access this functionality')
         return redirect(url_for('public_timeline'))
-    return render_template('cart.html', messages=query_db('''
+    return render_template('cart.html', items=query_db('''
        select product_id, quantity from cart where user_id = ?''',
         [session['user_id']]))
 
@@ -359,7 +359,6 @@ def clear_cart():
         db.commit()
         flash('The cart has been cleared')
     return redirect(url_for('cart'))
->>>>>>> 59cedbc9ef63d7737226d1238804308cbb3a8ea2
 
 @app.route('/update_product', methods=['POST'])
 def update_cart():
@@ -397,7 +396,7 @@ def charge():
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-      flash.keep('Your purchase was successful.')
+      flash('Your purchase was successful.')
     return redirect(url_for('timeline'))
 
 # add some filters to jinja
