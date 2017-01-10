@@ -30,6 +30,8 @@
                     <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
                 </ul>
 
+    
+
                 {% else %}
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
@@ -46,6 +48,11 @@
             </div>
             <!-- /#sidebar-wrapper -->
 
+            <div id="searchbar-wrapper">
+                <form action="/search" method="post">
+                   <input name="search" placeholder="Search..."> 
+                </form>
+            </div>
 
             <!-- //ext
             {% if get_flashed_messages() %}
