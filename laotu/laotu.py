@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     laotu
-  
+
 """
 
 import time
@@ -16,13 +16,11 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
-#DATABASE = '/tmp/laotu.db'
-#DATABASE = '/Users/nataliapacheco-tallaj/Documents/TITW/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
+# DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
-
 
 # test keys right now
 stripe_keys = {
@@ -39,6 +37,9 @@ app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = '/tmp/laotu.db')
 app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
+
+if __name__ == '__main__':
+    app.run()
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -152,6 +153,11 @@ def public_timeline():
         select message.*, user.* from message, user
         where message.author_id = user.user_id
         order by message.pub_date desc limit ?''', [PER_PAGE]))
+
+@app.route('/products')
+def products():
+    """Displays the products."""
+    return render_template('products.html')
 
 
 @app.route('/<email>')
@@ -283,7 +289,11 @@ def logout():
     flash('You were logged out')
     session.pop('user_id', None)
     return redirect(url_for('public_timeline'))
-#
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/products_list')
 def show_products_list():
     return render_template('products_list.html', products=query_db('''
@@ -308,32 +318,67 @@ def add_product(product_id):
     flash('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
 
-@app.route('/cart')
-def cart():
-    if 'user_id' not in session:
-        abort(401)
-    if request.form['text']:
-        db = get_db()
-        db.execute('''insert into cart (user_id, product_id, quantity)
-          values (?, ?, ?)''', (session['user_id'], product_id, 1))
-        db.commit()
-        flash('The product has been added to the cart.')
-    return redirect(url_for('product'))
+# @app.route('/cart')
+# def cart():
+#     #select product_id, quantity from cart where user_id = asdfsaf;
+#     return render_template('cart.html', items=query_db('select * from cart'))
 
-@app.route('/cart')
-def cart():
-    #select product_id, quantity from cart where user_id = asdfsaf;
-    return render_template('cart.html')
-
-#delete all elements in cart 
+#delete all elements in cart
     #delete from cart where user_id = safdsafsaf;
 
-#update card 
+#update card
     #delete from card where user_id= sdfsaf and product_id = safsadf;
     #update cart set quantity = safsafsafsa where user_id = safdsafd and product_id = safsadf;
 
+@app.route('/cart')
+def get_cart():
+    """Displays cart"""
+    if not g.user:
+        flash('You need to sign in first to access this functionality')
+        return redirect(url_for('register'))
+    return render_template('cart.html', items=query_db('''
+       select product_id, quantity from cart where user_id = ?''',
+        [session['user_id']]))
 
-    
+@app.route('/remove_product', methods=['POST'])
+def remove_from_cart():
+    """Removes a product from cart"""
+    if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
+        db.commit()
+        flash('The product has been removed from cart.')
+    return redirect(url_for('cart'))
+
+@app.route('/clear_cart', methods=['POST'])
+def clear_cart():
+    """Removes a product from cart"""
+    if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''delete from cart where user_id = ?''', (session['user_id']))
+        db.commit()
+        flash('The cart has been cleared')
+    return redirect(url_for('cart'))
+
+@app.route('/update_product', methods=['POST'])
+def update_cart():
+    """Updates a product from cart"""
+    if 'user_id' not in session:
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
+        db.commit()
+        flash('The cart has been updated')
+    return redirect(url_for('cart'))
+
+
 @app.route('/pay')
 def pay():
     # change amount here
@@ -345,8 +390,9 @@ def pay():
 def charge():
 
     # ideally, want to just keep this variable from the pay function
-    # also, the currency is in jiao, so 350 is just 3.50 yuan
+    # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
     amount = query_db('select sum(price) from cart', one=True)[0]*100
+
     try:
       charge = stripe.Charge.create(
           amount=amount, # Amount in cents
@@ -356,7 +402,7 @@ def charge():
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-
+      flash('Your purchase was successful.')
     return redirect(url_for('timeline'))
 
 # add some filters to jinja
