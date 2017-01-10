@@ -292,7 +292,7 @@ def product():
 def add_to_cart():
     """Adds a product to the cart."""
     if 'user_id' not in session:
-        abort(401)
+        return render_template('login.html')
     if request.form['text']:
         db = get_db()
         db.execute('''insert into cart (user_id, product_id, quantity)
@@ -302,17 +302,47 @@ def add_to_cart():
     return redirect(url_for('product'))
 
 @app.route('/cart')
-def cart():
-    #select product_id, quantity from cart where user_id = asdfsaf;
-    return render_template('cart.html')
+def get_cart(): 
+    """Displays cart"""
+    if not g.user:
+        flash('You need to sign in first to access this functionality')
+        return redirect(url_for('public_timeline'))
+    return render_template('cart.html', messages=query_db('''
+       select product_id, quantity from cart where user_id = ?''',
+        [session['user_id']]))
 
-#delete all elements in cart 
-    #delete from cart where user_id = safdsafsaf;
+def remove_from_cart():
+    """Removes a product from cart"""
+    if 'user_id' not in session:
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
+        db.commit()
+        flash('The product has been removed from cart.')
+    return redirect(url_for('cart'))
 
-#update card 
-    #delete from card where user_id= sdfsaf and product_id = safsadf;
-    #update cart set quantity = safsafsafsa where user_id = safdsafd and product_id = safsadf;
+def clear_cart():
+    """Removes a product from cart"""
+    if 'user_id' not in session:
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''delete from cart where user_id = ?''', (session['user_id']))
+        db.commit()
+        flash('The cart has been cleared')
+    return redirect(url_for('cart'))
 
+def update_cart():
+    """Updates a product from cart"""
+    if 'user_id' not in session:
+        return render_template('login.html')
+    if request.form['text']:
+        db = get_db()
+        db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
+        db.commit()
+        flash('The cart has been updated')
+    return redirect(url_for('cart'))    
 
     
 @app.route('/pay')
