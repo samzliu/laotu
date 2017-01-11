@@ -204,8 +204,8 @@ def show_products_list():
 
 @app.route('/<int:product_id>')
 def show_product(product_id):
-    product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
-    producer = query_db('select * from producer where producer.producer_id = ?', str(product['producer_id']), one=True)
+    product = query_db('select * from product where product_id = ?', [product_id], one=True)
+    producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
     return render_template('product.html', product=product, producer=producer)
 
 @app.route('/<int:product_id>/add_product')
@@ -225,9 +225,9 @@ def get_cart():
     if not g.user:
         flash('You need to sign in first to access this functionality')
         return render_template('login.html')
-    return render_template('cart.html', items=query_db('''
-       select product_id, quantity from cart where user_id = ?''',
-        [session['user_id']]))
+    items=query_db('''select cart.product_id, cart.quantity, product.title from cart \
+    join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
+    return render_template('cart.html', items=items)
 
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):
