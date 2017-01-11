@@ -256,16 +256,16 @@ def clear_cart():
     flash('The cart has been cleared')
     return redirect(url_for('get_cart'))
 
-@app.route('/update_product', methods=['POST'])
-def update_cart():
+@app.route('/<int:product_id>/<int:quantity>/update_product')
+def update_product(product_id, quantity):
     """Updates a product from cart"""
     if 'user_id' not in session:
+        flash('You need to sign in first to access this functionality')
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
-        db.commit()
-        flash('The cart has been updated')
+    db = get_db()
+    db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (quantity,session['user_id'], product_id))
+    db.commit()
+    flash('The cart has been updated')
     return redirect(url_for('get_cart'))
 
 
