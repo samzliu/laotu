@@ -314,7 +314,6 @@ def search_results(query):
 @app.route('/categories')
 def categories():
     categories = query_db("""select distinct category from product""")
-    print categories
     return render_template('categories.html', categories=categories)
 
 @app.route('/category/<category>')

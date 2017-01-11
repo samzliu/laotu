@@ -7,10 +7,10 @@
 {% endblock %}
 {% block main %}
     {% if results %}
-        <em>Search results for {{ query }}.</em> 
+        <em>Search results for "{{ query }}".</em> 
         <ul class="results">
     {% for result in results %}
-        <li><em>{{ result.title }}</em>
+        <li><em><a href={{ url_for('show_product', product_id=result.product_id) }}>{{ result.title }}</a></em>
     {% endfor %}
         </ul>
     {% else %}
