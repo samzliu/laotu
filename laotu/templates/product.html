@@ -14,13 +14,23 @@
 			</div>
 			<div style="">
 				<h2>Price: ${{product.price}}</h2>
+				<div class="dropdown">
+				  <button onclick="dropDownQuantity()" class="dropbtn">Add product to cart</button>
+				  <div id="myDropdown" class="dropdown-content">
+				    <a href="{{ url_for('add_product', product_id=product.product_id, quantity=1)}}">1</a>
+				    <a href="{{ url_for('add_product', product_id=product.product_id, quantity=2)}}">2</a>
+				    <a href="{{ url_for('add_product', product_id=product.product_id, quantity=3)}}">3</a>
+						<a href="{{ url_for('add_product', product_id=product.product_id, quantity=4)}}">4</a>
+						<a href="{{ url_for('add_product', product_id=product.product_id, quantity=5)}}">5</a>
+				  </div>
+				</div>
 			</div>
-			<img src="{{ url_for('static', filename='images/addtocart.png') }}" onclick="handleButtonClick('{{ url_for('add_product', product_id=product.product_id)}}')" style="max-width: 160%; height: auto">
 		</div>
 	</div>
 
+
 	<div class="product_description">
-		<h1>Farmer: {{producer.user_name}}</h1><br>
+		<h1>Farmer: {{producer.user_name}}</h1>
 		Location: {{product.location}}<br>
 		<br>
 		{{product.description}}
