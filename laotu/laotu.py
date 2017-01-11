@@ -304,8 +304,8 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    products = query_db("""select * from product where title like ?""", 
-        ('%' + query + '%',))
+    products = query_db("""select * from product where title like ? or description like ?""", 
+        ('%' + query + '%', '%' + query + '%'))
         
     results = products # this will be more general later
     return render_template('search_results.html', results=results, query=query)
