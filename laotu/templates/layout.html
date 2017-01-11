@@ -21,14 +21,18 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
 
     <!-- Custom CSS -->
-    <link href="{{url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
 
     <meta content="initial-scale=1, width=device-width" name="viewport"/>
 
     <!-- Search icon -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet">
 
    <title>{% block title %}{{ welcome }}{% endblock %} | LaoTu</title>
+
+   <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
+   <!--script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script-->
+   <!-- React.JS -->
 </head>
 
 <body>
@@ -47,7 +51,7 @@
                     <div class="searchbar-wrapper">
                         <span class="icon"><i class="fa fa-search"></i></span>
                         <form action="/search" method="post">
-                           <input name="search" id="search" placeholder="Search...">
+                           <input id="search" name="search" placeholder="Search...">
                         </form>
                     </div>
 
@@ -58,7 +62,6 @@
                     <li><a href="{{ url_for('get_cart')}}">{{ cart }}</a></li>
                     <li><a href="{{ url_for('categories') }}">{{ categories }}</a></li>
                     <li><a href="{{ url_for('logout') }}">{{ signout }} [{{ g.user['name'] }}]</a></li>
-
                 </ul>
 
 
@@ -72,8 +75,9 @@
                     </li>
         
                     <div class="searchbar-wrapper">
+                        <span class="icon"><i class="fa fa-search"></i></span>
                         <form id="search-form" action="/search" method="post">
-                           <input name="search" placeholder="Search...">
+                           <input id="search" name="search" placeholder="Search...">
                         </form>
                     </div>
 
@@ -134,7 +138,7 @@
     </script>
 
     <script>
-    function handleProductClick(url) {
+    function handleButtonClick(url) {
         window.open(url, "_self");
     }
     </script>
