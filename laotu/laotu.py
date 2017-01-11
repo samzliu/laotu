@@ -19,8 +19,8 @@ import re
 from strings import *
 
 # configuration
-#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
 #DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
