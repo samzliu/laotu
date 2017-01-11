@@ -205,7 +205,7 @@ def show_products_list():
 @app.route('/<int:product_id>')
 def show_product(product_id):
     product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
-    # producer = query_db('select * from producer where producer.producer_id = ?', [product.producer_id], one=True)
+    producer = query_db('select * from producer where producer.producer_id = ?', str(product['producer_id']), one=True)
     return render_template('product.html', product=product, producer=producer)
 
 @app.route('/<int:product_id>/add_product')
@@ -229,18 +229,20 @@ def get_cart():
        select product_id, quantity from cart where user_id = ?''',
         [session['user_id']]))
 
-@app.route('/remove_product', methods=['POST'])
-def remove_from_cart():
-    """Removes a product from cart"""
+@app.route('/<int:product_id>/remove_product')
+def remove_product(product_id):
+    """Adds a product to the cart."""
     if 'user_id' not in session:
         flash('You need to sign in first to access this functionality')
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
-        db.commit()
-        flash('The product has been removed from cart.')
+    if product_id is None:
+        abort(404)
+    db = get_db()
+    ddb.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
+    db.commit()
+    flash('The product has been removed from cart.')
     return redirect(url_for('cart'))
+
 
 @app.route('/clear_cart', methods=['POST'])
 def clear_cart():
