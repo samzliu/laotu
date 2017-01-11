@@ -73,6 +73,20 @@ input {
     transition: 250ms background ease-in;
 }
 
+.form-err {
+    background: #FAE4E4;
+    outline: none;
+    border: 0 solid;
+    border-bottom: 1px solid red;
+    color: black;
+    display: block;
+    margin: 1rem auto;
+    padding: .5rem;
+    transition: 250ms background ease-in;
+    width: calc(100% - 3rem);
+    max-width: 460px;
+}
+
 .form-submit {
     border: 1px solid green;
     background: transparent;
