@@ -16,8 +16,8 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 
 # configuration
-#DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+# DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -205,11 +205,15 @@ def show_products_list():
 @app.route('/<int:product_id>')
 def show_product(product_id):
     product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
-    return render_template('product.html', product=product)
+    producer = query_db('select * from producer where producer.producer_id = ?', str(product['producer_id']), one=True)
+    return render_template('product.html', product=product, producer=producer)
 
 @app.route('/<int:product_id>/add_product')
 def add_product(product_id):
     """Adds a product to the cart."""
+    if not g.user:
+        flash('You need to sign in first to access this functionality')
+        return redirect(url_for('register'))
     if product_id is None:
         abort(404)
     db = get_db()

@@ -1,8 +1,23 @@
 {% extends "layout.html" %}
 {% block main %}
-  This is a product.
-  {{product.title}}
-  <a class="add_product" href="{{ url_for('add_product', product_id=product.product_id)
-}}">Add product to cart</a>.
-<a href="{{ url_for('get_cart')}}">Go to cart</a>
+	<div class="product_main" style="border: 5px solid grey; height: 300px">
+		<div class="pic" style="border: 5px solid grey; height: 50px">
+
+		</div>
+		<h1>{{product.title}}</h1>
+		<a class="add_product" href="{{ url_for('add_product', product_id=product.product_id)
+	}}">Add product to cart</a>
+	</div>
+
+	<a href="{{ url_for('get_cart')}}">Go to cart</a>	
+	<div class="description">
+		<h2>Description</h2>
+		Farmer: {{producer.user_name}}<br>
+		Location: {{product.location}}<br>
+		<br>
+		{{product.description}}
+	</div>
+	<div class="producer">
+		<h2 style="font-size: 15px;">Click here to meet your farmer</h2>
+	</div>
 {% endblock %}
