@@ -2,11 +2,24 @@
 {% block main %}
   <ul class="cart items">
   {% for item in items %}
-    <li>{{item.title}}
+    <li>{{item.title}} {{item.quantity}}
+      <a class="remove_product" href="{{ url_for('remove_product', product_id=item.product_id)}}">Remove product</a>
+
+    <div class="dropdown">
+    <button onclick="dropDownQuantity()" class="dropbtn">Update product (e.g. change quantity)</button>
+    <div id="myDropdown" class="dropdown-content">
+      <a href="{{ url_for('update_product', product_id=item.product_id, quantity=1)}}">1</a>
+      <a href="{{ url_for('update_product', product_id=item.product_id, quantity=2)}}">2</a>
+      <a href="{{ url_for('update_product', product_id=item.product_id, quantity=3)}}">3</a>
+  		<a href="{{ url_for('update_product', product_id=item.product_id, quantity=4)}}">4</a>
+  		<a href="{{ url_for('update_product', product_id=item.product_id, quantity=5)}}">5</a>
+    </div>
+  </div>
   {% else %}
     <li><em>There's nothing in your cart.</em>
   {% endfor %}
   </ul>
   Total price: {{total}} CNY
+  <a class="clear" href="{{ url_for('clear_cart')}}">Clear cart</a>.
   <a class="pay" href="{{ url_for('pay')}}">Pay for items</a>.
 {% endblock %}
