@@ -300,6 +300,7 @@ def charge():
 
 @app.route('/search', methods=['POST'])
 def search():
+    print("here")
     return redirect(url_for('search_results', query=request.form['search']))
 
 @app.route('/search_results/<query>')

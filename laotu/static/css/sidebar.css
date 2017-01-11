@@ -130,7 +130,7 @@
 }
 
 .sidebar-nav > .sidebar-brand {
-    height: 65px;
+    height: 60px;
     font-size: 24px;
     line-height: 60px;
 }
@@ -143,6 +143,60 @@
     color: #fff;
     background: none;
 }
+
+/* search bar */
+.searchbar-wrapper {
+    width: 150px;
+    height: 37px;
+    padding-left: 20px;
+    vertical-align: middle;
+    white-space: nowrap;
+    position: relative;
+}
+
+.searchbar-wrapper input#search {
+    width: 150px;
+    height: 30px;
+    padding-left: 25px;
+    
+    font-size: 12pt;
+
+    background-color: #8cbe5b;
+    color: #fff;
+
+    border: none;
+    /*-webkit-border-radius: 5px;*/
+    /*-moz-border-radius: 5px;*/
+    border-radius: 5px;
+}
+
+/*
+.searchbar-wrapper input#search::-webkit-input-placeholder {
+    color: #fff;
+}
+
+.searchbar-wrapper input#search:-moz-placeholder {
+    color: #fff;
+}
+
+.searchbar-wrapper input#search::-moz-placeholder {
+    color: #fff;
+}
+
+.searchbar-wrapper input#search:-ms-input-placeholder {
+    color: #fff;
+}
+*/
+
+.searchbar-wrapper .icon {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 5px;
+    z-index: 1;
+    color: #fff;
+}
+
+
 
 /* small devices */
 @media only screen and (max-device-width: 480px) {
