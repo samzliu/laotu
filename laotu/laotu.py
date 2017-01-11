@@ -244,17 +244,16 @@ def remove_product(product_id):
     return redirect(url_for('get_cart'))
 
 
-@app.route('/clear_cart', methods=['POST'])
+@app.route('/clear_cart')
 def clear_cart():
-    """Removes a product from cart"""
+    """Clears everything from cart"""
     if 'user_id' not in session:
         flash('You need to sign in first to access this functionality')
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''delete from cart where user_id = ?''', (session['user_id']))
-        db.commit()
-        flash('The cart has been cleared')
+    db = get_db()
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    flash('The cart has been cleared')
     return redirect(url_for('get_cart'))
 
 @app.route('/update_product', methods=['POST'])
