@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}
+    Search results
+{% endblock %}
+{% block header %}
+    {{ self.title() }}
+{% endblock %}
+{% block main %}
+    <ul class="results">
+    {% for result in results %}
+        <li><em>{{ result.title }}</em>
+    {% else %}
+        <li><em>No search results found.</em>
+    {% endfor %}
+    </ul>
+{% endblock %}
