@@ -231,17 +231,17 @@ def get_cart():
 
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):
-    """Adds a product to the cart."""
+    """Removes a product to the cart."""
     if 'user_id' not in session:
         flash('You need to sign in first to access this functionality')
         return render_template('login.html')
     if product_id is None:
         abort(404)
     db = get_db()
-    ddb.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
+    db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],product_id))
     db.commit()
     flash('The product has been removed from cart.')
-    return redirect(url_for('cart'))
+    return redirect(url_for('get_cart'))
 
 
 @app.route('/clear_cart', methods=['POST'])
@@ -255,7 +255,7 @@ def clear_cart():
         db.execute('''delete from cart where user_id = ?''', (session['user_id']))
         db.commit()
         flash('The cart has been cleared')
-    return redirect(url_for('cart'))
+    return redirect(url_for('get_cart'))
 
 @app.route('/update_product', methods=['POST'])
 def update_cart():
@@ -267,7 +267,7 @@ def update_cart():
         db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
         db.commit()
         flash('The cart has been updated')
-    return redirect(url_for('cart'))
+    return redirect(url_for('get_cart'))
 
 
 @app.route('/pay')
