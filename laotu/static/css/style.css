@@ -12,12 +12,47 @@ body {
 }
 
 div.product {
-    width: 320px; 
-    height: 100px; 
-    border: 5px solid gray; 
+    width: 600px; 
+    height: 150px; 
+    border: 1px #77AA44; 
     margin: 10px; 
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: rgba(119,170,68,0.6);
     transition: 0.3s;
+}
+
+div.product_main {
+    height: 300px; 
+    width: 700px; 
+}
+
+div.product_main div.pic {
+    height: 250px; 
+    width: 300px; 
+    position: absolute; 
+    left: 50px; 
+    top: 90px;
+}
+
+div.product_main div.title {
+    position: absolute; 
+    width: 100px;  
+    height: 270px;
+    left: 370px; 
+    top: 80px;
+    padding: 10px
+}
+
+h1 {
+    font-size: 23px;
+}
+
+h2 {
+    font-size: 17px;
+}
+
+div.product_description {
+    background-color: rgba(119,170,68,0.4);
 }
 
 /*a {

@@ -2,10 +2,16 @@
 {% block main %}
   All the products!
   {% for product in products %}
-    <div class="product" onclick="handleProductClick('{{ url_for('show_product', product_id=product.product_id)}}')">
-      <div style="height: 30px; font-size: 14px;">
+    <div class="product" onclick="handleButtonClick('{{ url_for('show_product', product_id=product.product_id)}}')">
+      <div style="position: absolute; width: 150px; height: 150px; background-color: white">
+        <!-- Image goes here -->
+        <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%">
+      </div>
+      <div style="height: 30px; font-size: 14px; position:absolute; left: 200px; float: right">
         <h1>{{ product.title }}</h1>
-        <h2 style="font-size: 15px;">${{ product.price }}</h2>
+        <div style="position: absolute; top: 90px; left: 250px">
+          <h2>${{ product.price }}</h2>
+        </div>
       </div>
     </div> 
   {% else %}
