@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}
+    Categories
+{% endblock %}
+{% block header %}
+    {{ self.title() }}
+{% endblock %}
+{% block main %}
+    {% if categories %}
+        <em>Product categories:</em>    
+        <ul class="categories">
+    {% for category in categories %}
+        <li><em><a href={{ url_for('category', category=category.category) }}>{{ category.category }}</a></em>
+    {% endfor %}
+        </ul>
+    {% else %}
+        <em>No categories found, try again later</em>
+    {% endif %}
+{% endblock %}

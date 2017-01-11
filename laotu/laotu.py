@@ -235,12 +235,12 @@ def show_products_list():
 
 @app.route('/<int:product_id>')
 def show_product(product_id):
-    product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
-    producer = query_db('select * from producer where producer.producer_id = ?', str(product['producer_id']), one=True)
+    product = query_db('select * from product where product_id = ?', [product_id], one=True)
+    producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
     return render_template('product.html', product=product, producer=producer)
 
-@app.route('/<int:product_id>/add_product')
-def add_product(product_id):
+@app.route('/<int:product_id>/<int:quantity>/add_product')
+def add_product(product_id, quantity=1):
     """Adds a product to the cart."""
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
@@ -248,12 +248,10 @@ def add_product(product_id):
     if product_id is None:
         abort(404)
     db = get_db()
-    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, 1))
+    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
     db.commit()
     flash(FLASH_CARTED)
     return redirect(url_for('show_products_list'))
-
-
 
 @app.route('/cart')
 def get_cart():
@@ -261,47 +259,47 @@ def get_cart():
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
-    return render_template('cart.html', items=query_db('''
-       select product_id, quantity from cart where user_id = ?''',
-        [session['user_id']]))
+    items=query_db('''select cart.product_id, cart.quantity, product.title from cart \
+    join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
+    return render_template('cart.html', items=items)
 
-@app.route('/remove_product', methods=['POST'])
-def remove_from_cart():
-    """Removes a product from cart"""
+@app.route('/<int:product_id>/remove_product')
+def remove_product(product_id):
+    """Removes a product to the cart."""
     if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
-        db.commit()
-        flash(FLASH_UNCARTED)
-    return redirect(url_for('cart'))
+    if product_id is None:
+        abort(404)
+    db = get_db()
+    db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],product_id))
+    db.commit()
+    flash('The product has been removed from cart.')
+    return redirect(url_for('get_cart'))
 
-@app.route('/clear_cart', methods=['POST'])
+@app.route('/clear_cart')
 def clear_cart():
-    """Removes a product from cart"""
+    """Clears everything from cart"""
     if 'user_id' not in session:
-        flash('You need to sign in first to access this functionality')
+        flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''delete from cart where user_id = ?''', (session['user_id']))
-        db.commit()
-        flash(FLASH_CLEARED)
-    return redirect(url_for('cart'))
+    db = get_db()
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    flash('The cart has been cleared')
+    return redirect(url_for('get_cart'))
 
-@app.route('/update_product', methods=['POST'])
-def update_cart():
+@app.route('/<int:product_id>/<int:quantity>/update_product')
+def update_product(product_id, quantity):
     """Updates a product from cart"""
     if 'user_id' not in session:
+        flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
-        db.commit()
-        flash(FLASH_UPDATED)
-    return redirect(url_for('cart'))
+    db = get_db()
+    db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (quantity,session['user_id'], product_id))
+    db.commit()
+    flash('The cart has been updated')
+    return redirect(url_for('get_cart'))
 
 
 @app.route('/pay')
@@ -335,13 +333,22 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    print query
-    products = query_db("""select * from product where title like ?""", 
-        ('%' + query + '%',))
-        
+    products = query_db("""select * from product where title like ? or description like ?""",
+        ('%' + query + '%', '%' + query + '%'))
     results = products # this will be more general later
-    print(products)
-    return render_template('search_results.html', results=results)
+    return render_template('search_results.html', results=results, query=query)
+
+
+@app.route('/categories')
+def categories():
+    categories = query_db("""select distinct category from product""")
+    return render_template('categories.html', categories=categories)
+
+@app.route('/category/<category>')
+def category(category):
+    products = query_db("""select * from product where category like ?""", (category,))
+    return render_template('category.html', category=category, product=products)
+
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime

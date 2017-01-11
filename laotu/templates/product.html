@@ -1,18 +1,29 @@
 {% extends "layout.html" %}
 {% block main %}
-	<div class="product_title">
+	<div class="product_main" style="border: 5px solid grey; height: 300px">
+		<div class="pic" style="border: 5px solid grey; height: 50px">
+
+		</div>
 		<h1>{{product.title}}</h1>
 	</div>
 
-	<a class="add_product" href="{{ url_for('add_product', product_id=product.product_id)
-	}}">Add product to cart</a>.
-	<a href="{{ url_for('get_cart')}}">Go to cart</a>	
+	<div class="dropdown">
+  <button onclick="dropDownQuantity()" class="dropbtn">Add product to cart</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="{{ url_for('add_product', product_id=product.product_id, quantity=1)}}">1</a>
+    <a href="{{ url_for('add_product', product_id=product.product_id, quantity=2)}}">2</a>
+    <a href="{{ url_for('add_product', product_id=product.product_id, quantity=3)}}">3</a>
+		<a href="{{ url_for('add_product', product_id=product.product_id, quantity=4)}}">4</a>
+		<a href="{{ url_for('add_product', product_id=product.product_id, quantity=5)}}">5</a>
+  </div>
+</div>
+	<a href="{{ url_for('get_cart')}}">Go to cart</a>
 	<div class="description">
 		<h2>Description</h2>
 		Farmer: {{producer.user_name}}<br>
 		Location: {{product.location}}<br>
 		<br>
-		{{product.description}}
+		Desription: {{product.description}}
 	</div>
 	<div class="producer">
 		<h2 style="font-size: 15px;">Click here to meet your farmer</h2>
