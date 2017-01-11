@@ -13,7 +13,7 @@ create table producer (
     producer_id integer primary key autoincrement,
     user_name text not null,
     email text,
-    pw_hash text not null,
+    pw_hash text,
     location text
 );
 
