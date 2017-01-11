@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}
+    Category page
+{% endblock %}
+{% block header %}
+    {{ self.title() }}
+{% endblock %}
+{% block main %}
+    {% if category %}
+        <em>Products in category "{{ category }}":</em>
+    {% else %}
+        <em>No category "{{ category }}"</em>
+    {% endif %}
+
+    {% if product %}
+        <ul class="category-products">
+        {% for p in product %}
+            <li><em>{{ p.title }}</em> 
+        {% endfor %} 
+        </ul>
+    {% else %}
+        <em>No products found.</em>
+    {% endif %}
+{% endblock %}
