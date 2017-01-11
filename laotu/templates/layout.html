@@ -1,13 +1,22 @@
 <!DOCTYPE html><html lang="en">
 
+<!-- General (layout.html) -->
+{% set welcome    = "Welcome" %}
+{% set about      = "About" %}
+{% set products   = "Products" %}
+{% set stories    = "Stories" %}
+{% set cart       = "Cart" %}
+{% set categories = "Categories" %}
+{% set signout    = "Sign Out" %}
+{% set signup     = "Sign Up" %}
+{% set signin     = "Sign In" %}
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>{% block title %}Welcome{% endblock %} | LaoTu</title>
 
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
 
@@ -19,9 +28,11 @@
     <!-- Search icon -->
     <link href="{{ url_for('static', filename='css/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet">
 
-    <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
-    <!--script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script-->
-    <!-- React.JS -->
+   <title>{% block title %}{{ welcome }}{% endblock %} | LaoTu</title>
+
+   <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
+   <!--script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script-->
+   <!-- React.JS -->
 </head>
 
 <body>
@@ -45,13 +56,12 @@
                     </div>
 
 
-                    <li><a href="{{ url_for('about') }}">About</a></li>
-                    <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
-                    <li><a href="">Stories</a></li>
-                    <li><a href="{{ url_for('get_cart')}}">Cart</a></li>
-                    <li><a href="{{ url_for('categories') }}">Categories</a></li>
-                    <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
-
+                    <li><a href="{{ url_for('about') }}">{{ about }}</a></li>
+                    <li><a href="{{ url_for('show_products_list') }}">{{ products }}</a></li>
+                    <li><a href="">{{ stories }}</a></li>
+                    <li><a href="{{ url_for('get_cart')}}">{{ cart }}</a></li>
+                    <li><a href="{{ url_for('categories') }}">{{ categories }}</a></li>
+                    <li><a href="{{ url_for('logout') }}">{{ signout }} [{{ g.user['name'] }}]</a></li>
                 </ul>
 
 
@@ -71,11 +81,11 @@
                         </form>
                     </div>
 
-                    <li><a href="{{ url_for('about') }}">About</a></li>
-                    <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
-                    <li><a href="{{ url_for('categories') }}">Categories</a></li>
-                    <li><a href="{{ url_for('register') }}">Sign Up</a></li>
-                    <li><a href="{{ url_for('login') }}">Sign In</a></li>
+                    <li><a href="{{ url_for('about') }}">{{ about }}</a></li>
+                    <li><a href="{{ url_for('show_products_list') }}">{{ products }}</a></li>
+                    <li><a href="{{ url_for('categories') }}">{{ categories }}</a></li>
+                    <li><a href="{{ url_for('register') }}">{{ signup }}</a></li>
+                    <li><a href="{{ url_for('login') }}">{{ signin }}</a></li>
                 </ul>
                 {% endif %}
             </div>
