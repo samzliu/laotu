@@ -1,11 +1,14 @@
 {% extends "layout.html" %}
 {% block main %}
-	<div class="product_title">
+	<div class="product_main" style="border: 5px solid grey; height: 300px">
+		<div class="pic" style="border: 5px solid grey; height: 50px">
+
+		</div>
 		<h1>{{product.title}}</h1>
+		<a class="add_product" href="{{ url_for('add_product', product_id=product.product_id)
+	}}">Add product to cart</a>
 	</div>
 
-	<a class="add_product" href="{{ url_for('add_product', product_id=product.product_id)
-	}}">Add product to cart</a>.
 	<a href="{{ url_for('get_cart')}}">Go to cart</a>	
 	<div class="description">
 		<h2>Description</h2>

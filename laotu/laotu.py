@@ -125,12 +125,6 @@ blog -> external interface...
 
 """
 
-@app.route('/products')
-def products():
-    """Displays the products."""
-    return render_template('products.html')
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Logs the user in."""
