@@ -45,6 +45,7 @@ drop table if exists cart;
 create table cart (
     user_id integer not null references user(user_id),
     product_id integer not null references product(product_id),
+    title text not null,
     quantity integer not null,
     PRIMARY KEY (user_id, product_id)
 );
