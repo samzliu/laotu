@@ -2,7 +2,7 @@
 {% block main %}
   <ul class="cart items">
   {% for item in items %}
-    <li>{{item.title}} <a class="remove_product" href="{{ url_for('remove_product', product_id=item.product_id)
+    <li>{{item.title}} {{item.quantity}} <a class="remove_product" href="{{ url_for('remove_product', product_id=item.product_id)
   	}}">Remove product</a>
   {% else %}
     <li><em>There's nothing in your cart.</em>

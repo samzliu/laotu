@@ -208,13 +208,13 @@ def show_product(product_id):
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
     return render_template('product.html', product=product, producer=producer)
 
-@app.route('/<int:product_id>/add_product')
-def add_product(product_id):
+@app.route('/<int:product_id>/<int:quantity>/add_product')
+def add_product(product_id, quantity=1):
     """Adds a product to the cart."""
     if product_id is None:
         abort(404)
     db = get_db()
-    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, 1))
+    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
     db.commit()
     flash('The product has been added to the cart.')
     return redirect(url_for('show_products_list'))
