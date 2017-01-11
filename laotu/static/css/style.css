@@ -26,6 +26,30 @@ div.product {
     transition: 0.3s;
 }
 
+/* general */
+a {
+  color: #EB1936;
+  text-decoration: none;
+}
+
+/**
+ * Footer
+ */
+.panel-footer {
+    position: relative;
+    left: -30px;
+    margin: 10px auto 20px;
+    text-align: center;
+}
+
+.panel-footer p {
+    padding-bottom: 20px;
+}
+
+/*
+ * Products
+ */
+
 div.product_main {
     height: 300px; 
     width: 700px; 
