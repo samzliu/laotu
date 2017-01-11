@@ -52,50 +52,6 @@
     margin-right: -250px;
 }
 
-/* Button */
-
-/**
- * hamburger
- */
-/*
-.btn-hamburger {
-  border: none;
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  outline:none;
-  background: url('assets/menu.png') no-repeat center;
-  width: 50px;
-  height: 50px;
-}*/
-
-/*#btn-hamburger {
-    border: none;
-    outline: none;
-    width: 50px;
-    height: 50px;
-    background: url("{{ url_for('static', filename='images/menu.png') }}") no-repeat center;
-}*/
-
-/* Header Formatting */
-.header-div {
-    position: absolute;
-    z-index: 200;
-    top: 10px;
-}
-
-.header-div-left {
-    left: 10px;
-}
-
-.header-div-right {
-    right: 10px;
-}
-
-.header-div img {
-    height:30px;
-}
-
 /* Sidebar Styles */
 
 .sidebar-nav {
@@ -194,35 +150,6 @@
     margin-top: 5px;
     z-index: 1;
     color: #fff;
-}
-
-
-
-/* small devices */
-@media only screen and (max-device-width: 480px) {
-    .sidebar-nav > .sidebar-brand {
-        font-size: 20px;
-    }
-    
-    .header-div {
-        top: 6px;
-    }
-
-    .header-div-left {
-        left: 6px;
-    }
-
-    .header-div-right {
-        right: 6px;
-    }
-
-    .header-div img {
-        height:25px;
-    }
-
-    .resize-wrapper h2 {
-        font-size: 1.17em;
-    }
 }
 
 /* large devices */
