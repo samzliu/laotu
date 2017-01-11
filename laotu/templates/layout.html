@@ -16,9 +16,10 @@
 
     <meta content="initial-scale=1, width=device-width" name="viewport"/>
 
+    <!-- Search icon -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
     <!-- React.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
 </head>
 
 <body>
@@ -30,9 +31,18 @@
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
                         <a href="{{ url_for('home') }}">
-                            老土LAOTU
+                            老土 LAOTU
                         </a>
                     </li>
+
+                    <div class="searchbar-wrapper">
+                        <span class="icon"><i class="fa fa-search"></i></span>
+                        <form action="/search" method="post">
+                           <input name="search" id="search" placeholder="Search...">
+                        </form>
+                    </div>
+
+
                     <li><a href="{{ url_for('about') }}">About</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
                     <li><a href="">Stories</a></li>
@@ -51,6 +61,13 @@
                             老土LAOTU
                         </a>
                     </li>
+        
+                    <div class="searchbar-wrapper">
+                        <form id="search-form" action="/search" method="post">
+                           <input name="search" placeholder="Search...">
+                        </form>
+                    </div>
+
                     <li><a href="{{ url_for('about') }}">About</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
                     <li><a href="{{ url_for('categories') }}">Categories</a></li>
@@ -60,13 +77,6 @@
                 {% endif %}
             </div>
             <!-- /#sidebar-wrapper -->
-
-            <div id="searchbar-wrapper">
-                <form action="/search" method="post">
-                   <input name="search" placeholder="Search...">
-                </form>
-            </div>
-
             {% if get_flashed_messages() %}
                 <header>
                     <div class="alert alert-info" role="alert">
