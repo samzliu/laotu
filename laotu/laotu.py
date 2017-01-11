@@ -14,7 +14,7 @@ from werkzeug import check_password_hash, generate_password_hash
 import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
-from flaskext.uploads import (UploadSet, configure_uploads, IMAGES,
+from flask.ext.uploads import (UploadSet, configure_uploads, IMAGES,
                               UploadNotAllowed)
 
 # configuration
@@ -333,6 +333,9 @@ def show_product(product_id):
 @app.route('/<int:product_id>/add_product')
 def add_product(product_id):
     """Adds a product to the cart."""
+    if not g.user:
+        flash('You need to sign in first to access this functionality')
+        return redirect(url_for('register'))
     if product_id is None:
         abort(404)
     db = get_db()
