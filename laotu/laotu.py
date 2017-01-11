@@ -131,7 +131,7 @@ def products():
     return render_template('products.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST']) 
 def login():
     """Logs the user in."""
     if g.user:
@@ -300,13 +300,24 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    print query
     products = query_db("""select * from product where title like ?""", 
         ('%' + query + '%',))
         
     results = products # this will be more general later
-    print(products)
-    return render_template('search_results.html', results=results)
+    return render_template('search_results.html', results=results, query=query)
+
+
+@app.route('/categories')
+def categories():
+    categories = query_db("""select distinct category from product""")
+    print categories
+    return render_template('categories.html', categories=categories)
+
+@app.route('/category/<category>')
+def category(category):
+    products = query_db("""select * from product where category like ?""", (category,))
+    return render_template('category.html', category=category, product=products) 
+    
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
