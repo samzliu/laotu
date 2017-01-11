@@ -53,6 +53,7 @@ h2 {
 
 div.product_description {
     background-color: rgba(119,170,68,0.4);
+    width: 700px;
 }
 
 /*a {
