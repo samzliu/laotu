@@ -12,12 +12,12 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
 
     <!-- Custom CSS -->
-    <link href="{{url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
 
     <meta content="initial-scale=1, width=device-width" name="viewport"/>
 
     <!-- Search icon -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet">
 
     <!-- React.JS -->
 </head>
@@ -38,14 +38,13 @@
                     <div class="searchbar-wrapper">
                         <span class="icon"><i class="fa fa-search"></i></span>
                         <form action="/search" method="post">
-                           <input name="search" id="search" placeholder="Search...">
+                           <input id="search" name="search" placeholder="Search...">
                         </form>
                     </div>
 
 
                     <li><a href="{{ url_for('about') }}">About</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
-                    <li><a href="{{ url_for('get_cart') }}">Cart</a></li>
                     <li><a href="{{ url_for('categories') }}">Categories</a></li>
                     <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
                 </ul>
@@ -61,8 +60,9 @@
                     </li>
         
                     <div class="searchbar-wrapper">
+                        <span class="icon"><i class="fa fa-search"></i></span>
                         <form id="search-form" action="/search" method="post">
-                           <input name="search" placeholder="Search...">
+                           <input id="search" name="search" placeholder="Search...">
                         </form>
                     </div>
 
