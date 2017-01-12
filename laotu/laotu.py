@@ -228,8 +228,9 @@ def about():
 
 @app.route('/products_list')
 def show_products_list():
-    return render_template('products_list.html', products=query_db('''
-    select * from product'''))
+    products = query_db('''select * from product''')
+    print products[0]['product_id']
+    return render_template('products_list.html', products=products)
 
 
 @app.route('/products_list/<category>')
