@@ -19,8 +19,8 @@ import re
 from strings import *
 
 # configuration
-DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-#DATABASE = '/tmp/laotu.db'
+#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
 #DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
@@ -150,19 +150,22 @@ def login():
     if g.user:
         return redirect(url_for('home'))
     error = None
+    errtype = None
     if request.method == 'POST':
         user = query_db('''select * from user where
             email = ?''', [request.form['email']], one=True)
         if user is None:
             error = ERR_INVALID_EMAIL
+            errtype = "email"
         elif not check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = ERR_INVALID_PWD
+            errtype = "password"
         else:
             flash(FLASH_LOGGED)
             session['user_id'] = user['user_id']
             return redirect(url_for('home'))
-    return render_template('login.html', error=error)
+    return render_template('login.html', error=error, errtype=errtype)
 
 
 @app.route('/register', methods=['GET', 'POST'])
