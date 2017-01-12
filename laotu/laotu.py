@@ -371,10 +371,6 @@ def category(category):
     products = query_db("""select * from product where category like ?""", (category,))
     return render_template('products_list.html', products=products)
 
-@app.route('/stories')
-def stories():
-    return render_template('stories.html')
-
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
 app.jinja_env.filters['gravatar'] = gravatar_url
