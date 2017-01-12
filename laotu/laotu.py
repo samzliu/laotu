@@ -262,9 +262,12 @@ def get_cart():
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
-    items=query_db('''select cart.product_id, cart.quantity, product.title from cart \
+    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price from cart \
     join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
-    return render_template('cart.html', items=items)
+    total = 0
+    for item in items:
+        total += float(item['quantity']) * float(item['price'])/float(100)
+    return render_template('cart.html', items=items, total=total)
 
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):

@@ -3,26 +3,40 @@
 
 {% block header %}Cart{% endblock %}
 {% block main %}
-  <ul class="cart items">
+  <a style="position:absolute; left: 700px" class="clear" href="{{ url_for('clear_cart')}}">Clear cart</a>
   {% for item in items %}
-    <li>{{item.title}} {{item.quantity}}
-      <a class="remove_product" href="{{ url_for('remove_product', product_id=item.product_id)}}">Remove product</a>
-
-    <div class="dropdown">
-    <button onclick="dropDownQuantity()" class="dropbtn">Update product (e.g. change quantity)</button>
-    <div id="myDropdown" class="dropdown-content">
-      <a href="{{ url_for('update_product', product_id=item.product_id, quantity=1)}}">1</a>
-      <a href="{{ url_for('update_product', product_id=item.product_id, quantity=2)}}">2</a>
-      <a href="{{ url_for('update_product', product_id=item.product_id, quantity=3)}}">3</a>
-  		<a href="{{ url_for('update_product', product_id=item.product_id, quantity=4)}}">4</a>
-  		<a href="{{ url_for('update_product', product_id=item.product_id, quantity=5)}}">5</a>
+    <div class="product" onclick="handleButtonClick('{{ url_for('show_product', product_id=item.product_id)}}')">
+      <div style="position: absolute; width: 150px; height: 150px; background-color: white">
+        <!-- Image goes here -->
+        <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%">
+      </div>
+      <div style="height: 30px; font-size: 14px; position:absolute; left: 220px; float: right; width: 450px; height: 150px;">
+        <h1>{{ item.title }}</h1>
+        <div style="position: absolute; top: 100px; left: 10px; width: 370px">
+          <h2>Quantity: {{item.quantity }} &emsp; Price: {{ item.price/100 }} &emsp; You Pay: &#165 {{ item.price/100 * item.quantity }}</h2>
+        </div>
+      </div>
+    </div>
+    <div style="position: relative; left: 10px">
+      <button onclick="handleButtonClick('{{ url_for('remove_product', product_id=item.product_id)}}')" class="dropbtn">Remove Product</button>
+      <div class="dropdown">
+      <button onclick="dropDownQuantity()" class="dropbtn">Update Product (e.g. change quantity)</button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="{{ url_for('update_product', product_id=item.product_id, quantity=1)}}">1</a>
+        <a href="{{ url_for('update_product', product_id=item.product_id, quantity=2)}}">2</a>
+        <a href="{{ url_for('update_product', product_id=item.product_id, quantity=3)}}">3</a>
+    		<a href="{{ url_for('update_product', product_id=item.product_id, quantity=4)}}">4</a>
+    		<a href="{{ url_for('update_product', product_id=item.product_id, quantity=5)}}">5</a>
+      </div>
     </div>
   </div>
   {% else %}
-    <li><em>There's nothing in your cart.</em>
+    <em>There's nothing in your cart.</em>
   {% endfor %}
-  </ul>
-  Total price: {{total}} CNY
-  <a class="clear" href="{{ url_for('clear_cart')}}">Clear cart</a>.
-  <a class="pay" href="{{ url_for('pay')}}">Pay for items</a>.
+  <div style="position:relative; top: 20px">
+    <button class="dropbtn" onclick="handleButtonClick('{{ url_for('pay')}}')" style="position:relative; left: 10px; width: 800px; height: 100px; padding:0px">
+      <h1>Total Price: {{total}} CNY</h1>
+      <h1>Pay For Items</h1>
+    </button>
+  </div>
 {% endblock %}
