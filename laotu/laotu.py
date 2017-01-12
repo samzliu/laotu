@@ -44,9 +44,8 @@ stripe.api_key = stripe_keys['secret_key']
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-    tables = ['user', 'producer', 'product', 'trans'], title = 'Admin Page', h1 = 'Admin Page')
-app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE)
+app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
 
 upload_photos = UploadSet('photos', IMAGES)
 configure_uploads(app, upload_photos)
