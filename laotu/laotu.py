@@ -231,6 +231,11 @@ def show_products_list():
     return render_template('products_list.html', products=query_db('''
     select * from product'''))
 
+@app.route('/products_list/<category>')
+def show_products_list_category(category):
+    return render_template('products_list.html', products=query_db('''
+        select * from product where category = ?''', (category, )))
+
 @app.route('/<int:product_id>')
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
