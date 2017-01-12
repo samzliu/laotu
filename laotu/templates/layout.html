@@ -28,11 +28,10 @@
     <!-- Search icon -->
     <link href="{{ url_for('static', filename='css/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet">
 
-   <title>{% block title %}{{ welcome }}{% endblock %} | LaoTu</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script>
 
-   <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
-   <!--script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script-->
-   <!-- React.JS -->
+    <title>{% block title %}{{ welcome }}{% endblock %} | LaoTu</title>
 </head>
 
 <body>
@@ -51,7 +50,7 @@
                     <div class="searchbar-wrapper">
                         <span class="icon"><i class="fa fa-search"></i></span>
                         <form action="/search" method="post">
-                           <input id="search" name="search" placeholder="Search...">
+                           <input id="search" name="search" placeholder="Search products...">
                         </form>
                     </div>
 
@@ -77,7 +76,7 @@
                     <div class="searchbar-wrapper">
                         <span class="icon"><i class="fa fa-search"></i></span>
                         <form id="search-form" action="/search" method="post">
-                           <input id="search" name="search" placeholder="Search...">
+                           <input id="search" name="search" placeholder="Search products...">
                         </form>
                     </div>
 

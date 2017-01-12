@@ -150,19 +150,23 @@ def login():
     if g.user:
         return redirect(url_for('home'))
     error = None
+    errtype = None
     if request.method == 'POST':
         user = query_db('''select * from user where
             email = ?''', [request.form['email']], one=True)
         if user is None:
             error = ERR_INVALID_EMAIL
+            errtype = 'email'
         elif not check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = ERR_INVALID_PWD
+            errtype = 'password'
         else:
             flash(FLASH_LOGGED)
             session['user_id'] = user['user_id']
             return redirect(url_for('home'))
-    return render_template('login.html', error=error)
+    print(errtype)
+    return render_template('login.html', error=error, errtype=errtype)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -262,11 +266,13 @@ def add_product(product_id, quantity=1):
 def get_cart():
     """Displays cart"""
     if not g.user:
-        flash(FLASH_SIGNIN_NEEDED)
-        return redirect(url_for('register'))
-    items=query_db('''select cart.product_id, cart.quantity, product.title from cart \
+        flash('You need to sign in first to access this functionality')
+        return render_template('login.html')
+    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price from cart \
     join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
-    return render_template('cart.html', items=items)
+    amount = query_db('''select sum(product.price*cart.quantity)
+    from cart join product on cart.product_id=product.product_id''', one=True)[0]
+    return render_template('cart.html', items=items, amount=amount)
 
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):
@@ -309,16 +315,16 @@ def update_product(product_id, quantity):
 
 @app.route('/pay')
 def pay():
-    # change amount here
-    amount = query_db('select sum(price) from cart', one=True)[0]
-    print amount
-    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
+    amount = query_db('''select sum(product.price*cart.quantity)
+    from cart join product on cart.product_id=product.product_id''', one=True)[0]
+    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount)
 
 @app.route('/charge', methods=['POST'])
 def charge():
     # ideally, want to just keep this variable from the pay function
     # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
-    amount = query_db('select sum(price) from cart', one=True)[0]*100
+    amount = query_db('''select sum(product.price*cart.quantity)
+    from cart join product on cart.product_id=product.product_id''', one=True)[0]*100
 
     try:
       charge = stripe.Charge.create(
