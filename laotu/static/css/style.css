@@ -16,11 +16,16 @@ body {
     }
 }
 
-div.product {
+div.product_container {
+    position: relative; 
+    margin: 1rem auto;
+}
+
+div.productlist {
     width: 600px; 
     height: 150px; 
     border: 1px #77AA44; 
-    margin: 10px; 
+    margin: 1rem auto;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: rgba(119,170,68,0.6);
     transition: 0.3s;
@@ -28,24 +33,65 @@ div.product {
 
 div.product_main {
     height: 300px; 
-    width: 700px; 
+    width: 90%;/*700px;*/ 
+    position: relative; 
+    margin: 1rem auto;
 }
 
 div.product_main div.pic {
-    height: 250px; 
-    width: 300px; 
     position: absolute; 
-    left: 50px; 
-    top: 90px;
+    height: 100%; 
+    width: 40%; 
+    left: 0px; 
+    top: 0px;
 }
 
 div.product_main div.title {
     position: absolute; 
-    width: 100px;  
-    height: 270px;
-    left: 370px; 
-    top: 80px;
-    padding: 10px
+    width: 58%;  
+    height: 100%;
+    left: 40%; 
+    top: 0px;
+    padding-left: 2%;
+}
+
+div.product_description {
+    background-color: rgba(119,170,68,0.4);
+    position: relative; 
+    margin: 1rem auto;
+    width: 90%;
+    top: 0px;
+}
+
+div.productlist div.pic {
+    position: relative; 
+    right: 230px;
+    width: 150px; 
+    height: 150px; 
+    margin: 1rem auto;
+    background-color: white
+}
+
+div.productlist div.title {
+    position: relative; 
+    height: 30px; 
+    font-size: 14px; 
+    right: 370px; 
+    bottom: 180px;
+    margin: 1rem auto;
+    float: right
+}
+
+div.category {
+    height: 50px; 
+    width: 40%; 
+    position: relative; 
+    margin: 1rem auto; 
+    background-color: rgba(119,170,68,0.6);
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: rgba(119,170,68,0.6);
+    transition: 0.3s;
 }
 
 h1 {
@@ -56,10 +102,6 @@ h2 {
     font-size: 17px;
 }
 
-div.product_description {
-    background-color: rgba(119,170,68,0.4);
-    width: 700px;
-}
 
 /*a {
     color: #26776F;
@@ -218,6 +260,7 @@ ul.flashes li {
 .dropdown-content {
     display: none;
     position: absolute;
+    z-index: 1;
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);

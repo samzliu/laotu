@@ -1,21 +1,23 @@
 {% extends "layout.html" %}
 {% block main %}
   All the products! Click for more information and to add product to cart.
+  <div style="width: 150px; position:relative; left: 250px; margin: 1rem auto;">
+    <h1><a href="{{ url_for('get_cart')}}">Go to cart</a></h1>
+  </div>
   {% for product in products %}
-    <div class="product" onclick="handleButtonClick('{{ url_for('show_product', product_id=product.product_id)}}')">
-      <div style="position: absolute; width: 150px; height: 150px; background-color: white">
+    <div class="productlist" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
+      <div class="pic">
         <!-- Image goes here -->
         <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%">
       </div>
-      <div style="height: 30px; font-size: 14px; position:absolute; left: 200px; float: right">
+      <div class="title">
         <h1>{{ product.title }}</h1>
-        <div style="position: absolute; top: 90px; left: 250px">
-          <h2>&#165 {{ product.price/100 }}</h2>
+        <div style="position: absolute; width: 190px; top: 75%; left: 60%;">
+          <h2 style="font-size: 20px">&#165 {{ product.price/100 }}</h2>
         </div>
       </div>
     </div>
   {% else %}
     <em>There are no products so far.</em>
   {% endfor %}
-  <a href="{{ url_for('get_cart')}}">Go to cart</a>
 {% endblock %}
