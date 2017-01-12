@@ -1,3 +1,8 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     background: #fff;
     font-family: 'Trebuchet MS', sans-serif;
@@ -101,6 +106,8 @@ input {
 
 .form-text, .form-password {
     background: transparent;
+    position: relative;
+    left: -30px;
     outline: none;
     border: 0 solid;
     border-bottom: 1px solid green;
@@ -109,7 +116,7 @@ input {
     margin: 1rem auto;
     padding: .5rem;
     transition: 250ms background ease-in;
-    width: calc(100% - 3rem);
+    width: 70%; 
     max-width: 460px;
 }
 
@@ -121,6 +128,8 @@ input {
 
 .form-err {
     background: #FAE4E4;
+    position: relative;
+    left: -30px;
     outline: none;
     border: 0 solid;
     border-bottom: 1px solid red;
@@ -129,7 +138,7 @@ input {
     margin: 1rem auto;
     padding: .5rem;
     transition: 250ms background ease-in;
-    width: calc(100% - 3rem);
+    width: 70%; 
     max-width: 460px;
 }
 
@@ -138,6 +147,8 @@ input {
     background: transparent;
     color: green;
     display: block;
+    position: relative;
+    left: -30px;
     width: 50%;
     height: 60px;
     font-size: 22px;
@@ -163,6 +174,7 @@ div.error {
     -webkit-border-radius: 2px;
     padding: 4px;
     font-size: 13px;
+    width: 90%;
 }
 
 ul.flashes {

@@ -212,8 +212,6 @@ def register():
             db.commit()
             flash(FLASH_REGISTERED)
             return redirect(url_for('login'))
-    # if not errtype==None:
-    #     print("ERRTYPE:"+errtype)
     return render_template('register.html', error=error, errtype=errtype)
 
 
