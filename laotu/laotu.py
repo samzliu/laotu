@@ -361,6 +361,12 @@ def category(category):
 def stories():
     return render_template('stories.html')
 
+@app.route('/<int:producer_id>/show_farmer')
+def show_farmer(producer_id):
+    producer_products = query_db('select * from product where producer_id= ?', [producer_id])
+    producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
+    return render_template('farmer.html', producer_products=producer_products, producer=producer)
+
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
 app.jinja_env.filters['gravatar'] = gravatar_url
