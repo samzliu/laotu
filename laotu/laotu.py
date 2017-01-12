@@ -253,11 +253,16 @@ def add_product(product_id, quantity=1):
         return redirect(url_for('register'))
     if product_id is None:
         abort(404)
-    db = get_db()
-    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
-    db.commit()
-    flash(FLASH_CARTED)
-    return redirect(url_for('show_products_list'))
+    elif query_db('select 1 from cart where product_id = ?', [product_id], one=True):
+        flash('''You have already added this product to your cart. \
+        You cannot add a product twice. If you need to change the quantity, please edit your cart.''')
+        return redirect(url_for('show_product', product_id=product_id))
+    else:
+        db = get_db()
+        db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
+        db.commit()
+        flash(FLASH_CARTED)
+        return redirect(url_for('show_products_list'))
 
 @app.route('/cart')
 def get_cart():
