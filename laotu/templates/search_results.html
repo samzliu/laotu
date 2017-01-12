@@ -6,14 +6,11 @@
     {{ self.title() }}
 {% endblock %}
 {% block main %}
-    {% if results %}
-        <em>Search results for "{{ query }}".</em> 
-        <ul class="results">
+    <ul class="results">
     {% for result in results %}
-        <li><em><a href={{ url_for('show_product', product_id=result.product_id) }}>{{ result.title }}</a></em>
-    {% endfor %}
-        </ul>
+        <li><em>{{ result.title }}</em>
     {% else %}
-        <em>No search results found for {{ query }}.</em>
-    {% endif %}
+        <li><em>No search results found.</em>
+    {% endfor %}
+    </ul>
 {% endblock %}
