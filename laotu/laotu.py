@@ -346,7 +346,7 @@ def categories():
 @app.route('/category/<category>')
 def category(category):
     products = query_db("""select * from product where category like ?""", (category,))
-    return render_template('category.html', category=category, product=products)
+    return render_template('products_list.html', products=products)
 
 
 # add some filters to jinja
