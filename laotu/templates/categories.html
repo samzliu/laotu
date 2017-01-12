@@ -10,7 +10,7 @@
         <em>Product categories:</em>    
         <ul class="categories">
     {% for category in categories %}
-        <li><em><a href={{ url_for('category', category=category.category) }}>{{ category.category }}</a></em>
+        <li><em><a href={{ url_for('show_products_list_category', category=category.category) }}>{{ category.category }}</a></em>
     {% endfor %}
         </ul>
     {% else %}

@@ -5,7 +5,7 @@
 {% block main %}
   <ul class="cart items">
   {% for item in items %}
-    <li>{{item.title}} Quantity: {{item.quantity}} Price: {{item.price}}
+    <li>{{item.title}} {{item.quantity}}
       <a class="remove_product" href="{{ url_for('remove_product', product_id=item.product_id)}}">Remove product</a>
 
     <div class="dropdown">
@@ -22,7 +22,7 @@
     <li><em>There's nothing in your cart.</em>
   {% endfor %}
   </ul>
-  Total price: {{amount}} CNY
+  Total price: {{total}} CNY
   <a class="clear" href="{{ url_for('clear_cart')}}">Clear cart</a>.
   <a class="pay" href="{{ url_for('pay')}}">Pay for items</a>.
 {% endblock %}

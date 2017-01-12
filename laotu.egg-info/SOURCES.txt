@@ -12,6 +12,7 @@ laotu.egg-info/top_level.txt
 laotu/static/bootstrap.js
 laotu/static/jquery.js
 laotu/static/products.js
+laotu/static/utility.js
 laotu/static/css/sidebar.css
 laotu/static/css/style.css
 laotu/static/css/font-awesome-4.7.0/HELP-US-OUT.txt
@@ -68,4 +69,3 @@ laotu/templates/product.html
 laotu/templates/products_list.html
 laotu/templates/register.html
 laotu/templates/search_results.html
-laotu/templates/strings.html
