@@ -313,15 +313,13 @@ def update_product(product_id, quantity):
 @app.route('/pay')
 def pay():
     # change amount here
-    amount = query_db('select sum(price) from cart', one=True)[0]
-    print amount
+    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
     return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])
 def charge():
     # ideally, want to just keep this variable from the pay function
-    # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
-    amount = query_db('select sum(price) from cart', one=True)[0]*100
+    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
 
     try:
       charge = stripe.Charge.create(

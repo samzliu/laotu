@@ -3,14 +3,14 @@
   <form action="/charge" method="post">
   <article>
     <label>
-      <span>Checkout button will appear soon </span>
+      <span>Checkout button will appear in a few seconds... </span>
     </label>
   </article>
 
   <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
           data-key="{{ key }}"
           data-description="Complete your purchase with a card or Alipay"
-          data-amount=amount
+          data-amount={{amount}}
           data-locale="auto"
           data-alipay="true"
           data-locale="auto"
