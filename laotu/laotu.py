@@ -14,9 +14,13 @@ from werkzeug import check_password_hash, generate_password_hash
 import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
-import re
 
+from flask.ext.uploads import (UploadSet, configure_uploads, IMAGES,
+                              UploadNotAllowed)
+from werkzeug import secure_filename
+import re
 from strings import *
+
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
@@ -25,6 +29,7 @@ DATABASE = '/tmp/laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 
 # test keys right now
 stripe_keys = {
@@ -35,13 +40,18 @@ stripe_keys = {
 stripe.api_key = stripe_keys['secret_key']
 
 
-# create our little application :)
+# create our little aWpplication :)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
     tables = ['user', 'producer', 'product', 'trans'], title = 'Admin Page', h1 = 'Admin Page')
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+
+upload_photos = UploadSet('photos', IMAGES)
+configure_uploads(app, upload_photos)
+
+
 
 if __name__ == '__main__':
     app.run()
@@ -112,6 +122,7 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
+
 #validation functions
 def isphone(num):
     if re.match("(\d{3}[-\.\s]??\d{4}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{4}[-\.\s]??\d{4}"
@@ -121,29 +132,13 @@ def isphone(num):
     else:
         return True
 
-#pages are below .................................................................
 
 @app.route('/')
 def home():
     """Home page"""
     return render_template('home.html')
 
-
-"""
-Login page
-registration page
-
-Blog homepage
-blog -> external interface...
-
-
-"""
-
-@app.route('/products')
-def products():
-    """Displays the products."""
-    return render_template('products.html')
-
+    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -230,6 +225,25 @@ def logout():
 def about():
     return render_template('about.html')
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        photo = request.files.get('photo')
+        title = request.form.get('title')
+        if not (photo and title):
+            flash("You must fill in all the fields")
+        else:
+            try:
+                filename = upload_photos.save(photo)
+            except UploadNotAllowed:
+                flash("The upload was not allowed")
+            else:
+                #store filename database
+                flash("Upload successful")
+                return redirect(url_for('home'))
+    return render_template('upload.html')   
+
+    
 @app.route('/products_list')
 def show_products_list():
     return render_template('products_list.html', products_list=query_db('''

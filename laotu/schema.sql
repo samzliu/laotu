@@ -27,6 +27,7 @@ create table product (
     location text not null,
     description text not null,
     producer_id integer not null,
+    photo_name text,
     FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
 );
 
