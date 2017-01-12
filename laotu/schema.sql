@@ -13,7 +13,7 @@ create table producer (
     producer_id integer primary key autoincrement,
     user_name text not null,
     email text,
-    pw_hash text not null,
+    pw_hash text,
     location text
 );
 
@@ -27,6 +27,7 @@ create table product (
     location text not null,
     description text not null,
     producer_id integer not null,
+    photo_name text,
     FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
 );
 
@@ -45,7 +46,6 @@ drop table if exists cart;
 create table cart (
     user_id integer not null references user(user_id),
     product_id integer not null references product(product_id),
-    title text not null,
     quantity integer not null,
     PRIMARY KEY (user_id, product_id)
 );
