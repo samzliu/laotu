@@ -2,14 +2,33 @@
 {% block title %}Sign In{% endblock %}
 {% block header %}Sign In{% endblock %}
 {% block main %}
-  	{% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
-  	<form action="" method="post" class="sleek-form">
-    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+	{% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
+	  	<form action="" method="post" class="sleek-form">
+	    	
+	  		{% if errtype=="email" %}
+	    	<input type="text" name="email" class="form-err" value="{{ request.form.email }}" required="true" placeholder="Email">
+	    	{% else %}
+	    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+	    	{% endif %}
 
-	    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+	    	{% if errtype=="password" %}
+		    <input type="password" name="password" class="form-err" value="{{ request.form.email }}" placeholder="Password">
+		    {% else %}
+		    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+		    {% endif %}
 
-    	<input type="submit" name="Login" class="form-submit" value="Sign In">
-	</form>
+	    	<input type="submit" name="Login" class="form-submit" value="Sign In">
+		</form>
+	{% else %}
+		<form action="" method="post" class="sleek-form">
+	    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+
+		    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+
+	    	<input type="submit" name="Login" class="form-submit" value="Sign In">
+		</form>
+	{% endif %}
+
 
 
 	<footer class="panel-footer">
