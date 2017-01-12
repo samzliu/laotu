@@ -14,13 +14,18 @@ from werkzeug import check_password_hash, generate_password_hash
 import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
+
 from flask.ext.uploads import (UploadSet, configure_uploads, IMAGES,
                               UploadNotAllowed)
 from werkzeug import secure_filename
+import re
+from strings import *
+
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
+#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -117,6 +122,16 @@ def before_request():
                           [session['user_id']], one=True)
 
 
+#validation functions
+def isphone(num):
+    if re.match("(\d{3}[-\.\s]??\d{4}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{4}[-\.\s]??\d{4}"
+                "|\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\d{4}[-\.\s]??\d{3}[-\.\s]??\d{4})",
+                num) == None:
+        return False
+    else:
+        return True
+
+
 @app.route('/')
 def home():
     """Home page"""
@@ -130,19 +145,22 @@ def login():
     if g.user:
         return redirect(url_for('home'))
     error = None
+    errtype = None
     if request.method == 'POST':
         user = query_db('''select * from user where
             email = ?''', [request.form['email']], one=True)
         if user is None:
-            error = 'Invalid email'
+            error = ERR_INVALID_EMAIL
+            errtype = "email"
         elif not check_password_hash(user['pw_hash'],
                                      request.form['password']):
-            error = 'Invalid password'
+            error = ERR_INVALID_PWD
+            errtype = "password"
         else:
-            flash('You were logged in')
+            flash(FLASH_LOGGED)
             session['user_id'] = user['user_id']
             return redirect(url_for('home'))
-    return render_template('login.html', error=error)
+    return render_template('login.html', error=error, errtype=errtype)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -151,22 +169,38 @@ def register():
     if g.user:
         return redirect(url_for('home'))
     error = None
+    errtype = None
     if request.method == 'POST':
         if not request.form['name']:
-            error = 'You have to enter a name'
-        elif not request.form['address']:
-            error = 'You have to enter an address'
-        elif not request.form['phone']:
-            error = 'You have to enter a phone number'
-        elif not request.form['email'] or \
-                '@' not in request.form['email']:
-            error = 'You have to enter a valid email address'
+            error = ERR_NO_NAME
+            errtype = 'thename'
+        elif not request.form['email']:
+            error = ERR_NO_EMAIL
+            errtype = 'email'
+        elif '@' not in request.form['email'] or '.' not in request.form['email']:
+            error = ERR_INVALID_EMAIL
+            errtype = 'email'
         elif not request.form['password']:
-            error = 'You have to enter a password'
+            error = ERR_NO_PWD
+            errtype = 'password1'
+        elif not request.form['password2']:
+            error = ERR_NO_PWD
+            errtype = 'password2'
+        elif not request.form['address']:
+            error = ERR_NO_ADDRESS
+            errtype = 'address'
+        elif not request.form['phone']:
+            error = ERR_NO_PHONE
+            errtype = 'phone'
+        elif not isphone(request.form['phone']):
+            error = ERR_INVALID_PHONE
+            errtype = 'phone'
         elif request.form['password'] != request.form['password2']:
-            error = 'The two passwords do not match'
+            error = ERR_MISMATCH
+            errtype = 'password'
         elif get_user_id(request.form['email']) is not None:
-            error = 'The email is already taken'
+            error = ERR_EMAIL_TAKEN
+            errtype = 'email'
         else:
             db = get_db()
             db.execute('''insert into user (
@@ -174,15 +208,15 @@ def register():
               [request.form['email'],
                generate_password_hash(request.form['password']),request.form['name'], request.form['address'], request.form['phone']])
             db.commit()
-            flash('You were successfully registered and can login now')
+            flash(FLASH_REGISTERED)
             return redirect(url_for('login'))
-    return render_template('register.html', error=error)
+    return render_template('register.html', error=error, errtype=errtype)
 
 
 @app.route('/logout')
 def logout():
     """Logs the user out."""
-    flash('You were logged out')
+    flash(FLASH_UNLOGGED)
     session.pop('user_id', None)
     return redirect(url_for('home'))
 
@@ -211,77 +245,84 @@ def upload():
     
 @app.route('/products_list')
 def show_products_list():
-    return render_template('products_list.html', products=query_db('''
+    return render_template('products_list.html', products_list=query_db('''
     select * from product'''))
+
+@app.route('/products_list/<category>')
+def show_products_list_category(category):
+    return render_template('products_list.html', products=query_db('''
+        select * from product where category = ?''', (category, )))
 
 @app.route('/<int:product_id>')
 def show_product(product_id):
-    product = query_db('select * from product where product.product_id = ?', [product_id], one=True)
-    producer = query_db('select * from producer where producer.producer_id = ?', str(product['producer_id']), one=True)
+    product = query_db('select * from product where product_id = ?', [product_id], one=True)
+    producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
     return render_template('product.html', product=product, producer=producer)
 
-@app.route('/<int:product_id>/add_product')
-def add_product(product_id):
+@app.route('/<int:product_id>/<int:quantity>/add_product')
+def add_product(product_id, quantity=1):
     """Adds a product to the cart."""
     if not g.user:
-        flash('You need to sign in first to access this functionality')
+        flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
     if product_id is None:
         abort(404)
     db = get_db()
-    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, 1))
+    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
     db.commit()
-    flash('The product has been added to the cart.')
+    flash(FLASH_CARTED)
     return redirect(url_for('show_products_list'))
 
 @app.route('/cart')
 def get_cart():
     """Displays cart"""
     if not g.user:
-        flash('You need to sign in first to access this functionality')
+        flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
-    return render_template('cart.html', items=query_db('''
-       select product_id, quantity from cart where user_id = ?''',
-        [session['user_id']]))
+    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price from cart \
+    join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
+    total = 0
+    for item in items:
+        total += float(item['quantity']) * float(item['price'])/float(100)
+    return render_template('cart.html', items=items, total=total)
 
-@app.route('/remove_product', methods=['POST'])
-def remove_from_cart():
-    """Removes a product from cart"""
+@app.route('/<int:product_id>/remove_product')
+def remove_product(product_id):
+    """Removes a product to the cart."""
     if 'user_id' not in session:
-        flash('You need to sign in first to access this functionality')
+        flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],session['product_id']))
-        db.commit()
-        flash('The product has been removed from cart.')
-    return redirect(url_for('cart'))
+    if product_id is None:
+        abort(404)
+    db = get_db()
+    db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],product_id))
+    db.commit()
+    flash('The product has been removed from cart.')
+    return redirect(url_for('get_cart'))
 
-@app.route('/clear_cart', methods=['POST'])
+@app.route('/clear_cart')
 def clear_cart():
-    """Removes a product from cart"""
+    """Clears everything from cart"""
     if 'user_id' not in session:
-        flash('You need to sign in first to access this functionality')
+        flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''delete from cart where user_id = ?''', (session['user_id']))
-        db.commit()
-        flash('The cart has been cleared')
-    return redirect(url_for('cart'))
+    db = get_db()
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    flash('The cart has been cleared')
+    return redirect(url_for('get_cart'))
 
-@app.route('/update_product', methods=['POST'])
-def update_cart():
+@app.route('/<int:product_id>/<int:quantity>/update_product')
+def update_product(product_id, quantity):
     """Updates a product from cart"""
     if 'user_id' not in session:
+        flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
-    if request.form['text']:
-        db = get_db()
-        db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (session['quantity'],session['user_id'],session['product_id']))
-        db.commit()
-        flash('The cart has been updated')
-    return redirect(url_for('cart'))
-
+    db = get_db()
+    db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (quantity,session['user_id'], product_id))
+    db.commit()
+    flash('The cart has been updated')
+    return redirect(url_for('get_cart'))
 
 @app.route('/pay')
 def pay():
@@ -305,22 +346,34 @@ def charge():
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-      flash('Your purchase was successful.')
+      flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
 @app.route('/search', methods=['POST'])
 def search():
+    print("here")
     return redirect(url_for('search_results', query=request.form['search']))
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    print query
-    products = query_db("""select * from product where title like ?""", 
-        ('%' + query + '%',))
-        
+    products = query_db("""select * from product where title like ? or description like ?""",
+        ('%' + query + '%', '%' + query + '%'))
     results = products # this will be more general later
-    print(products)
-    return render_template('search_results.html', results=results)
+    return render_template('search_results.html', results=results, query=query)
+
+@app.route('/categories')
+def categories():
+    categories = query_db("""select distinct category from product""")
+    return render_template('categories.html', categories=categories)
+
+@app.route('/category/<category>')
+def category(category):
+    products = query_db("""select * from product where category like ?""", (category,))
+    return render_template('products_list.html', products=products)
+
+@app.route('/stories')
+def stories():
+    return render_template('stories.html')
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
