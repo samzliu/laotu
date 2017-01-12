@@ -232,7 +232,7 @@ def about():
 
 @app.route('/products_list')
 def show_products_list():
-    return render_template('products_list.html', products=query_db('''
+    return render_template('products_list.html', products_list=query_db('''
     select * from product'''))
 
 @app.route('/<int:product_id>')
@@ -305,7 +305,6 @@ def update_product(product_id, quantity):
     flash('The cart has been updated')
     return redirect(url_for('get_cart'))
 
-
 @app.route('/pay')
 def pay():
     amount = query_db('''select sum(product.price*cart.quantity)
@@ -343,7 +342,6 @@ def search_results(query):
     results = products # this will be more general later
     return render_template('search_results.html', results=results, query=query)
 
-
 @app.route('/categories')
 def categories():
     categories = query_db("""select distinct category from product""")
@@ -353,7 +351,6 @@ def categories():
 def category(category):
     products = query_db("""select * from product where category like ?""", (category,))
     return render_template('category.html', category=category, product=products)
-
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime

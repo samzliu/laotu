@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block main %}
-  All the products! Click for more information and to add product to cart.
-  {% for product in products %}
+  All the products! Click for more information and to add product to  cart.
+  {% for product in products_list %}
     <div class="product" onclick="handleButtonClick('{{ url_for('show_product', product_id=product.product_id)}}')">
       <div style="position: absolute; width: 150px; height: 150px; background-color: white">
         <!-- Image goes here -->
