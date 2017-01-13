@@ -20,8 +20,6 @@
           <h2 style="font-size: 20px; text-orientation: right">&#165 {{ product.price/100 }}</h2>
         </div>
       </div>
-    {% endfor %}
-    <footer class="panel-footer"><a href="{{ url_for('get_cart')}}">Go to cart</a></footer>
   {% else %}
     <em>There are no products so far.</em>
   {% endfor %}
