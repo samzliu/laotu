@@ -19,8 +19,8 @@ import re
 from strings import *
 
 # configuration
-#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
 #DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
@@ -237,7 +237,7 @@ def show_products_list():
 
 @app.route('/products_list/<category>')
 def show_products_list_category(category):
-    return render_template('products_list.html', products=query_db('''
+    return render_template('products_list.html', products_list=query_db('''
         select * from product where category = ?''', (category, )))
 
 @app.route('/<int:product_id>')
@@ -358,8 +358,8 @@ def categories():
 
 @app.route('/category/<category>')
 def category(category):
-    products = query_db("""select * from product where category like ?""", (category,))
-    return render_template('products_list.html', products=products)
+    products_list = query_db("""select * from product where category like ?""", (category,))
+    return render_template('products_list.html', products_list=products_list)
 
 @app.route('/stories')
 def stories():

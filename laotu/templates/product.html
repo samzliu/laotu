@@ -31,7 +31,8 @@
 
 	<div class="product_description">
 		<h1>Farmer: {{producer.user_name}}</h1>
-		Location: {{product.location}}<br>
+		Click <a href="{{ url_for('show_farmer', producer_id=producer.producer_id)}}">here</a> to learn more about {{producer.user_name}}.<br>
+		Location: {{producer.location}}<br>
 		<br>
 		{{product.description}}
 	</div>
