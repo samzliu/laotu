@@ -6,7 +6,7 @@
 	<div class="product_main">
 		<div class="product-image">
 			<!-- Picture goes here -->
-			<img src="{{ url_for('static', filename='images/laotu-logo.png') }}", style="max-width:100%; max-height:100%">
+			<img class="product-img" src="" onload="loadProductPicture({{photos}})" style="max-width:100%; max-height:100%">
 		</div>
 		<div class="product-info">
 			<div class="product-title">
@@ -106,6 +106,10 @@
 			{{ product.standard_price }}
 		</div>
 		{% endif %}
+	</div>
+
+	<div class="story_container">
+		<img class="story-img" src="" onload="loadStoryPicture({{stories}})">
 	</div>
 
 

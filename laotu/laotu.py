@@ -21,14 +21,14 @@ from datetime import datetime
 from strings import *
 
 # configuration
-#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
 #DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
-#UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
-UPLOADED_PHOTOS_DEST = '/tmp/photos'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
+#UPLOADED_PHOTOS_DEST = '/tmp/photos'
 
 # test keys right now
 stripe_keys = {
@@ -235,13 +235,13 @@ def show_products_list_category(category):
     return render_template('products_list.html', products_list=query_db('''
         select * from product where category = ?''', (category, )))
 
-@app.route('/<int:product_id>/<int:photo_index>')
+@app.route('/<int:product_id>')
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
     photos = [product['photo1'], product['photo2'], product['photo3']]
-    standards = [product['stand1'], product['stand2'], product['stand3'], product['stand4']] 
-    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product), photos=photo, photo_index=photo_index, standards=standars, stand_index=stand_index)
+    stories = [product['stand1'], product['stand2'], product['stand3'], product['stand4']] 
+    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product), photos=photo, stories=stories)
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
