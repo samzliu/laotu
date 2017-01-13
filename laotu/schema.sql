@@ -26,6 +26,14 @@ create table product (
     price decimal(7,2) not null,
     description text not null,
     producer_id integer not null,
+    standard_geo text,
+    standard_producer text,
+    standard_raw text,
+    standard_production text,
+    standard_storage text,
+    standard_tech text,
+    standard_package text,
+    standard_price text,
     FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
 );
 
