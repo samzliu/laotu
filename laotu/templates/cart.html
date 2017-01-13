@@ -42,7 +42,7 @@
     <div style="position: relative; left: 10px">
       <button onclick="handleButtonClick('{{ url_for('remove_product', product_id=item.product_id)}}')" class="dropbtn">去掉</button>
       <div class="dropdown">
-      <button onclick="dropDownQuantity()" class="dropbtn">Update Product</button>
+      <button onclick="dropDownQuantity()" class="dropbtn">改写产品</button>
       <div id="myDropdown" class="dropdown-content">
         <a href="{{ url_for('update_product', product_id=item.product_id, quantity=1)}}">1</a>
         <a href="{{ url_for('update_product', product_id=item.product_id, quantity=2)}}">2</a>
@@ -53,14 +53,14 @@
     </div>
   </div>
   {% else %}
-    <em>There's nothing in your cart.</em>
+    <em>没有产品在购物车里。</em>
   {% endfor %}
 
   {% if items %}
   <div style="position: relative; left: 10px">
     <button onclick="handleButtonClick('{{ url_for('pay')}}')" class="dropbtn">
-      <h1>Total Price: {{total}} CNY</h1>
-      <h1>Pay For Items</h1>
+      <h1>总价格: {{total}} 元</h1>
+      <h1>工资</h1>
     </button>
   </div>
   {% endif %}
