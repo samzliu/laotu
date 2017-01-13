@@ -378,17 +378,19 @@ def pay():
     # store the amount the user must pay in the session
     session['amount'] = query_db('''select sum(product.price*cart.quantity) from cart \
                                     join product on cart.product_id=product.product_id''', one=True)[0]
-    # store the transation_ids in the session
-    session['transation_ids'] = transaction_ids
+    # store the transaction_ids in the session
+    session['transaction_ids'] = transaction_ids
     if session['amount'] < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
     return render_template('pay.html', key=stripe_keys['publishable_key'],
-                            amount=session['amount'], transaction_ids=session['transation_ids'])
+                            amount=session['amount'], transaction_ids=session['transaction_ids'])
 
-def undo_hold(purchase):
+def undo_hold():
+    """put products back into product table. Do nothing to the transactions (they remain there as uncomfirmed)"""
     db = get_db()
     for trans_id in session['transaction_ids']:
+        purchase = query_db('select * from trans where trans_id = ?', [trans_id])[0]
         db.execute('''update product set quantity = quantity + ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
     db.commit()
 
@@ -399,44 +401,50 @@ def charge():
             amount=session['amount'], # Amount in cents
             currency="cny",
             source=request.form['stripeToken'])
-    # The account has been declined
+    # for any exception, undo the hold
     except stripe.error.CardError as e:
-        # leave the transactions in the history as unconfirmed (i.e. do nothing to trans table)
-        # add the items on hold back to the product table
-        
-        flash(FLASH_CARD_FAILURE)
+        # The account has been declined
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
     except stripe.error.RateLimitError as e:
         # Too many requests made to the API too quickly
-      pass
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
     except stripe.error.InvalidRequestError as e:
-      # Invalid parameters were supplied to Stripe's API
-      pass
+        # Invalid parameters were supplied to Stripe's API
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
     except stripe.error.AuthenticationError as e:
-      # Authentication with Stripe's API failed
-      # (maybe you changed API keys recently)
-      pass
+        # Authentication with Stripe's API failed
+        # (maybe you changed API keys recently)
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
     except stripe.error.APIConnectionError as e:
-      # Network communication with Stripe failed
-      pass
+        # Network communication with Stripe failed
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
     except stripe.error.StripeError as e:
-      # Display a very generic error to the user, and maybe send
-      # yourself an email
-      pass
+        # Display a very generic error to the user, and maybe send
+        # yourself an email
+        undo_hold()
+        flash(FLASH_ERROR)
     except Exception as e:
-      # Something else happened, completely unrelated to Stripe
-      pass
+        # Something else happened, completely unrelated to Stripe
+        undo_hold()
+        flash(FLASH_CARD_FAILURE)
 
     # if charge successful, then change the transactions to confirmed
-    db = get_db()
-    for trans_id in session['transation_ids']:
-        db.execute('''update trans set confirmed = 1 where trans_id = ?''', [trans_id])
-    # empty the cart
-    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
-    db.commit()
-    # remove the variables amount and transaction_ids from session
-    session.pop('amount', None)
-    session.pop('transaction_ids', None)
-    flash(FLASH_PURCHASE)
+    else:
+        db = get_db()
+        for trans_id in session['transaction_ids']:
+            db.execute('''update trans set confirmed = 1 where trans_id = ?''', [trans_id])
+        # empty the cart
+        db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+        db.commit()
+        # remove the variables amount and transaction_ids from session
+        session.pop('amount', None)
+        session.pop('transaction_ids', None)
+        flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
 @app.route('/search', methods=['POST'])
