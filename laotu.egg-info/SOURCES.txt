@@ -1,6 +1,7 @@
 MANIFEST.in
 README
 setup.cfg
+laotu/_init_.py
 laotu/laotu.py
 laotu/schema.sql
 laotu/strings.py

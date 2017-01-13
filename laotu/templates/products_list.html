@@ -2,26 +2,28 @@
 {% block title %}Products{% endblock %}
 {% block header %}Products{% endblock %}
 {% block main %}
-  All the products! Click for more information and to add product to cart.
-  <div style="width: 150px; position:relative; left: 30%; margin: 1rem auto;">
+  All the products! Click for more information and to add product to cart. 
+  <div class="product-cart-link">
     <h1><a href="{{ url_for('get_cart')}}">Go to cart</a></h1>
   </div>
+  {% if products_list %}
+  <ul>
   {% for product in products_list %}
-    <div class="product-list" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
+    <li class="product-list" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
       <div class="product-image">
         <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" class="product-image-tag">
       </div>
 
       <div class="product-info">
-        <div class="product-title" style="">
-          <h1>{{ product.title }}</h1>
-        </div>
-        <div class="product-price">
-          <h2 style="font-size: 20px; text-orientation: right">&#165 {{ product.price/100 }}</h2>
-        </div>
+        <div class="product-title"> {{ product.title }} </div>
+        <div class="product-price"> &#165 {{ '%0.2f' | format(product.price/100) }} </div>
+        <div class="product-description"> {{ product.description }} </div>
       </div>
+    </li>
     </div>
-  {% else %}
-    <em>There are no products so far.</em>
   {% endfor %}
+  </ul>
+  {% else %}
+    <em>There are no products so far</em>
+  {% endif %}
 {% endblock %}

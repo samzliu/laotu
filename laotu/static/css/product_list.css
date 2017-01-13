@@ -1,28 +1,29 @@
 .product-list {
     position: relative;
     width: 90%;
-    right: 5%;
-    max-width: 600px;
-    height: 150px;
-    border: 1px #77AA44;
-    border-radius: 15px;
-    margin: 1rem auto;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: rgba(119,170,68,0.6);
+    max-width: 90%;
+    height: 180px;
+    border: grey;
+    //box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: rgba(119,170,68,0.01);
     transition: 0.3s;    
+    margin: 10px;
+    list-style: none;
+}
+
+.product-list~.product-list {
+    border-top: 1px solid rgb(119, 170, 68);
 }
 
 .product-list .product-image {
-    position: relative;
+    position: absolute;
     border-radius: 15px 0px 0px 15px;
     overflow: hidden;
-    position: relative;
-    right: 35%;
-    width: 30%;
-    height: 100%;
-    margin: 1rem auto;
+    width: 28%;
+    height: 90%;
+    left: 1%;
+    top: 5%;
     background-color: transparent;
-    text-align: center;
 }
 
 .product-list .product-image .product-image-tag {
@@ -33,3 +34,55 @@
     max-width: 90%;
     max-height: 90%;
 }
+
+.product-list .product-info {
+    position: absolute;
+    left: 30%;
+    height: 90%;
+    width: 70%;
+    font-size: 10px;
+}
+
+.product-list .product-info .product-title {
+    position: relative;
+    left: 2%;
+    top: 7%;
+    width: 70%;
+    max-height: 30%;
+    font-size: 14pt;
+    font-weight: bold;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-list .product-info .product-price {
+    position: absolute;
+    top: 7%;
+    right: 5%;
+    max-width: 20%;
+    font-size: 14pt;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-list .product-info .product-description {
+    position: relative;
+    left: 2%;
+    width: 90%;
+    height: 82%;
+    top: 8%;
+    font-size: 14pt;
+    font-style: italic;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.product-cart-link {
+    position: relative;
+    width: 150px;
+}
+
