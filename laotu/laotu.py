@@ -237,7 +237,7 @@ def show_products_list():
 
 @app.route('/products_list/<category>')
 def show_products_list_category(category):
-    return render_template('products_list.html', products=query_db('''
+    return render_template('products_list.html', products_list=query_db('''
         select * from product where category = ?''', (category, )))
 
 @app.route('/<int:product_id>')
@@ -358,8 +358,8 @@ def categories():
 
 @app.route('/category/<category>')
 def category(category):
-    products = query_db("""select * from product where category like ?""", (category,))
-    return render_template('products_list.html', products=products)
+    products_list = query_db("""select * from product where category like ?""", (category,))
+    return render_template('products_list.html', products_list=products)
 
 @app.route('/stories')
 def stories():
