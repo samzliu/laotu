@@ -140,14 +140,6 @@ def home():
     """Home page"""
     return render_template('home.html')
 
-
-
-@app.route('/products')
-def products():
-    """Displays the products."""
-    return render_template('products.html')
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Logs the user in."""
@@ -243,11 +235,13 @@ def show_products_list_category(category):
     return render_template('products_list.html', products_list=query_db('''
         select * from product where category = ?''', (category, )))
 
-@app.route('/<int:product_id>')
+@app.route('/<int:product_id>/<int:photo_index>')
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
-    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product))
+    photos = [product['photo1'], product['photo2'], product['photo3']]
+    standards = [product['stand1'], product['stand2'], product['stand3'], product['stand4']] 
+    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product), photos=photo, photo_index=photo_index, standards=standars, stand_index=stand_index)
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
