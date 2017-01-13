@@ -33,6 +33,13 @@ create table product (
     standard_tech text,
     standard_package text,
     standard_price text,
+    product_photo_1 text,
+    product_photo_2 text,
+    product_photo_3 text,
+    laotu_book_photo_1 text,
+    laotu_book_photo_2 text,
+    laotu_book_photo_3 text,
+    laotu_book_photo_4 text,
     FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
 );
 
