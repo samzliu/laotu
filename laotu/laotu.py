@@ -338,50 +338,67 @@ def update_product(product_id, quantity):
 
 @app.route('/pay')
 def pay():
-    # check that all items are still in stock
+    # get all the user's purchases
     purchases = query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
     join product on cart.product_id=product.product_id where cart.user_id=?''', [session['user_id']])
+    # check that all items are still in stock
     for purchase in purchases:
         if purchase['inventory'] < purchase['quantity']:
             out_of_stock_message = FLASH_OUT_OF_STOCK % (purchase['title'], purchase['title'])
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
-    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
+    # put all the items in hold
+    db = get_db()
+    cursor = db.cursor()
+    transaction_ids = []
+    for purchase in purchases:
+        # add transactions to history, one row for each product
+        cursor.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
+        values (?,?,?,?,?)''', (purchase['product_id'], session['user_id'], purchase['quantity'],
+        datetime.utcnow(), purchase['price']*purchase['quantity']))
+        # keep track of the transaction id for each product in the cart
+        transaction_ids.append(cursor.lastrowid)
+        # update product inventory
+        db.execute('''update product set quantity = quantity - ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+    db.commit()
+    # store the amount the user must pay in the session
+    session['amount'] = query_db('''select sum(product.price*cart.quantity) from cart \
+                                    join product on cart.product_id=product.product_id''', one=True)[0]
+    # store the transation_ids in the session
+    session['transation_ids'] = transation_ids
     if amount < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
-    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
+    return render_template('pay.html', key=stripe_keys['publishable_key'],
+                            amount=session['amount'], transaction_ids=session['transation_ids'])
 
 @app.route('/charge', methods=['POST'])
 def charge():
-    # ideally, want to just keep this variable from the pay function
-    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
-
     try:
-      charge = stripe.Charge.create(
-          amount=amount, # Amount in cents
-          currency="cny",
-          source=request.form['stripeToken']
-      )
+        charge = stripe.Charge.create(
+            amount=session['amount'], # Amount in cents
+            currency="cny",
+            source=request.form['stripeToken'])
+    # The account has been declined
     except stripe.error.CardError as e:
-      # The Alipay account has been declined
-      pass
+        # leave the transactions in the history as unconfirmed (i.e. do nothing to trans table)
+        # add the items on hold back to the product table
+        db = get_db()
+        db.execute('''update product set quantity = quantity + ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+        db.commit()
+        flash(FLASH_CARD_FAILURE)
+        # pass
 
-    # update all the databases
-    purchases = query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
-    join product on cart.product_id=product.product_id where cart.user_id=?''', [session['user_id']])
+    # if charge successful, then change the transactions to confirmed
     db = get_db()
-    # check that all products are in stock
-    for purchase in purchases:
-        # add transactions to history, one row for each product
-        db.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
-        values (?,?,?,?,?)''', (purchase['product_id'], session['user_id'], purchase['quantity'],
-        datetime.utcnow(), purchase['price']*purchase['quantity']))
-        # update product inventory
-        db.execute('''update product set quantity = quantity - ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
-    # clear the cart
+    for trans_id in session['transation_ids']:
+        db.execute('''update trans set confirmed = 1 where trans_id = ?''', [trans_id])
+    # empty the cart
     db.execute('''delete from cart where user_id = ?''', [session['user_id']])
     db.commit()
+    # remove the variables amount and transaction_ids from session
+    session.pop('amount', None)
+    session.pop('transaction_ids', None)
     flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
@@ -410,7 +427,7 @@ def category(category):
         on product.product_id=product_to_tag.product_id
         and product_to_tag.tag_id=?""", (tag_id,))
     # one importance level away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
         tag
         inner join product
         inner join product_to_tag
@@ -421,7 +438,7 @@ def category(category):
         return render_template('products_list.html', products_list=products_list, tags_list=tags_list)
 
     # multiple importance levels away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
         tag
         inner join product
         inner join product_to_tag
