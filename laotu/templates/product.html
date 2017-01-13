@@ -14,14 +14,14 @@
 			</div>
 
 			<div class="product-price">
-				<h2>Price: &#165 {{ product.price/100 }}</h2>
+				<h2>价钱: &#165 {{ product.price/100 }}</h2>
 			</div>
 				{% if product.quantity <= 0 %}
-					This product is out of stock.
+					产品缺货。
 				{% else %}
 					{% if product.quantity <= 5 %}
 						<div class="dropdown">
-							<button onclick="dropDownQuantity()" class="dropbtn">Add product to cart</button>
+							<button onclick="dropDownQuantity()" class="dropbtn">放在购物车</button>
 							<div id="myDropdown" class="dropdown-content">
 							{% for number in range(1, product.quantity+1) %}
 								<a href="{{ url_for('add_product', product_id=product.product_id, quantity=number)}}">{{number}}</a>
@@ -30,7 +30,7 @@
 						</div>
 					{% else %}
 						<div class="dropdown">
-							<button onclick="dropDownQuantity()" class="dropbtn">Add product to cart</button>
+							<button onclick="dropDownQuantity()" class="dropbtn">放在购物车</button>
 							<div id="myDropdown" class="dropdown-content">
 								<a href="{{ url_for('add_product', product_id=product.product_id, quantity=1)}}">1</a>
 								<a href="{{ url_for('add_product', product_id=product.product_id, quantity=2)}}">2</a>
@@ -48,8 +48,8 @@
 
 	<div class="product_description">
 		<h2>Farmer: {{producer.user_name}}</h2>
-		Click <a href="{{ url_for('show_farmer', producer_id=producer.producer_id)}}">here</a> to learn more about {{producer.user_name}}.<br>
-		Location: {{producer.location}}<br>
+		点击<a href="{{ url_for('show_farmer', producer_id=producer.producer_id)}}">这里</a>了解更多关于 {{producer.user_name}}.<br>
+		所在: {{producer.location}}<br>
 		<br>
 		{{product.description}}
 	</div>
