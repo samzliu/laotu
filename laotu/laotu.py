@@ -245,7 +245,7 @@ def show_product(product_id):
     return render_template('product.html', product=product, producer=producer)
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
-def add_product(product_id, quantity=1):
+def add_product(product_id, quantity):
     """Adds a product to the cart."""
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
@@ -286,7 +286,7 @@ def get_cart():
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
-    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price from cart \
+    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
     join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
     total = 0
     for item in items:
@@ -333,7 +333,9 @@ def update_product(product_id, quantity):
 
 @app.route('/pay')
 def pay():
-    # change amount here
+    # check that all items are still in stock
+    purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
+
     amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
     if amount < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
@@ -356,10 +358,9 @@ def charge():
       pass
 
     # update all the databases
-    db = get_db()
     purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
-    purchase_rows = []
-    # check that all products are in stock for the specified quantity
+    db = get_db()
+    # check that all products are in stock
     for purchase in purchases:
         # add transactions to history, one row for each product
         db.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
