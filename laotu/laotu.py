@@ -135,15 +135,6 @@ def home():
     return render_template('home.html')
 
 
-"""
-Login page
-registration page
-
-Blog homepage
-blog -> external interface...
-
-
-"""
 
 @app.route('/products')
 def products():
