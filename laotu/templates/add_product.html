@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block title %}Add Product{% endblock %}
+{% block header %}Add Product to Database{% endblock %}
+{% block main %}
+  {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
+      <form action="" method="post" class="sleek-form" onload="errorcheck()">
+
+        {% if errtype=="title" %}
+        <input type="text" name="title" class="form-err" value="{{ request.form.title }}" placeholder="Product title"> 
+        {% else %}
+        <input type="text" name="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title"> 
+        {% endif %}
+        
+        {% if errtype=="quantity" %}
+        <input type="text" name="quantity" class="form-err" value="{{ request.form.quantity }}" placeholder="Product quantity">
+        {% else %}
+        <input type="text" name="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity">
+        {% endif %}
+        
+        {% if errtype=="price"%}
+        <input type="text" name="price" class="form-err" value="{{ request.form.price }}"  placeholder="Price (in jiao)">
+        {% else %}
+        <input type="text" name="price" class="form-text" value="{{ request.form.price }}" placeholder="Price (in jiao)">
+        {% endif %}
+
+        {% if errtype=="description" %}
+        <textarea name="description" class="form-paragraph-err" value="{{ request.form.description }}" placeholder="Product description"></textarea>
+        {% else %}
+        <textarea name="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="description" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="producerid" %}
+        <input type="text" name="producerid" class="form-err" value="{{ request.form.producerid }}" placeholder="ID of producer">
+        {% else %}
+        <input type="text" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer">
+        {% endif %}
+
+        {% if errtype=="standard_geo" %}
+        <textarea name="standard_geo" id="standard_geo" class="form-paragraph-err" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
+
+        {% else %}
+        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_producer" %}
+        <textarea name="standard_producer" id="standard_producer" class="form-paragraph-err" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_raw" %}
+        <textarea name="standard_raw" id="standard_raw" class="form-paragraph-err" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_production" %}
+        <textarea name="standard_production" id="standard_production" class="form-paragraph-err" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_storage" %}
+        <textarea name="standard_storage" id="standard_storage" class="form-paragraph-err" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_tech" %}
+        <textarea name="standard_tech" id="standard_tech" class="form-paragraph-err" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_package" %}
+        <textarea name="standard_package" id="standard_package" class="form-paragraph-err" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
+        {% endif %}
+
+        {% if errtype=="standard_price" %}
+        <textarea name="standard_price" id="standard_price" class="form-paragraph-err" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
+        {% else %}
+        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
+        {% endif %}
+        <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
+      </form>  
+  {% else %}
+      <form action="" method="post" class="sleek-form" onload="errorcheck()">
+        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title"> 
+        <input type="text" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity">
+        <input type="text" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)">
+        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5"></textarea>
+        <input type="text" name="producerid" id="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer">
+
+        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
+        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
+        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
+        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
+        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
+        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
+        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
+        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
+
+        <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags" cols="40" rows="5"></textarea>
+        <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
+
+
+      </form>  
+  {% endif %}
+
+{% endblock %}
+
+
+
