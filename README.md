@@ -36,9 +36,9 @@ High prority:
     - product page (Carl)
     - multiple categories (Carl)
     - blog/splashpage (Sam)
-    - database updates: show transactions, decrease quantity (Lily)
     - admin authentication 
-    - 
+    - transaction and confirmation emails
+    - add product seperate page 
     
     - formatting
     - wechat
@@ -48,5 +48,8 @@ High prority:
 Low priority:
     - guest checkout
     - producer registration
+    - next page 
+    - download csv of transactions from admin page 
+    - user transaction history 
 
 
