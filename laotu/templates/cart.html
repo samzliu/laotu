@@ -19,7 +19,7 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: rgba(119,170,68,0.6);
     " onclick="gotoURL('{{ url_for('show_product', product_id=item.product_id)}}')">
-    
+
       <div style="position: absolute;
       border-radius: 15px 0px 0px 15px;
       overflow: hidden;
@@ -36,7 +36,7 @@
         <div style="position: absolute; bottom:10px; width: 100%">
           <h2>数量: {{item.quantity }} &emsp; 价钱: {{ item.price/100 }} &emsp; 你付: &#165 {{ item.price/100 * item.quantity }}</h2>
         </div>
-      </div> 
+      </div>
     </div>
     
     <div style="position: relative;
@@ -68,6 +68,7 @@
         </div>
       </div>
   </div>
+
   {% else %}
     <em>没有产品在购物车里。</em>
   {% endfor %}

@@ -140,6 +140,15 @@ div.product-list div.product-info div.product-price {
     top: 70%;
 }
 
+div.standards_container {
+    position: relative; 
+    margin: 1rem auto;
+    width: 90%;
+    top: 0px;
+    right: 7%;
+    background-color: rgba(119,170,68,0.4);
+}
+
 div.category {
     height: 50px; 
     width: 40%; 

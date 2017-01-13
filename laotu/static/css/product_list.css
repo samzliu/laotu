@@ -1,5 +1,10 @@
 .product-list {
     position: relative;
+}
+
+.product-list-item {
+    position: relative;
+    float: left;
     width: 90%;
     max-width: 90%;
     height: 180px;
@@ -7,15 +12,15 @@
     //box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: rgba(119,170,68,0.01);
     transition: 0.3s;    
-    margin: 10px;
+    margin: auto;
     list-style: none;
 }
 
-.product-list~.product-list {
+.product-list-item~.product-list-item {
     border-top: 1px solid rgb(119, 170, 68);
 }
 
-.product-list .product-image {
+.product-list-item .product-image {
     position: absolute;
     border-radius: 15px 0px 0px 15px;
     overflow: hidden;
@@ -26,7 +31,7 @@
     background-color: transparent;
 }
 
-.product-list .product-image .product-image-tag {
+.product-list-item .product-image .product-image-tag {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -35,7 +40,7 @@
     max-height: 90%;
 }
 
-.product-list .product-info {
+.product-list-item .product-info {
     position: absolute;
     left: 30%;
     height: 90%;
@@ -43,7 +48,7 @@
     font-size: 10px;
 }
 
-.product-list .product-info .product-title {
+.product-list-item .product-info .product-title {
     position: relative;
     left: 2%;
     top: 7%;
@@ -57,7 +62,7 @@
     text-overflow: ellipsis;
 }
 
-.product-list .product-info .product-price {
+.product-list-item .product-info .product-price {
     position: absolute;
     top: 7%;
     right: 5%;
@@ -69,7 +74,7 @@
     text-overflow: ellipsis;
 }
 
-.product-list .product-info .product-description {
+.product-list-item .product-info .product-description {
     position: relative;
     left: 2%;
     width: 90%;
