@@ -34,56 +34,14 @@
         {% else %}
         <input type="text" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer">
         {% endif %}
-
-        {% if errtype=="standard_geo" %}
-        <textarea name="standard_geo" id="standard_geo" class="form-paragraph-err" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
-
-        {% else %}
         <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_producer" %}
-        <textarea name="standard_producer" id="standard_producer" class="form-paragraph-err" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_raw" %}
-        <textarea name="standard_raw" id="standard_raw" class="form-paragraph-err" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_production" %}
-        <textarea name="standard_production" id="standard_production" class="form-paragraph-err" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_storage" %}
-        <textarea name="standard_storage" id="standard_storage" class="form-paragraph-err" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_tech" %}
-        <textarea name="standard_tech" id="standard_tech" class="form-paragraph-err" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_package" %}
-        <textarea name="standard_package" id="standard_package" class="form-paragraph-err" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
-        {% endif %}
-
-        {% if errtype=="standard_price" %}
-        <textarea name="standard_price" id="standard_price" class="form-paragraph-err" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
-        {% else %}
         <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
-        {% endif %}
-
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
 
         <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>

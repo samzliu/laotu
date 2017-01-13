@@ -119,13 +119,4 @@ ERR_INVALID_PROD_PRICE = "You need to provide a valid (integer) price for this p
 ERR_NO_PROD_DESCRIPTION = "You need to provide a description for this product."
 ERR_NO_PROD_PRODUCER_ID = "You need to provide a producer id for this product."
 ERR_INVALID_PROD_PRODUCER_ID = "You need to provide a valid producer id for this product."
-ERR_NO_STANDARD_GEO = "Please provide a standard geo."
-ERR_NO_STANDARD_PRODUCER = "Please provide a standard producer."
-ERR_NO_STANDARD_RAW = "Please provide a standard raw."
-ERR_NO_STANDARD_PRODUCTION = "Please provide a standard production."
-ERR_NO_STANDARD_STORAGE = "Please provide a standard storage."
-ERR_NO_STANDARD_TECH = "Please provide a standard tech."
-ERR_NO_STANDARD_PACKAGE = "Please provide a standard package."
-ERR_NO_STANDARD_PRICE = "Please provide a standard price."
-
 

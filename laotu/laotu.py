@@ -497,30 +497,6 @@ def add_product_db():
             (request.form['producerid'],))) == 0:
             error = ERR_INVALID_PROD_PRODUCER_ID
             errtype = 'producerid'
-        elif not request.form['standard_geo']:
-            error = ERR_NO_STANDARD_GEO
-            errtype = 'standard_geo'
-        elif not request.form['standard_producer']:
-            error = ERR_NO_STANDARD_PRODUCER
-            errtype = 'standard_producer'
-        elif not request.form['standard_raw']:
-            error = ERR_NO_STANDARD_RAW
-            errtype = 'standard_raw'
-        elif not request.form['standard_production']:
-            error = ERR_NO_STANDARD_PRODUCTION
-            errtype = 'standard_production'
-        elif not request.form['standard_storage']:
-            error = ERR_NO_STANDARD_STORAGE
-            errtype = 'standard_storage'
-        elif not request.form['standard_tech']:
-            error = ERR_NO_STANDARD_TECH
-            errtype = 'standard_tech'
-        elif not request.form['standard_package']:
-            error = ERR_NO_STANDARD_PACKAGE
-            errtype = 'standard_price'
-        elif not request.form['standard_price']:
-            error = ERR_NO_STANDARD_PRICE
-            errtype = 'standard_price'
         else:
             print request.form['tags']
             db = get_db()
