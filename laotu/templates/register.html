@@ -2,14 +2,62 @@
 {% block title %}Sign Up{% endblock %}
 {% block header %}Sign Up{% endblock %}
 {% block main %}
-  {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
-  <form action="" method="post" class="sleek-form">
-    <input type="text" name="name" class="form-text" value="{{ request.form.name }}" placeholder="Name">
-    <input type="text" name="email" class="form-text" value="{{ request.form.email }}" placeholder="Email">
-    <input type="password" name="password" class="form-password"   placeholder="Password">
-    <input type="password" name="password2" class="form-password"   placeholder="Confirm Password">
-    <input type="text" name="address" class="form-text" value="{{ request.form.address }}" placeholder="Address">
-    <input type="text" name="phone" class="form-text" value="{{ request.form.phone }}" placeholder="Phone">
-    <div class="actions"><input type="submit" class="form-submit" value="Sign Up"></div>
-  </form>
+  {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
+      <form action="" method="post" class="sleek-form" onload="errorcheck()">
+
+        {% if errtype=="thename" %}
+        <input type="text" name="name" class="form-err" value="{{ request.form.name }}" placeholder="Name"> 
+        {% else %}
+        <input type="text" name="name" class="form-text" value="{{ request.form.name }}" placeholder="Name"> 
+        {% endif %}
+        
+        {% if errtype=="email" %}
+        <input type="text" name="email" class="form-err" value="{{ request.form.email }}" placeholder="Email">
+        {% else %}
+        <input type="text" name="email" class="form-text" value="{{ request.form.email }}" placeholder="Email">
+        {% endif %}
+        
+        {% if errtype=="password1" or errtype=="password" %}
+        <input type="password" name="password" class="form-err"   placeholder="Password">
+        {% else %}
+        <input type="password" name="password" class="form-password"   placeholder="Password">
+        {% endif %}
+
+        {% if errtype=="password2" or errtype=="password" %}
+        <input type="password" name="password2" class="form-err"   placeholder="Confirm Password">
+        {% else %}
+        <input type="password" name="password2" class="form-password"   placeholder="Confirm Password">
+        {% endif %}
+
+        {% if errtype=="address" %}
+        <input type="text" name="address" class="form-err" value="{{ request.form.address }}" placeholder="Address">
+        {% else %}
+        <input type="text" name="address" class="form-text" value="{{ request.form.address }}" placeholder="Address">
+        {% endif %}
+
+        {% if errtype=="phone" %}
+        <input type="text" name="phone" class="form-err" value="{{ request.form.phone }}" placeholder="Phone">
+        {% else %}
+        <input type="text" name="phone" class="form-text" value="{{ request.form.phone }}" placeholder="Phone">
+        {% endif %}
+        <div class="actions"><input type="submit" class="form-submit" value="Sign Up"></div>
+      </form>  
+  {% else %}
+      <form action="" method="post" class="sleek-form" onload="errorcheck()">
+        <input type="text" name="name" id="name" class="form-text" value="{{ request.form.name }}" placeholder="Name"> 
+        <input type="text" name="email" id="email" class="form-text" value="{{ request.form.email }}" placeholder="Email">
+        <input type="password" name="password" id="password" class="form-password"   placeholder="Password">
+        <input type="password" name="password2" id="password2" class="form-password"   placeholder="Confirm Password">
+        <input type="text" name="address" id="address" class="form-text" value="{{ request.form.address }}" placeholder="Address">
+        <input type="text" name="phone" id="phone" class="form-text" value="{{ request.form.phone }}" placeholder="Phone">
+        <div class="actions"><input type="submit" class="form-submit" value="Sign Up"></div>
+      </form>  
+  {% endif %}
+
+  <footer class="panel-footer">
+        Already have an account? <a href="{{ url_for('login')}}">Sign In</a>
+    </footer>
 {% endblock %}
+
+
+

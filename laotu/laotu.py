@@ -14,13 +14,9 @@ from werkzeug import check_password_hash, generate_password_hash
 import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
-
-from flask.ext.uploads import (UploadSet, configure_uploads, IMAGES,
-                              UploadNotAllowed)
-from werkzeug import secure_filename
 import re
-from strings import *
 
+from strings import *
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
@@ -29,7 +25,6 @@ DATABASE = '/tmp/laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
-UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 
 # test keys right now
 stripe_keys = {
@@ -40,17 +35,13 @@ stripe_keys = {
 stripe.api_key = stripe_keys['secret_key']
 
 
-# create our little aWpplication :)
+# create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE)
-app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
-
-upload_photos = UploadSet('photos', IMAGES)
-configure_uploads(app, upload_photos)
-
-
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
+    tables = ['user', 'producer', 'product', 'trans'], title = 'Admin Page', h1 = 'Admin Page')
+app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 if __name__ == '__main__':
     app.run()
@@ -121,7 +112,6 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
-
 #validation functions
 def isphone(num):
     if re.match("(\d{3}[-\.\s]??\d{4}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{4}[-\.\s]??\d{4}"
@@ -131,13 +121,29 @@ def isphone(num):
     else:
         return True
 
+#pages are below .................................................................
 
 @app.route('/')
 def home():
     """Home page"""
     return render_template('home.html')
 
-    
+
+"""
+Login page
+registration page
+
+Blog homepage
+blog -> external interface...
+
+
+"""
+
+@app.route('/products')
+def products():
+    """Displays the products."""
+    return render_template('products.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -224,25 +230,6 @@ def logout():
 def about():
     return render_template('about.html')
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    if request.method == 'POST':
-        photo = request.files.get('photo')
-        title = request.form.get('title')
-        if not (photo and title):
-            flash("You must fill in all the fields")
-        else:
-            try:
-                filename = upload_photos.save(photo)
-            except UploadNotAllowed:
-                flash("The upload was not allowed")
-            else:
-                #store filename database
-                flash("Upload successful")
-                return redirect(url_for('home'))
-    return render_template('upload.html')   
-
-    
 @app.route('/products_list')
 def show_products_list():
     return render_template('products_list.html', products_list=query_db('''
@@ -250,7 +237,7 @@ def show_products_list():
 
 @app.route('/products_list/<category>')
 def show_products_list_category(category):
-    return render_template('products_list.html', products=query_db('''
+    return render_template('products_list.html', products_list=query_db('''
         select * from product where category = ?''', (category, )))
 
 @app.route('/<int:product_id>')
@@ -267,11 +254,16 @@ def add_product(product_id, quantity=1):
         return redirect(url_for('register'))
     if product_id is None:
         abort(404)
-    db = get_db()
-    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
-    db.commit()
-    flash(FLASH_CARTED)
-    return redirect(url_for('show_products_list'))
+    elif query_db('select 1 from cart where product_id = ?', [product_id], one=True):
+        flash('''You have already added this product to your cart. \
+        You cannot add a product twice. If you need to change the quantity, please edit your cart.''')
+        return redirect(url_for('show_product', product_id=product_id))
+    else:
+        db = get_db()
+        db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
+        db.commit()
+        flash(FLASH_CARTED)
+        return redirect(url_for('show_products_list'))
 
 @app.route('/cart')
 def get_cart():
@@ -327,15 +319,13 @@ def update_product(product_id, quantity):
 @app.route('/pay')
 def pay():
     # change amount here
-    amount = query_db('select sum(price) from cart', one=True)[0]
-    print amount
+    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
     return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])
 def charge():
     # ideally, want to just keep this variable from the pay function
-    # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
-    amount = query_db('select sum(price) from cart', one=True)[0]*100
+    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
 
     try:
       charge = stripe.Charge.create(
@@ -368,8 +358,18 @@ def categories():
 
 @app.route('/category/<category>')
 def category(category):
-    products = query_db("""select * from product where category like ?""", (category,))
-    return render_template('products_list.html', products=products)
+    products_list = query_db("""select * from product where category like ?""", (category,))
+    return render_template('products_list.html', products_list=products)
+
+@app.route('/stories')
+def stories():
+    return render_template('stories.html')
+
+@app.route('/<int:producer_id>/show_farmer')
+def show_farmer(producer_id):
+    producer_products = query_db('select * from product where producer_id= ?', [producer_id])
+    producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
+    return render_template('farmer.html', producer_products=producer_products, producer=producer)
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime

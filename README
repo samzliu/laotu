@@ -13,8 +13,6 @@
       3. tell flask about the right application (if windows, use set instead of export):
 
          export FLASK_APP=laotu
-         export PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQK37hzh
-         export SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7
 
       4. fire up a shell and run this:
 
