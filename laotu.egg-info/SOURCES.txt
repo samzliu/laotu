@@ -60,6 +60,7 @@ laotu/templates/about.html
 laotu/templates/cart.html
 laotu/templates/categories.html
 laotu/templates/category.html
+laotu/templates/farmer.html
 laotu/templates/home.html
 laotu/templates/layout.html
 laotu/templates/login.html
