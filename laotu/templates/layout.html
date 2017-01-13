@@ -12,16 +12,13 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
 
     <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
 
     <meta content="initial-scale=1, width=device-width" name="viewport"/>
 
-    <!-- Search icon -->
-    <link href="{{ url_for('static', filename='css/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet">
-
-    <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script>
     <!-- React.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
 </head>
 
 <body>
@@ -33,25 +30,15 @@
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand">
                         <a href="{{ url_for('home') }}">
-                            老土 LAOTU
+                            老土LAOTU
                         </a>
                     </li>
-
-                    <div class="searchbar-wrapper">
-                        <span class="icon"><i class="fa fa-search"></i></span>
-                        <form action="/search" method="post">
-                           <input id="search" name="search" placeholder="Search products...">
-                        </form>
-                    </div>
-
-
                     <li><a href="{{ url_for('about') }}">About</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
                     <li><a href="{{ url_for('stories') }}">Stories</a></li>
                     <li><a href="{{ url_for('get_cart')}}">Cart</a></li>
                     <li><a href="{{ url_for('categories') }}">Categories</a></li>
                     <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
-
                 </ul>
 
 
@@ -63,23 +50,21 @@
                             老土LAOTU
                         </a>
                     </li>
-        
-                    <div class="searchbar-wrapper">
-                        <span class="icon"><i class="fa fa-search"></i></span>
-                        <form id="search-form" action="/search" method="post">
-                           <input id="search" name="search" placeholder="Search products...">
-                        </form>
-                    </div>
-
                     <li><a href="{{ url_for('about') }}">About</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">Products</a></li>
-                    <li><a href="{{ url_for('categories') }}">Categories</a></li>
                     <li><a href="{{ url_for('register') }}">Sign Up</a></li>
                     <li><a href="{{ url_for('login') }}">Sign In</a></li>
                 </ul>
                 {% endif %}
             </div>
             <!-- /#sidebar-wrapper -->
+
+            <div id="searchbar-wrapper">
+                <form action="/search" method="post">
+                   <input name="search" placeholder="Search...">
+                </form>
+            </div>
+
             {% if get_flashed_messages() %}
                 <header>
                     <div class="alert alert-info" role="alert">
@@ -94,11 +79,11 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <a href="#menu-toggle" class="btn btn-default" id="menu-toggle" style="position:absolute;z-index:200;top:.63em;left:.63em;"><img src="{{ url_for('static', filename='images/menu.png') }}" style="height:1.87em;"></a>
+                            <a href="#menu-toggle" class="header-div header-div-left" id="menu-toggle"><img src="{{ url_for('static', filename='images/menu.png') }}"></a>
 
                             <div style="position:absolute;top:0px;left:-25px;width:100%;text-align:center;"><h3>{% block header %}{% endblock %}</h3></div>
 
-                            <div style="position:absolute;z-index:200;top:.63em;right:60px;"><img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="height:1.87em;"></div>
+                            <div class="header-div header-div-right" style="right:60px;"><img src="{{ url_for('static', filename='images/laotu-logo.png') }}"></div>
 
                             <br>
                             <br>
@@ -128,8 +113,8 @@
     </script>
 
     <script>
-    function handleButtonClick(url) {
-        window.open(url, "_self");
+    function handleProductClick(url) {
+        window.location.replace(url);
     }
     </script>
 </body>
