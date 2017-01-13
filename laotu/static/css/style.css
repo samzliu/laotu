@@ -140,6 +140,7 @@ input {
     :-ms-input-placeholder {
         color: rgba(255,255,255,0.7);
     }
+    /*
     &:focus {
         outline: 0 transparent solid;
         ::-webkit-input-placeholder {
@@ -152,6 +153,7 @@ input {
             color: rgba(0,0,0,0.7);
         }
     }
+    */
 }
 
 .sleek-form {
