@@ -22,8 +22,8 @@ from strings import *
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
-#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -249,6 +249,20 @@ def show_product(product_id):
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
     return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product))
 
+@app.route('/del/<int:product_id>')
+def del_product(product_id):
+    #insert admin authentication
+    product = query_db('select * from product where product_id = ?', [product_id], one=True)
+    #delete photos
+    for i in range(14,21):
+        os.remove(os.path.join(UPLOADED_PHOTOS_DEST, product[i]))
+    db = get_db()
+    db.execute('''delete from product where product_id = ?''', (product_id,))
+    db.commit()
+        
+    
+    
+    
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
     """Adds a product to the cart."""
