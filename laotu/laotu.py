@@ -522,6 +522,7 @@ def add_product_db():
             error = ERR_NO_STANDARD_PRICE
             errtype = 'standard_price'
         else:
+            print request.form['tags']
             db = get_db()
             db.execute('''insert into product (
               title, quantity, price, description, producer_id, standard_geo, 

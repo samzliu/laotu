@@ -83,6 +83,9 @@
         {% else %}
         <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
         {% endif %}
+
+        <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
+
         <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
       </form>  
   {% else %}
@@ -102,13 +105,10 @@
         <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
         <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
 
-        <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags" cols="40" rows="5"></textarea>
+        <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
         <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
-
-
       </form>  
   {% endif %}
-
 {% endblock %}
 
 
