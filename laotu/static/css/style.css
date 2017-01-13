@@ -66,6 +66,11 @@ div.product_main {
     margin: 1rem auto;
 }
 
+div.product_main div.product-image {
+    height: 100%;
+    width: 40%;
+}
+
 div.product_main div.product-info {
     position: absolute; 
     width: 58%;  
@@ -89,7 +94,14 @@ div.product_description {
     background-color: rgba(119,170,68,0.4);
     position: relative; 
     margin: 1rem auto;
-    width: 80%;
+    width: 90%;
+    top: 0px;
+}
+
+div.standards_container {
+    position: relative; 
+    margin: 1rem auto;
+    width: 90%;
     top: 0px;
 }
 

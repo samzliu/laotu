@@ -16,6 +16,7 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads
+from datetime import datetime
 
 from strings import *
 
@@ -127,6 +128,11 @@ def isphone(num):
     else:
         return True
 
+def hasStandard(product):
+    return product['standard_geo'] or product['standard_producer'] or product['standard_raw'] or \
+    product['standard_production'] or product['standard_storage'] or product['standard_tech'] or \
+    product['standard_package'] or product['standard_price']
+
 #pages are below .................................................................
 
 @app.route('/')
@@ -135,15 +141,6 @@ def home():
     return render_template('home.html')
 
 
-"""
-Login page
-registration page
-
-Blog homepage
-blog -> external interface...
-
-
-"""
 
 @app.route('/products')
 def products():
@@ -250,10 +247,10 @@ def show_products_list_category(category):
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
-    return render_template('product.html', product=product, producer=producer)
+    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product))
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
-def add_product(product_id, quantity=1):
+def add_product(product_id, quantity):
     """Adds a product to the cart."""
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
@@ -294,7 +291,7 @@ def get_cart():
     if not g.user:
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
-    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price from cart \
+    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
     join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
     total = 0
     for item in items:
@@ -341,7 +338,9 @@ def update_product(product_id, quantity):
 
 @app.route('/pay')
 def pay():
-    # change amount here
+    # check that all items are still in stock
+    purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
+
     amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
     if amount < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
@@ -362,7 +361,22 @@ def charge():
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-      flash(FLASH_PURCHASE)
+
+    # update all the databases
+    purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
+    db = get_db()
+    # check that all products are in stock
+    for purchase in purchases:
+        # add transactions to history, one row for each product
+        db.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
+        values (?,?,?,?,?)''', (purchase['product_id'], session['user_id'], purchase['quantity'],
+        datetime.utcnow(), purchase['price']*purchase['quantity']))
+        # update product inventory
+        db.execute('''update product set quantity = quantity - ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+    # clear the cart
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
 @app.route('/search', methods=['POST'])
