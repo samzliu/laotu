@@ -16,6 +16,7 @@ import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads
+from datetime import datetime
 
 from strings import *
 
@@ -362,7 +363,22 @@ def charge():
     except stripe.error.CardError as e:
       # The Alipay account has been declined
       pass
-      flash(FLASH_PURCHASE)
+
+    # update all the databases
+    db = get_db()
+    purchases = query_db('select * from cart join product on cart.product_id=product.product_id')
+    purchase_rows = []
+    for purchase in purchases:
+        # add transactions to history, one row for each product
+        db.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
+        values (?,?,?,?,?)''', (purchase['product_id'], session['user_id'], purchase['quantity'],
+        datetime.utcnow(), purchase['price']*purchase['quantity']))
+        # update product inventory
+        db.execute('''update product set quantity = quantity - ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+    # clear the cart
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
 @app.route('/search', methods=['POST'])
