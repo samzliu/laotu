@@ -257,8 +257,6 @@ div.error {
 .dropbtn {
     background-color: #4CAF50;
     color: white;
-    padding: 16px;
-    font-size: 16px;
     border: none;
     cursor: pointer;
 }
@@ -271,7 +269,6 @@ div.error {
     vertical-align:center;
     font-size: 16px;
     border: none;
-    cursor: pointer;
 }
 .dropbtn-green {
     background-color: #4CAF50;
@@ -287,9 +284,6 @@ div.error {
     background-color: #A60032;
 }
 
-.dropbtn-green:hover, .dropbtn-green:focus {
-    background-color: #3e8e41;
-}
 
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {

@@ -58,8 +58,8 @@
         width: calc((100% + 30px) * .7 - 15px );
         vertical-align:center;
         ">
-        <button onclick="dropDownQuantity()" class="dropbtn-green">更改数量</button>
-        <div id="myDropdown" class="dropdown-content">
+        <button onclick="dropDownQuantity()" class="dropbtn dropbtn-green">更改数量</button>
+        <div id="myDropdown" class="dropdown-content" style="top:45px;">
           <a href="{{ url_for('update_product', product_id=item.product_id, quantity=1)}}">1</a>
           <a href="{{ url_for('update_product', product_id=item.product_id, quantity=2)}}">2</a>
           <a href="{{ url_for('update_product', product_id=item.product_id, quantity=3)}}">3</a>
