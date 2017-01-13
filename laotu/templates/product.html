@@ -55,39 +55,57 @@
 	</div>
 
 	<div class="standards_container">
+		{% if hasStandard %}
 		<h1>Laotu Standards</h1>
+		{% endif %}
+		{% if product.standard_geo %}
 		<div class="standard">
 			<h2>Geo</h2>
 			{{ product.standard_geo }}
 		</div>
+		{% endif %}
+		{% if product.standard_producer %}
 		<div class="standard">
 			<h2>Producer</h2>
 			{{ product.standard_producer }}
 		</div>
+		{% endif %}
+		{% if product.standard_raw %}
 		<div class="standard">
 			<h2>Raw</h2>
 			{{ product.standard_raw }}
 		</div>
+		{% endif %}
+		{% if product.standard_production %}
 		<div class="standard">
 			<h2>Production</h2>
 			{{ product.standard_production }}
 		</div>
+		{% endif %}
+		{% if product.standard_storage %}
 		<div class="standard">
 			<h2>Storage</h2>
 			{{ product.standard_storage }}
 		</div>
+		{% endif %}
+		{% if product.standard_tech %}
 		<div class="standard">
 			<h2>Tech</h2>
 			{{ product.standard_tech }}
 		</div>
+		{% endif %}
+		{% if product.standard_package %}
 		<div class="standard">
 			<h2>Package</h2>
 			{{ product.standard_package }}
 		</div>
+		{% endif %}
+		{% if product.standard_price %}
 		<div class="standard">
 			<h2>Price</h2>
 			{{ product.standard_price }}
 		</div>
+		{% endif %}
 	</div>
 
 

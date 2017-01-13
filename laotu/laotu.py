@@ -44,7 +44,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-    tables = ['user', 'producer', 'product', 'trans'], title = 'Admin Page', h1 = 'Admin Page')
+    tables = ['user', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 upload_photos = UploadSet('photos', IMAGES)
@@ -127,6 +127,11 @@ def isphone(num):
         return False
     else:
         return True
+
+def hasStandard(product):
+    return product['standard_geo'] or product['standard_producer'] or product['standard_raw'] or \
+    product['standard_production'] or product['standard_storage'] or product['standard_tech'] or \
+    product['standard_package'] or product['standard_price']
 
 #pages are below .................................................................
 
@@ -231,7 +236,7 @@ def about():
 @app.route('/products_list')
 def show_products_list():
     return render_template('products_list.html', products_list=query_db('''
-    select * from product'''))
+    select * from product'''), producer=None)
 
 @app.route('/products_list/<category>')
 def show_products_list_category(category):
@@ -242,7 +247,7 @@ def show_products_list_category(category):
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
-    return render_template('product.html', product=product, producer=producer)
+    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product))
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
@@ -394,13 +399,37 @@ def search_results(query):
 
 @app.route('/categories')
 def categories():
-    categories = query_db("""select distinct category from product""")
-    return render_template('categories.html', categories=categories)
+    tags = query_db("""select * from tag where importance = 1""")
+    return render_template('categories.html', tags=tags)
 
 @app.route('/category/<category>')
 def category(category):
-    products_list = query_db("""select * from product where category like ?""", (category,))
-    return render_template('products_list.html', products_list=products_list)
+    tag_id = query_db("""select tag_id from tag where name=?""", (category,), one=True)[0]
+    products_list = query_db("""select * from product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?""", (tag_id,))
+    # one importance level away
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance=?+1""", (tag_id, tag_id))
+    if len(tags_list) > 0:
+        return render_template('products_list.html', products_list=products_list, tags_list=tags_list)
+
+    # multiple importance levels away
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance>?""", (tag_id, tag_id))
+    return render_template('products_list.html', products_list=products_list, tags_list=tags_list)
+
 
 @app.route('/stories')
 def stories():
@@ -410,7 +439,7 @@ def stories():
 def show_farmer(producer_id):
     producer_products = query_db('select * from product where producer_id= ?', [producer_id])
     producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
-    return render_template('farmer.html', producer_products=producer_products, producer=producer)
+    return render_template('products_list.html', products_list=producer_products, producer=producer)
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
