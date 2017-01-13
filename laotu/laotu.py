@@ -15,7 +15,7 @@ import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
-from flask.ext.uploads import UploadSet, IMAGES, configure_uploads 
+from flask.ext.uploads import UploadSet, IMAGES, configure_uploads
 
 from strings import *
 
@@ -261,8 +261,7 @@ def add_product(product_id, quantity=1):
     if product_id is None:
         abort(404)
     elif query_db('select 1 from cart where product_id = ?', [product_id], one=True):
-        flash('''You have already added this product to your cart. \
-        You cannot add a product twice. If you need to change the quantity, please edit your cart.''')
+        flash(FLASH_CART_PRODUCT)
         return redirect(url_for('show_product', product_id=product_id))
     else:
         db = get_db()
@@ -277,18 +276,18 @@ def upload():
         photo = request.files.get('photo')
         title = request.form.get('title')
         if not (photo and title):
-            flash("You must fill in all the fields")
+            flash(FLASH_UPLOAD_FIELDS)
         else:
             try:
                 filename = upload_photos.save(photo)
             except UploadNotAllowed:
-                flash("The upload was not allowed")
+                flash(FLASH_UPLOAD_FORBIDDEN)
             else:
                 #store filename database
-                flash("Upload successful")
+                flash(FLASH_UPLOAD_SUCCESSFUL)
                 return redirect(url_for('home'))
     return render_template('upload.html')
-        
+
 @app.route('/cart')
 def get_cart():
     """Displays cart"""
@@ -313,7 +312,7 @@ def remove_product(product_id):
     db = get_db()
     db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],product_id))
     db.commit()
-    flash('The product has been removed from cart.')
+    flash(FLASH_UNCARTED)
     return redirect(url_for('get_cart'))
 
 @app.route('/clear_cart')
@@ -325,7 +324,7 @@ def clear_cart():
     db = get_db()
     db.execute('''delete from cart where user_id = ?''', [session['user_id']])
     db.commit()
-    flash('The cart has been cleared')
+    flash(FLASH_CLEARED)
     return redirect(url_for('get_cart'))
 
 @app.route('/<int:product_id>/<int:quantity>/update_product')
@@ -337,13 +336,16 @@ def update_product(product_id, quantity):
     db = get_db()
     db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (quantity,session['user_id'], product_id))
     db.commit()
-    flash('The cart has been updated')
+    flash(FLASH_UPDATED)
     return redirect(url_for('get_cart'))
 
 @app.route('/pay')
 def pay():
     # change amount here
     amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
+    if amount < 500:
+        flash(FLASH_AMOUNT_TOO_SMALL)
+        return redirect(url_for('get_cart'))
     return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])

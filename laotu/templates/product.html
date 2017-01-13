@@ -4,16 +4,17 @@
 		<a href="{{ url_for('get_cart')}}">Go to cart</a>
 	</div>
 	<div class="product_main">
-		<div class="pic">
+		<div class="product-image">
 			<!-- Picture goes here -->
 			<img src="{{ url_for('static', filename='images/laotu-logo.png') }}", style="max-width:100%; max-height:100%">
 		</div>
-		<div class="title">
-			<div style="height: 130px; width: 100%; border-bottom: 1px solid green">
+		<div class="product-info">
+			<div class="product-title">
 				<h1>{{product.title}}</h1>
 			</div>
-			<div style="">
-				<h2>Price: ${{product.price}}</h2>
+
+			<div class="product-price">
+				<h2>Price: &#165 {{ product.price/100 }}</h2>
 				<div class="dropdown">
 				  <button onclick="dropDownQuantity()" class="dropbtn">Add product to cart</button>
 				  <div id="myDropdown" class="dropdown-content">
@@ -36,4 +37,6 @@
 		<br>
 		{{product.description}}
 	</div>
+
+
 {% endblock %}

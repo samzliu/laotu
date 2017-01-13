@@ -1,16 +1,18 @@
 .product-list {
     position: relative;
     width: 90%;
-    left: 0px;
     max-width: 90%;
-    height: 150px;
-    border: 1px #77AA44;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: rgba(119,170,68,0.6);
+    height: 180px;
+    border: grey;
+    //box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: rgba(119,170,68,0.01);
     transition: 0.3s;    
-    margin: 1rem;
+    margin: 10px;
     list-style: none;
+}
+
+.product-list~.product-list {
+    border-top: 1px solid rgb(119, 170, 68);
 }
 
 .product-list .product-image {
@@ -79,4 +81,8 @@
     overflow: hidden;
 }
 
+.product-cart-link {
+    position: relative;
+    width: 150px;
+}
 
