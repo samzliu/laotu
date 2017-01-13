@@ -20,6 +20,9 @@ from datetime import datetime
 
 from strings import *
 
+from functools import wraps
+
+
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
 DATABASE = '/tmp/laotu.db'
@@ -44,7 +47,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-    tables = ['user', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
+    tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 upload_photos = UploadSet('photos', IMAGES)
@@ -53,6 +56,39 @@ configure_uploads(app, upload_photos)
 if __name__ == '__main__':
     app.run()
 
+# admin authentication ........................................................
+
+def admin_required(f):
+    """
+    Decorate routes to require admin login. Add @admin_required below @app.route 
+    for any endpoint that should require admin authentication
+
+    http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        #if ADMIN NOT LOGGED IN:
+        # print("REQUEST")
+        # print(request.path)
+        if request.args.get('adm') != 'y':
+            return redirect(url_for("adminauth", next=request.path))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# def login_required(f):
+#     """
+#     Decorate routes to require login.
+
+#     http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+#     """
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session.get("user_id") is None:
+#             return redirect(url_for("login", next=request.url))
+#         return f(*args, **kwargs)
+#     return decorated_function
+
+# helper functions ............................................................
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -143,6 +179,7 @@ def home():
 
 
 @app.route('/products')
+@admin_required
 def products():
     """Displays the products."""
     return render_template('products.html')
@@ -440,6 +477,30 @@ def show_farmer(producer_id):
     producer_products = query_db('select * from product where producer_id= ?', [producer_id])
     producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
     return render_template('products_list.html', products_list=producer_products, producer=producer)
+
+
+@app.route('/adminauth', methods=['GET', 'POST'])
+def adminauth():
+    error = None
+    if request.method == 'POST':
+        user = query_db('''select * from user where
+            email = ?''', [request.form['email']], one=True)
+        print("NEXT:"),
+        print(request.args.get('next'))
+        if user is None:
+            error = ERR_INVALID_EMAIL
+        elif not check_password_hash(user['pw_hash'],
+                                     request.form['password']):
+            error = ERR_INVALID_PWD
+        elif query_db('''select * from admin where 
+            user_id = ?''', [user[0]], one=True) is None:
+            error = ERR_NOT_ADMIN
+        else:
+            flash(FLASH_LOGGED_ADMIN)
+            print(url_for('products')+'?adm=1')
+            #alt make a global?
+            return redirect(request.args.get('next')+'?adm=y')
+    return render_template('adminauth.html', error=error)    
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
