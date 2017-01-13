@@ -59,7 +59,6 @@ laotu/static/images/laotu-logo.png
 laotu/static/images/laotu.png
 laotu/static/images/menu-green.png
 laotu/static/images/menu.png
-laotu/templates/.DS_Store
 laotu/templates/about.html
 laotu/templates/cart.html
 laotu/templates/categories.html
