@@ -5,17 +5,17 @@
   {{producer.user_name}}'s products! Click for more information and to add product to cart.
   {% if producer_products %}
     {% for product in producer_products %}
-      <div class="productlist" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
-        <div class="pic" >
+      <div class="product-list" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
+        <div class="product-image" >
           <!-- Image goes here -->
           <span style="width:100%;display:inline-block;vertical-align:center;"> </span>
           <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%; vertical-align:center;">
         </div>
-        <div class="info" style="font-size: 14px;">
-          <div class="title">
+        <div class="product-info" style="font-size: 14px;">
+          <div class="product-title">
             <h1>{{ product.title }}</h1>
           </div>
-          <div style="position: absolute; height: 30%; width: 100%; top: 70%;border: 1px solid grey;">
+          <div class="product-price">
             <h2>&#165 {{ product.price/100 }}</h2>
           </div>
         </div>

@@ -95,7 +95,7 @@
                             <div style="position:absolute;z-index:200;top:.63em;right:60px;"><img src="{{ url_for('static', filename='images/laotu-logo-green.png') }}" style="height:1.87em;"></div>
 
                             {% if get_flashed_messages() %}
-                                <div class="flashes" id="flashes" style="display:none;position:absolute;z-index:1000;margin:auto;top:.63em;background: #58DC89;color: #000000;padding: 4px;width: 80%;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+                                <div id="flashes" style="display:none;position:absolute;z-index:500;margin:.63rem auto auto;top:-.15em;left:3.7em;background: #58DC89;color: #000000;padding: 4px;width: 60%;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
                                     {{ get_flashed_messages() | join(" ") }}
                                 </div>
                             {% endif %}

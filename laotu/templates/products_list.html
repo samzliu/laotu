@@ -12,14 +12,15 @@
         <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" class="product-image-tag">
       </div>
 
-      <div class="info">
-        <div class="title" style="">
+      <div class="product-info">
+        <div class="product-title" style="">
           <h1>{{ product.title }}</h1>
         </div>
-        <div style="position: absolute; height: 30%; width: 100%; top: 70%;border: 1px solid grey;">
+        <div class="product-price" style="position: absolute; height: 30%; width: 100%; top: 70%;">
           <h2 style="font-size: 20px; text-orientation: right">&#165 {{ product.price/100 }}</h2>
         </div>
       </div>
+    </div>
   {% else %}
     <em>There are no products so far.</em>
   {% endfor %}
