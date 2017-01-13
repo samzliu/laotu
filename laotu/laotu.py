@@ -29,6 +29,7 @@ DEBUG = True
 SECRET_KEY = 'development key'
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
+DEFAULT_IMPORTANCE = 100
 
 # test keys right now
 stripe_keys = {
@@ -499,6 +500,8 @@ def add_product_db():
             errtype = 'producerid'
         else:
             print request.form['tags']
+                
+                
             db = get_db()
             db.execute('''insert into product (
               title, quantity, price, description, producer_id, standard_geo, 
@@ -513,6 +516,22 @@ def add_product_db():
                   request.form['standard_tech'], request.form['standard_package'],\
                   request.form['standard_price']])
             db.commit()
+
+            tag_list = request.form['tags'].split(';')
+            tag_list = [t.strip() for t in tag_list]
+            for tag in tag_list:
+                if len(query_db('''select * from tag where name=?''', \
+                    (tag,))) == 0:
+                    db.execute('''insert into tag (name, importance)
+                        values (?, ?)''', [tag, DEFAULT_IMPORTANCE])
+                    db.commit()
+                product_id = query_db('''select product_id from product''')[-1][0]
+                print product_id
+                tag_id = query_db('''select tag_id from tag where name=?''', (tag,))[0][0]
+                print tag_id
+                db.execute('''insert into product_to_tag (product_id, tag_id)
+                    values (?, ?)''', (product_id, tag_id))
+                db.commit()
             flash(FLASH_PROD_ADD_SUCCESSFUL)
             error = None
             errtype = errtype
