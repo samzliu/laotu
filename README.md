@@ -8,7 +8,7 @@ pip install --editable .
 
 3. tell flask about the right application:
 
-export FLASK_APP=minitwit
+export FLASK_APP=laotu
 
 4. fire up a shell and run this:
 
