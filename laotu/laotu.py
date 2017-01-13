@@ -44,7 +44,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-    tables = ['user', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
+    tables = ['user', 'producer', 'product', 'standards', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 upload_photos = UploadSet('photos', IMAGES)
@@ -259,10 +259,10 @@ def del_product(product_id):
     db = get_db()
     db.execute('''delete from product where product_id = ?''', (product_id,))
     db.commit()
-        
-    
-    
-    
+
+
+
+
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
     """Adds a product to the cart."""
@@ -379,12 +379,18 @@ def pay():
     session['amount'] = query_db('''select sum(product.price*cart.quantity) from cart \
                                     join product on cart.product_id=product.product_id''', one=True)[0]
     # store the transation_ids in the session
-    session['transation_ids'] = transation_ids
-    if amount < 500:
+    session['transation_ids'] = transaction_ids
+    if session['amount'] < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
     return render_template('pay.html', key=stripe_keys['publishable_key'],
                             amount=session['amount'], transaction_ids=session['transation_ids'])
+
+def undo_hold(purchase):
+    db = get_db()
+    for trans_id in session['transaction_ids']:
+        db.execute('''update product set quantity = quantity + ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+    db.commit()
 
 @app.route('/charge', methods=['POST'])
 def charge():
@@ -397,11 +403,28 @@ def charge():
     except stripe.error.CardError as e:
         # leave the transactions in the history as unconfirmed (i.e. do nothing to trans table)
         # add the items on hold back to the product table
-        db = get_db()
-        db.execute('''update product set quantity = quantity + ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
-        db.commit()
+        
         flash(FLASH_CARD_FAILURE)
-        # pass
+    except stripe.error.RateLimitError as e:
+        # Too many requests made to the API too quickly
+      pass
+    except stripe.error.InvalidRequestError as e:
+      # Invalid parameters were supplied to Stripe's API
+      pass
+    except stripe.error.AuthenticationError as e:
+      # Authentication with Stripe's API failed
+      # (maybe you changed API keys recently)
+      pass
+    except stripe.error.APIConnectionError as e:
+      # Network communication with Stripe failed
+      pass
+    except stripe.error.StripeError as e:
+      # Display a very generic error to the user, and maybe send
+      # yourself an email
+      pass
+    except Exception as e:
+      # Something else happened, completely unrelated to Stripe
+      pass
 
     # if charge successful, then change the transactions to confirmed
     db = get_db()
