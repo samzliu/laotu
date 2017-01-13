@@ -136,15 +136,6 @@ def home():
     return render_template('home.html')
 
 
-"""
-Login page
-registration page
-
-Blog homepage
-blog -> external interface...
-
-
-"""
 
 @app.route('/products')
 def products():
@@ -368,6 +359,7 @@ def charge():
     db = get_db()
     purchases = query_db('select * from cart join product on cart.product_id=product.product_id')
     purchase_rows = []
+    # check that all products are in stock for the specified quantity
     for purchase in purchases:
         # add transactions to history, one row for each product
         db.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
