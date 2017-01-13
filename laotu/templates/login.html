@@ -1,36 +1,36 @@
 {% extends "layout.html" %}
-{% block title %}Sign In{% endblock %}
-{% block header %}Sign In{% endblock %}
+{% block title %}登录{% endblock %}
+{% block header %}登录{% endblock %}
 {% block main %}
 	{% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
  	  	<form action="" method="post" class="sleek-form">
  	    	
  	  		{% if errtype=="email" %}
- 	    	<input type="text" name="email" class="form-err" value="{{ request.form.email }}" required="true" placeholder="Email">
+ 	    	<input type="text" name="email" class="form-err" value="{{ request.form.email }}" required="true" placeholder="电子邮件">
  	    	{% else %}
- 	    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+ 	    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="电子邮件">
  	    	{% endif %}
  	    	{% if errtype=="password" %}
- 		    <input type="password" name="password" class="form-err" value="{{ request.form.email }}" placeholder="Password">
+ 		    <input type="password" name="password" class="form-err" value="{{ request.form.email }}" placeholder="密码">
  		    {% else %}
- 		    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+ 		    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="密码">
  		    {% endif %}
  
- 	    	<input type="submit" name="Login" class="form-submit" value="Sign In">
+ 	    	<input type="submit" name="Login" class="form-submit" value="登录">
  		</form>
 	{% else %}
 		<form action="" method="post" class="sleek-form">
-	    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+	    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="电子邮件">
 
-		    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+		    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="密码">
 
-	    	<input type="submit" name="Login" class="form-submit" value="Sign In">
+	    	<input type="submit" name="Login" class="form-submit" value="登录">
 		</form>
 	{% endif %}
 
 
 	<footer class="panel-footer">
-		Don't have an account? <a href="{{ url_for('register')}}">Sign Up</a>
+		没有账户?? <a href="{{ url_for('register')}}">注册</a>
 	</footer>
  
 {% endblock %}

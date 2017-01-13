@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
-{% block title %}Products{% endblock %}
-{% block header %}Products{% endblock %}
+{% block title %}产品{% endblock %}
+{% block header %}产品{% endblock %}
 {% block main %}
-  All the products! Click for more information and to add product to cart. 
+  所有的产品! 点击获取更多信息并将产品添加到购物车。
   <div class="product-cart-link">
-    <h1><a href="{{ url_for('get_cart')}}">Go to cart</a></h1>
+    <h1><a href="{{ url_for('get_cart')}}">去购物车</a></h1>
   </div>
   {% if products_list %}
   <ul>
