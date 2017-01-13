@@ -1,0 +1,1056 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'cordova' ]
+2 info using npm@2.15.9
+3 info using node@v4.6.0
+4 verbose install initial load of C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\package.json
+5 verbose readDependencies loading dependencies from C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\package.json
+6 silly cache add args [ 'cordova', null ]
+7 verbose cache add spec cordova
+8 silly cache add parsed spec Result {
+8 silly cache add   raw: 'cordova',
+8 silly cache add   scope: null,
+8 silly cache add   name: 'cordova',
+8 silly cache add   rawSpec: '',
+8 silly cache add   spec: 'latest',
+8 silly cache add   type: 'tag' }
+9 silly addNamed cordova@latest
+10 verbose addNamed "latest" is being treated as a dist-tag for cordova
+11 info addNameTag [ 'cordova', 'latest' ]
+12 silly mapToRegistry name cordova
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry data Result {
+15 silly mapToRegistry   raw: 'cordova',
+15 silly mapToRegistry   scope: null,
+15 silly mapToRegistry   name: 'cordova',
+15 silly mapToRegistry   rawSpec: '',
+15 silly mapToRegistry   spec: 'latest',
+15 silly mapToRegistry   type: 'tag' }
+16 silly mapToRegistry uri https://registry.npmjs.org/cordova
+17 verbose addNameTag registry:https://registry.npmjs.org/cordova not in flight; fetching
+18 verbose request uri https://registry.npmjs.org/cordova
+19 verbose request no auth needed
+20 info attempt registry request try #1 at 6:22:21 PM
+21 verbose request id 8b0eb4199d135a41
+22 http request GET https://registry.npmjs.org/cordova
+23 http 200 https://registry.npmjs.org/cordova
+24 verbose headers { server: 'nginx/1.10.1',
+24 verbose headers   'content-type': 'application/json',
+24 verbose headers   'last-modified': 'Sat, 07 Jan 2017 14:56:30 GMT',
+24 verbose headers   etag: 'W/"5871019e-10473b"',
+24 verbose headers   'content-encoding': 'gzip',
+24 verbose headers   'cache-control': 'max-age=300',
+24 verbose headers   'content-length': '39721',
+24 verbose headers   'accept-ranges': 'bytes',
+24 verbose headers   date: 'Fri, 13 Jan 2017 10:22:27 GMT',
+24 verbose headers   via: '1.1 varnish',
+24 verbose headers   age: '159',
+24 verbose headers   connection: 'keep-alive',
+24 verbose headers   'x-served-by': 'cache-atl6225-ATL',
+24 verbose headers   'x-cache': 'HIT',
+24 verbose headers   'x-cache-hits': '1',
+24 verbose headers   'x-timer': 'S1484302947.266907,VS0,VE0',
+24 verbose headers   vary: 'Accept-Encoding' }
+25 silly get cb [ 200,
+25 silly get   { server: 'nginx/1.10.1',
+25 silly get     'content-type': 'application/json',
+25 silly get     'last-modified': 'Sat, 07 Jan 2017 14:56:30 GMT',
+25 silly get     etag: 'W/"5871019e-10473b"',
+25 silly get     'content-encoding': 'gzip',
+25 silly get     'cache-control': 'max-age=300',
+25 silly get     'content-length': '39721',
+25 silly get     'accept-ranges': 'bytes',
+25 silly get     date: 'Fri, 13 Jan 2017 10:22:27 GMT',
+25 silly get     via: '1.1 varnish',
+25 silly get     age: '159',
+25 silly get     connection: 'keep-alive',
+25 silly get     'x-served-by': 'cache-atl6225-ATL',
+25 silly get     'x-cache': 'HIT',
+25 silly get     'x-cache-hits': '1',
+25 silly get     'x-timer': 'S1484302947.266907,VS0,VE0',
+25 silly get     vary: 'Accept-Encoding' } ]
+26 verbose get saving cordova to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\cordova\.cache.json
+27 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+28 silly addNameTag next cb for cordova with tag latest
+29 silly addNamed cordova@6.4.0
+30 verbose addNamed "6.4.0" is a plain semver version for cordova
+31 silly mapToRegistry name cordova
+32 silly mapToRegistry using default registry
+33 silly mapToRegistry registry https://registry.npmjs.org/
+34 silly mapToRegistry data Result {
+34 silly mapToRegistry   raw: 'cordova',
+34 silly mapToRegistry   scope: null,
+34 silly mapToRegistry   name: 'cordova',
+34 silly mapToRegistry   rawSpec: '',
+34 silly mapToRegistry   spec: 'latest',
+34 silly mapToRegistry   type: 'tag' }
+35 silly mapToRegistry uri https://registry.npmjs.org/cordova
+36 verbose addRemoteTarball https://registry.npmjs.org/cordova/-/cordova-6.4.0.tgz not in flight; adding
+37 verbose addRemoteTarball [ 'https://registry.npmjs.org/cordova/-/cordova-6.4.0.tgz',
+37 verbose addRemoteTarball   '3fd9e8b9ad77a6a93ec76947704de21ac2991776' ]
+38 info retry fetch attempt 1 at 6:22:29 PM
+39 info attempt registry request try #1 at 6:22:29 PM
+40 http fetch GET https://registry.npmjs.org/cordova/-/cordova-6.4.0.tgz
+41 http fetch 200 https://registry.npmjs.org/cordova/-/cordova-6.4.0.tgz
+42 silly fetchAndShaCheck shasum 3fd9e8b9ad77a6a93ec76947704de21ac2991776
+43 verbose addTmpTarball C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\cordova\-\cordova-6.4.0.tgz not in flight; adding
+44 verbose addTmpTarball already have metadata; skipping unpack for cordova@6.4.0
+45 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+46 silly cache afterAdd cordova@6.4.0
+47 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\cordova\6.4.0\package\package.json not in flight; writing
+48 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+49 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\cordova\6.4.0\package\package.json written
+50 silly install resolved [ { name: 'cordova',
+50 silly install resolved     version: '6.4.0',
+50 silly install resolved     preferGlobal: 'true',
+50 silly install resolved     description: 'Cordova command line interface tool',
+50 silly install resolved     main: 'cordova',
+50 silly install resolved     engines: { node: '>=4.0.0' },
+50 silly install resolved     bin: { cordova: './bin/cordova' },
+50 silly install resolved     scripts:
+50 silly install resolved      { test: 'node node_modules/jasmine-node/bin/jasmine-node --captureExceptions --color spec',
+50 silly install resolved        cover: 'node node_modules/istanbul/lib/cli.js cover --root src --print detail node_modules/jasmine-node/bin/jasmine-node -- spec' },
+50 silly install resolved     repository:
+50 silly install resolved      { type: 'git',
+50 silly install resolved        url: 'https://git-wip-us.apache.org/repos/asf/cordova-cli.git' },
+50 silly install resolved     bugs:
+50 silly install resolved      { url: 'https://issues.apache.org/jira/browse/CB',
+50 silly install resolved        email: 'dev@cordova.apache.org' },
+50 silly install resolved     keywords: [ 'cordova', 'client', 'cli' ],
+50 silly install resolved     dependencies:
+50 silly install resolved      { 'cordova-common': '1.5.x',
+50 silly install resolved        'cordova-lib': '6.4.0',
+50 silly install resolved        insight: '~0.8.2',
+50 silly install resolved        nopt: '3.0.1',
+50 silly install resolved        q: '1.0.1',
+50 silly install resolved        underscore: '1.7.0',
+50 silly install resolved        'update-notifier': '^0.5.0' },
+50 silly install resolved     devDependencies: { istanbul: '^0.4.5', 'jasmine-node': '1.14.5' },
+50 silly install resolved     author: { name: 'Anis Kadri' },
+50 silly install resolved     contributors:
+50 silly install resolved      [ [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object] ],
+50 silly install resolved     license: 'Apache-2.0',
+50 silly install resolved     _id: 'cordova@6.4.0',
+50 silly install resolved     _shasum: '3fd9e8b9ad77a6a93ec76947704de21ac2991776',
+50 silly install resolved     _resolved: 'https://registry.npmjs.org/cordova/-/cordova-6.4.0.tgz',
+50 silly install resolved     _from: 'cordova@latest',
+50 silly install resolved     _npmVersion: '4.0.0',
+50 silly install resolved     _nodeVersion: '6.6.0',
+50 silly install resolved     _npmUser: { name: 'stevegill', email: 'stevengill97@gmail.com' },
+50 silly install resolved     dist:
+50 silly install resolved      { shasum: '3fd9e8b9ad77a6a93ec76947704de21ac2991776',
+50 silly install resolved        tarball: 'https://registry.npmjs.org/cordova/-/cordova-6.4.0.tgz' },
+50 silly install resolved     maintainers:
+50 silly install resolved      [ [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object],
+50 silly install resolved        [Object] ],
+50 silly install resolved     _npmOperationalInternal:
+50 silly install resolved      { host: 'packages-18-east.internal.npmjs.com',
+50 silly install resolved        tmp: 'tmp/cordova-6.4.0.tgz_1477514706896_0.4209229650441557' },
+50 silly install resolved     directories: {} } ]
+51 info install cordova@6.4.0 into C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+52 info installOne cordova@6.4.0
+53 verbose installOne of cordova to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo not in flight; installing
+54 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache\_locks correctMkdir not in flight; initializing
+55 verbose lock using C:\Users\Milan\AppData\Roaming\npm-cache\_locks\cordova-1fb861027f9616ae.lock for C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+56 silly install write writing cordova 6.4.0 to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+57 verbose unbuild node_modules\cordova
+58 silly gentlyRm C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova is being purged from base C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+59 verbose gentlyRm don't care about contents; nuking C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+60 verbose tar unpack C:\Users\Milan\AppData\Roaming\npm-cache\cordova\6.4.0\package.tgz
+61 verbose tar unpacking to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+62 silly gentlyRm C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova is being purged
+63 verbose gentlyRm don't care about contents; nuking C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+64 silly gunzTarPerm modes [ '777', '666' ]
+65 silly gunzTarPerm extractEntry package.json
+66 silly gunzTarPerm modified mode [ 'package.json', 420, 438 ]
+67 silly gunzTarPerm extractEntry .npmignore
+68 silly gunzTarPerm modified mode [ '.npmignore', 420, 438 ]
+69 silly gunzTarPerm extractEntry README.md
+70 silly gunzTarPerm modified mode [ 'README.md', 420, 438 ]
+71 silly gunzTarPerm extractEntry LICENSE
+72 silly gunzTarPerm modified mode [ 'LICENSE', 420, 438 ]
+73 silly gunzTarPerm extractEntry cordova.js
+74 silly gunzTarPerm modified mode [ 'cordova.js', 420, 438 ]
+75 silly gunzTarPerm extractEntry RELEASENOTES.md
+76 silly gunzTarPerm modified mode [ 'RELEASENOTES.md', 420, 438 ]
+77 silly gunzTarPerm extractEntry CONTRIBUTING.md
+78 silly gunzTarPerm modified mode [ 'CONTRIBUTING.md', 420, 438 ]
+79 silly gunzTarPerm extractEntry .github/PULL_REQUEST_TEMPLATE.md
+80 silly gunzTarPerm modified mode [ '.github/PULL_REQUEST_TEMPLATE.md', 420, 438 ]
+81 silly gunzTarPerm extractEntry NOTICE
+82 silly gunzTarPerm modified mode [ 'NOTICE', 420, 438 ]
+83 silly gunzTarPerm extractEntry .gitattributes
+84 silly gunzTarPerm modified mode [ '.gitattributes', 420, 438 ]
+85 silly gunzTarPerm extractEntry appveyor.yml
+86 silly gunzTarPerm modified mode [ 'appveyor.yml', 420, 438 ]
+87 silly gunzTarPerm extractEntry bin/cordova
+88 silly gunzTarPerm modified mode [ 'bin/cordova', 493, 511 ]
+89 silly gunzTarPerm extractEntry bin/cordova.cmd
+90 silly gunzTarPerm modified mode [ 'bin/cordova.cmd', 493, 511 ]
+91 silly gunzTarPerm extractEntry .ratignore
+92 silly gunzTarPerm modified mode [ '.ratignore', 420, 438 ]
+93 silly gunzTarPerm extractEntry doc/ja/README.md
+94 silly gunzTarPerm modified mode [ 'doc/ja/README.md', 420, 438 ]
+95 silly gunzTarPerm extractEntry doc/ja/bash.md
+96 silly gunzTarPerm modified mode [ 'doc/ja/bash.md', 420, 438 ]
+97 silly gunzTarPerm extractEntry doc/bash.md
+98 silly gunzTarPerm modified mode [ 'doc/bash.md', 420, 438 ]
+99 silly gunzTarPerm extractEntry doc/clean.txt
+100 silly gunzTarPerm modified mode [ 'doc/clean.txt', 420, 438 ]
+101 silly gunzTarPerm extractEntry doc/compile.txt
+102 silly gunzTarPerm modified mode [ 'doc/compile.txt', 420, 438 ]
+103 silly gunzTarPerm extractEntry doc/cordova.txt
+104 silly gunzTarPerm modified mode [ 'doc/cordova.txt', 420, 438 ]
+105 silly gunzTarPerm extractEntry doc/create.txt
+106 silly gunzTarPerm modified mode [ 'doc/create.txt', 420, 438 ]
+107 silly gunzTarPerm extractEntry doc/de/README.md
+108 silly gunzTarPerm modified mode [ 'doc/de/README.md', 420, 438 ]
+109 silly gunzTarPerm extractEntry doc/de/bash.md
+110 silly gunzTarPerm modified mode [ 'doc/de/bash.md', 420, 438 ]
+111 silly gunzTarPerm extractEntry doc/emulate.txt
+112 silly gunzTarPerm modified mode [ 'doc/emulate.txt', 420, 438 ]
+113 silly gunzTarPerm extractEntry doc/es/README.md
+114 silly gunzTarPerm modified mode [ 'doc/es/README.md', 420, 438 ]
+115 silly gunzTarPerm extractEntry doc/es/bash.md
+116 silly gunzTarPerm modified mode [ 'doc/es/bash.md', 420, 438 ]
+117 silly gunzTarPerm extractEntry doc/fr/README.md
+118 silly gunzTarPerm modified mode [ 'doc/fr/README.md', 420, 438 ]
+119 silly gunzTarPerm extractEntry doc/fr/bash.md
+120 silly gunzTarPerm modified mode [ 'doc/fr/bash.md', 420, 438 ]
+121 silly gunzTarPerm extractEntry doc/help.txt
+122 silly gunzTarPerm modified mode [ 'doc/help.txt', 420, 438 ]
+123 silly gunzTarPerm extractEntry doc/info.txt
+124 silly gunzTarPerm modified mode [ 'doc/info.txt', 420, 438 ]
+125 silly gunzTarPerm extractEntry doc/it/README.md
+126 silly gunzTarPerm modified mode [ 'doc/it/README.md', 420, 438 ]
+127 silly gunzTarPerm extractEntry doc/it/bash.md
+128 silly gunzTarPerm modified mode [ 'doc/it/bash.md', 420, 438 ]
+129 silly gunzTarPerm extractEntry doc/build.txt
+130 silly gunzTarPerm modified mode [ 'doc/build.txt', 420, 438 ]
+131 silly gunzTarPerm extractEntry doc/ko/README.md
+132 silly gunzTarPerm modified mode [ 'doc/ko/README.md', 420, 438 ]
+133 silly gunzTarPerm extractEntry doc/ko/bash.md
+134 silly gunzTarPerm modified mode [ 'doc/ko/bash.md', 420, 438 ]
+135 silly gunzTarPerm extractEntry doc/pl/README.md
+136 silly gunzTarPerm modified mode [ 'doc/pl/README.md', 420, 438 ]
+137 silly gunzTarPerm extractEntry doc/pl/bash.md
+138 silly gunzTarPerm modified mode [ 'doc/pl/bash.md', 420, 438 ]
+139 silly gunzTarPerm extractEntry doc/platform.txt
+140 silly gunzTarPerm modified mode [ 'doc/platform.txt', 420, 438 ]
+141 silly gunzTarPerm extractEntry doc/plugin.txt
+142 silly gunzTarPerm modified mode [ 'doc/plugin.txt', 420, 438 ]
+143 silly gunzTarPerm extractEntry doc/prepare.txt
+144 silly gunzTarPerm modified mode [ 'doc/prepare.txt', 420, 438 ]
+145 silly gunzTarPerm extractEntry doc/readme.md
+146 silly gunzTarPerm modified mode [ 'doc/readme.md', 420, 438 ]
+147 silly gunzTarPerm extractEntry doc/requirements.txt
+148 silly gunzTarPerm modified mode [ 'doc/requirements.txt', 420, 438 ]
+149 silly gunzTarPerm extractEntry doc/ru/bash.md
+150 silly gunzTarPerm modified mode [ 'doc/ru/bash.md', 420, 438 ]
+151 silly gunzTarPerm extractEntry doc/run.txt
+152 silly gunzTarPerm modified mode [ 'doc/run.txt', 420, 438 ]
+153 silly gunzTarPerm extractEntry doc/serve.txt
+154 silly gunzTarPerm modified mode [ 'doc/serve.txt', 420, 438 ]
+155 silly gunzTarPerm extractEntry doc/telemetry.txt
+156 silly gunzTarPerm modified mode [ 'doc/telemetry.txt', 420, 438 ]
+157 silly gunzTarPerm extractEntry doc/zh/README.md
+158 silly gunzTarPerm modified mode [ 'doc/zh/README.md', 420, 438 ]
+159 silly gunzTarPerm extractEntry doc/zh/bash.md
+160 silly gunzTarPerm modified mode [ 'doc/zh/bash.md', 420, 438 ]
+161 silly gunzTarPerm extractEntry .travis.yml
+162 silly gunzTarPerm modified mode [ '.travis.yml', 420, 438 ]
+163 silly gunzTarPerm extractEntry scripts/cordova.completion
+164 silly gunzTarPerm modified mode [ 'scripts/cordova.completion', 420, 438 ]
+165 silly gunzTarPerm extractEntry src/cli.js
+166 silly gunzTarPerm modified mode [ 'src/cli.js', 420, 438 ]
+167 silly gunzTarPerm extractEntry src/create.js
+168 silly gunzTarPerm modified mode [ 'src/create.js', 420, 438 ]
+169 silly gunzTarPerm extractEntry src/help.js
+170 silly gunzTarPerm modified mode [ 'src/help.js', 420, 438 ]
+171 silly gunzTarPerm extractEntry src/telemetry.js
+172 silly gunzTarPerm modified mode [ 'src/telemetry.js', 420, 438 ]
+173 verbose write writing to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova\package.json
+174 info preinstall cordova@6.4.0
+175 verbose readDependencies loading dependencies from C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova\package.json
+176 silly prepareForInstallMany adding cordova-common@1.5.x from cordova dependencies
+177 silly prepareForInstallMany adding cordova-lib@6.4.0 from cordova dependencies
+178 silly prepareForInstallMany adding insight@~0.8.2 from cordova dependencies
+179 silly prepareForInstallMany adding nopt@3.0.1 from cordova dependencies
+180 silly prepareForInstallMany adding q@1.0.1 from cordova dependencies
+181 silly prepareForInstallMany adding underscore@1.7.0 from cordova dependencies
+182 silly prepareForInstallMany adding update-notifier@^0.5.0 from cordova dependencies
+183 verbose readDependencies loading dependencies from C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova\package.json
+184 silly cache add args [ 'cordova-common@1.5.x', null ]
+185 verbose cache add spec cordova-common@1.5.x
+186 silly cache add args [ 'cordova-lib@6.4.0', null ]
+187 verbose cache add spec cordova-lib@6.4.0
+188 silly cache add parsed spec Result {
+188 silly cache add   raw: 'cordova-common@1.5.x',
+188 silly cache add   scope: null,
+188 silly cache add   name: 'cordova-common',
+188 silly cache add   rawSpec: '1.5.x',
+188 silly cache add   spec: '>=1.5.0 <1.6.0',
+188 silly cache add   type: 'range' }
+189 silly addNamed cordova-common@>=1.5.0 <1.6.0
+190 verbose addNamed ">=1.5.0 <1.6.0" is a valid semver range for cordova-common
+191 silly addNameRange { name: 'cordova-common',
+191 silly addNameRange   range: '>=1.5.0 <1.6.0',
+191 silly addNameRange   hasData: false }
+192 silly mapToRegistry name cordova-common
+193 silly mapToRegistry using default registry
+194 silly mapToRegistry registry https://registry.npmjs.org/
+195 silly mapToRegistry data Result {
+195 silly mapToRegistry   raw: 'cordova-common',
+195 silly mapToRegistry   scope: null,
+195 silly mapToRegistry   name: 'cordova-common',
+195 silly mapToRegistry   rawSpec: '',
+195 silly mapToRegistry   spec: 'latest',
+195 silly mapToRegistry   type: 'tag' }
+196 silly mapToRegistry uri https://registry.npmjs.org/cordova-common
+197 verbose addNameRange registry:https://registry.npmjs.org/cordova-common not in flight; fetching
+198 silly cache add parsed spec Result {
+198 silly cache add   raw: 'cordova-lib@6.4.0',
+198 silly cache add   scope: null,
+198 silly cache add   name: 'cordova-lib',
+198 silly cache add   rawSpec: '6.4.0',
+198 silly cache add   spec: '6.4.0',
+198 silly cache add   type: 'version' }
+199 silly addNamed cordova-lib@6.4.0
+200 verbose addNamed "6.4.0" is a plain semver version for cordova-lib
+201 silly mapToRegistry name cordova-lib
+202 silly mapToRegistry using default registry
+203 silly mapToRegistry registry https://registry.npmjs.org/
+204 silly mapToRegistry data Result {
+204 silly mapToRegistry   raw: 'cordova-lib',
+204 silly mapToRegistry   scope: null,
+204 silly mapToRegistry   name: 'cordova-lib',
+204 silly mapToRegistry   rawSpec: '',
+204 silly mapToRegistry   spec: 'latest',
+204 silly mapToRegistry   type: 'tag' }
+205 silly mapToRegistry uri https://registry.npmjs.org/cordova-lib
+206 verbose addNameVersion registry:https://registry.npmjs.org/cordova-lib not in flight; fetching
+207 silly cache add args [ 'insight@~0.8.2', null ]
+208 verbose cache add spec insight@~0.8.2
+209 silly cache add parsed spec Result {
+209 silly cache add   raw: 'insight@~0.8.2',
+209 silly cache add   scope: null,
+209 silly cache add   name: 'insight',
+209 silly cache add   rawSpec: '~0.8.2',
+209 silly cache add   spec: '>=0.8.2 <0.9.0',
+209 silly cache add   type: 'range' }
+210 silly addNamed insight@>=0.8.2 <0.9.0
+211 verbose addNamed ">=0.8.2 <0.9.0" is a valid semver range for insight
+212 silly addNameRange { name: 'insight', range: '>=0.8.2 <0.9.0', hasData: false }
+213 silly mapToRegistry name insight
+214 silly mapToRegistry using default registry
+215 silly mapToRegistry registry https://registry.npmjs.org/
+216 silly mapToRegistry data Result {
+216 silly mapToRegistry   raw: 'insight',
+216 silly mapToRegistry   scope: null,
+216 silly mapToRegistry   name: 'insight',
+216 silly mapToRegistry   rawSpec: '',
+216 silly mapToRegistry   spec: 'latest',
+216 silly mapToRegistry   type: 'tag' }
+217 silly mapToRegistry uri https://registry.npmjs.org/insight
+218 verbose addNameRange registry:https://registry.npmjs.org/insight not in flight; fetching
+219 silly cache add args [ 'nopt@3.0.1', null ]
+220 verbose cache add spec nopt@3.0.1
+221 silly cache add parsed spec Result {
+221 silly cache add   raw: 'nopt@3.0.1',
+221 silly cache add   scope: null,
+221 silly cache add   name: 'nopt',
+221 silly cache add   rawSpec: '3.0.1',
+221 silly cache add   spec: '3.0.1',
+221 silly cache add   type: 'version' }
+222 silly addNamed nopt@3.0.1
+223 verbose addNamed "3.0.1" is a plain semver version for nopt
+224 silly mapToRegistry name nopt
+225 silly mapToRegistry using default registry
+226 silly mapToRegistry registry https://registry.npmjs.org/
+227 silly mapToRegistry data Result {
+227 silly mapToRegistry   raw: 'nopt',
+227 silly mapToRegistry   scope: null,
+227 silly mapToRegistry   name: 'nopt',
+227 silly mapToRegistry   rawSpec: '',
+227 silly mapToRegistry   spec: 'latest',
+227 silly mapToRegistry   type: 'tag' }
+228 silly mapToRegistry uri https://registry.npmjs.org/nopt
+229 verbose addNameVersion registry:https://registry.npmjs.org/nopt not in flight; fetching
+230 silly cache add args [ 'q@1.0.1', null ]
+231 verbose cache add spec q@1.0.1
+232 silly cache add parsed spec Result {
+232 silly cache add   raw: 'q@1.0.1',
+232 silly cache add   scope: null,
+232 silly cache add   name: 'q',
+232 silly cache add   rawSpec: '1.0.1',
+232 silly cache add   spec: '1.0.1',
+232 silly cache add   type: 'version' }
+233 silly addNamed q@1.0.1
+234 verbose addNamed "1.0.1" is a plain semver version for q
+235 silly mapToRegistry name q
+236 silly mapToRegistry using default registry
+237 silly mapToRegistry registry https://registry.npmjs.org/
+238 silly mapToRegistry data Result {
+238 silly mapToRegistry   raw: 'q',
+238 silly mapToRegistry   scope: null,
+238 silly mapToRegistry   name: 'q',
+238 silly mapToRegistry   rawSpec: '',
+238 silly mapToRegistry   spec: 'latest',
+238 silly mapToRegistry   type: 'tag' }
+239 silly mapToRegistry uri https://registry.npmjs.org/q
+240 verbose addNameVersion registry:https://registry.npmjs.org/q not in flight; fetching
+241 silly cache add args [ 'underscore@1.7.0', null ]
+242 verbose cache add spec underscore@1.7.0
+243 silly cache add parsed spec Result {
+243 silly cache add   raw: 'underscore@1.7.0',
+243 silly cache add   scope: null,
+243 silly cache add   name: 'underscore',
+243 silly cache add   rawSpec: '1.7.0',
+243 silly cache add   spec: '1.7.0',
+243 silly cache add   type: 'version' }
+244 silly addNamed underscore@1.7.0
+245 verbose addNamed "1.7.0" is a plain semver version for underscore
+246 silly mapToRegistry name underscore
+247 silly mapToRegistry using default registry
+248 silly mapToRegistry registry https://registry.npmjs.org/
+249 silly mapToRegistry data Result {
+249 silly mapToRegistry   raw: 'underscore',
+249 silly mapToRegistry   scope: null,
+249 silly mapToRegistry   name: 'underscore',
+249 silly mapToRegistry   rawSpec: '',
+249 silly mapToRegistry   spec: 'latest',
+249 silly mapToRegistry   type: 'tag' }
+250 silly mapToRegistry uri https://registry.npmjs.org/underscore
+251 verbose addNameVersion registry:https://registry.npmjs.org/underscore not in flight; fetching
+252 silly cache add args [ 'update-notifier@^0.5.0', null ]
+253 verbose cache add spec update-notifier@^0.5.0
+254 silly cache add parsed spec Result {
+254 silly cache add   raw: 'update-notifier@^0.5.0',
+254 silly cache add   scope: null,
+254 silly cache add   name: 'update-notifier',
+254 silly cache add   rawSpec: '^0.5.0',
+254 silly cache add   spec: '>=0.5.0 <0.6.0',
+254 silly cache add   type: 'range' }
+255 silly addNamed update-notifier@>=0.5.0 <0.6.0
+256 verbose addNamed ">=0.5.0 <0.6.0" is a valid semver range for update-notifier
+257 silly addNameRange { name: 'update-notifier',
+257 silly addNameRange   range: '>=0.5.0 <0.6.0',
+257 silly addNameRange   hasData: false }
+258 silly mapToRegistry name update-notifier
+259 silly mapToRegistry using default registry
+260 silly mapToRegistry registry https://registry.npmjs.org/
+261 silly mapToRegistry data Result {
+261 silly mapToRegistry   raw: 'update-notifier',
+261 silly mapToRegistry   scope: null,
+261 silly mapToRegistry   name: 'update-notifier',
+261 silly mapToRegistry   rawSpec: '',
+261 silly mapToRegistry   spec: 'latest',
+261 silly mapToRegistry   type: 'tag' }
+262 silly mapToRegistry uri https://registry.npmjs.org/update-notifier
+263 verbose addNameRange registry:https://registry.npmjs.org/update-notifier not in flight; fetching
+264 verbose request uri https://registry.npmjs.org/cordova-common
+265 verbose request no auth needed
+266 info attempt registry request try #1 at 6:22:43 PM
+267 http request GET https://registry.npmjs.org/cordova-common
+268 verbose request uri https://registry.npmjs.org/cordova-lib
+269 verbose request no auth needed
+270 info attempt registry request try #1 at 6:22:43 PM
+271 http request GET https://registry.npmjs.org/cordova-lib
+272 verbose request uri https://registry.npmjs.org/insight
+273 verbose request no auth needed
+274 info attempt registry request try #1 at 6:22:43 PM
+275 http request GET https://registry.npmjs.org/insight
+276 verbose request uri https://registry.npmjs.org/underscore
+277 verbose request no auth needed
+278 info attempt registry request try #1 at 6:22:43 PM
+279 verbose etag "38SNR0GUWU4AIXDCEXL9WY02O"
+280 http request GET https://registry.npmjs.org/underscore
+281 verbose request uri https://registry.npmjs.org/nopt
+282 verbose request no auth needed
+283 info attempt registry request try #1 at 6:22:43 PM
+284 verbose etag W/"58518ed2-84a2"
+285 verbose lastModified Wed, 14 Dec 2016 18:26:26 GMT
+286 http request GET https://registry.npmjs.org/nopt
+287 verbose request uri https://registry.npmjs.org/q
+288 verbose request no auth needed
+289 info attempt registry request try #1 at 6:22:43 PM
+290 verbose etag "586750fb-23932"
+291 http request GET https://registry.npmjs.org/q
+292 verbose request uri https://registry.npmjs.org/update-notifier
+293 verbose request no auth needed
+294 info attempt registry request try #1 at 6:22:43 PM
+295 verbose etag "76S2XWB2H5FOKA3DZUNXCEII3"
+296 http request GET https://registry.npmjs.org/update-notifier
+297 http 200 https://registry.npmjs.org/cordova-common
+298 verbose headers { server: 'nginx/1.10.1',
+298 verbose headers   'content-type': 'application/json',
+298 verbose headers   'last-modified': 'Tue, 13 Dec 2016 00:04:40 GMT',
+298 verbose headers   etag: 'W/"584f3b18-6b72"',
+298 verbose headers   'content-encoding': 'gzip',
+298 verbose headers   'cache-control': 'max-age=300',
+298 verbose headers   'content-length': '4320',
+298 verbose headers   'accept-ranges': 'bytes',
+298 verbose headers   date: 'Fri, 13 Jan 2017 10:22:45 GMT',
+298 verbose headers   via: '1.1 varnish',
+298 verbose headers   age: '131',
+298 verbose headers   connection: 'keep-alive',
+298 verbose headers   'x-served-by': 'cache-atl6225-ATL',
+298 verbose headers   'x-cache': 'HIT',
+298 verbose headers   'x-cache-hits': '1',
+298 verbose headers   'x-timer': 'S1484302965.424359,VS0,VE0',
+298 verbose headers   vary: 'Accept-Encoding' }
+299 silly get cb [ 200,
+299 silly get   { server: 'nginx/1.10.1',
+299 silly get     'content-type': 'application/json',
+299 silly get     'last-modified': 'Tue, 13 Dec 2016 00:04:40 GMT',
+299 silly get     etag: 'W/"584f3b18-6b72"',
+299 silly get     'content-encoding': 'gzip',
+299 silly get     'cache-control': 'max-age=300',
+299 silly get     'content-length': '4320',
+299 silly get     'accept-ranges': 'bytes',
+299 silly get     date: 'Fri, 13 Jan 2017 10:22:45 GMT',
+299 silly get     via: '1.1 varnish',
+299 silly get     age: '131',
+299 silly get     connection: 'keep-alive',
+299 silly get     'x-served-by': 'cache-atl6225-ATL',
+299 silly get     'x-cache': 'HIT',
+299 silly get     'x-cache-hits': '1',
+299 silly get     'x-timer': 'S1484302965.424359,VS0,VE0',
+299 silly get     vary: 'Accept-Encoding' } ]
+300 verbose get saving cordova-common to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\cordova-common\.cache.json
+301 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+302 silly addNameRange number 2 { name: 'cordova-common',
+302 silly addNameRange   range: '>=1.5.0 <1.6.0',
+302 silly addNameRange   hasData: true }
+303 silly addNameRange versions [ 'cordova-common',
+303 silly addNameRange   [ '0.1.0',
+303 silly addNameRange     '1.0.0',
+303 silly addNameRange     '1.1.0',
+303 silly addNameRange     '1.1.1',
+303 silly addNameRange     '1.2.0',
+303 silly addNameRange     '1.3.0',
+303 silly addNameRange     '1.4.0',
+303 silly addNameRange     '1.4.1',
+303 silly addNameRange     '1.5.0',
+303 silly addNameRange     '1.5.1' ] ]
+304 silly addNamed cordova-common@1.5.1
+305 verbose addNamed "1.5.1" is a plain semver version for cordova-common
+306 silly mapToRegistry name cordova-common
+307 silly mapToRegistry using default registry
+308 silly mapToRegistry registry https://registry.npmjs.org/
+309 silly mapToRegistry data Result {
+309 silly mapToRegistry   raw: 'cordova-common',
+309 silly mapToRegistry   scope: null,
+309 silly mapToRegistry   name: 'cordova-common',
+309 silly mapToRegistry   rawSpec: '',
+309 silly mapToRegistry   spec: 'latest',
+309 silly mapToRegistry   type: 'tag' }
+310 silly mapToRegistry uri https://registry.npmjs.org/cordova-common
+311 verbose addRemoteTarball https://registry.npmjs.org/cordova-common/-/cordova-common-1.5.1.tgz not in flight; adding
+312 verbose addRemoteTarball [ 'https://registry.npmjs.org/cordova-common/-/cordova-common-1.5.1.tgz',
+312 verbose addRemoteTarball   '6770de0d6200ad6f94a1abe8939b5bd9ece139e3' ]
+313 info retry fetch attempt 1 at 6:22:43 PM
+314 info attempt registry request try #1 at 6:22:43 PM
+315 http fetch GET https://registry.npmjs.org/cordova-common/-/cordova-common-1.5.1.tgz
+316 http fetch 200 https://registry.npmjs.org/cordova-common/-/cordova-common-1.5.1.tgz
+317 http 304 https://registry.npmjs.org/nopt
+318 verbose headers { date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+318 verbose headers   via: '1.1 varnish',
+318 verbose headers   'cache-control': 'max-age=300',
+318 verbose headers   etag: 'W/"58518ed2-84a2"',
+318 verbose headers   age: '92',
+318 verbose headers   connection: 'keep-alive',
+318 verbose headers   'x-served-by': 'cache-atl6249-ATL',
+318 verbose headers   'x-cache': 'HIT',
+318 verbose headers   'x-cache-hits': '532',
+318 verbose headers   'x-timer': 'S1484302966.244178,VS0,VE0',
+318 verbose headers   vary: 'Accept-Encoding' }
+319 silly get cb [ 304,
+319 silly get   { date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+319 silly get     via: '1.1 varnish',
+319 silly get     'cache-control': 'max-age=300',
+319 silly get     etag: 'W/"58518ed2-84a2"',
+319 silly get     age: '92',
+319 silly get     connection: 'keep-alive',
+319 silly get     'x-served-by': 'cache-atl6249-ATL',
+319 silly get     'x-cache': 'HIT',
+319 silly get     'x-cache-hits': '532',
+319 silly get     'x-timer': 'S1484302966.244178,VS0,VE0',
+319 silly get     vary: 'Accept-Encoding' } ]
+320 verbose etag https://registry.npmjs.org/nopt from cache
+321 verbose get saving nopt to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\nopt\.cache.json
+322 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+323 http 200 https://registry.npmjs.org/insight
+324 verbose headers { server: 'nginx/1.10.1',
+324 verbose headers   'content-type': 'application/json',
+324 verbose headers   'last-modified': 'Wed, 23 Nov 2016 05:28:24 GMT',
+324 verbose headers   etag: 'W/"583528f8-a42b"',
+324 verbose headers   'content-encoding': 'gzip',
+324 verbose headers   'cache-control': 'max-age=300',
+324 verbose headers   'content-length': '6112',
+324 verbose headers   'accept-ranges': 'bytes',
+324 verbose headers   date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+324 verbose headers   via: '1.1 varnish',
+324 verbose headers   age: '283',
+324 verbose headers   connection: 'keep-alive',
+324 verbose headers   'x-served-by': 'cache-atl6249-ATL',
+324 verbose headers   'x-cache': 'HIT',
+324 verbose headers   'x-cache-hits': '1',
+324 verbose headers   'x-timer': 'S1484302966.243950,VS0,VE0',
+324 verbose headers   vary: 'Accept-Encoding' }
+325 silly get cb [ 200,
+325 silly get   { server: 'nginx/1.10.1',
+325 silly get     'content-type': 'application/json',
+325 silly get     'last-modified': 'Wed, 23 Nov 2016 05:28:24 GMT',
+325 silly get     etag: 'W/"583528f8-a42b"',
+325 silly get     'content-encoding': 'gzip',
+325 silly get     'cache-control': 'max-age=300',
+325 silly get     'content-length': '6112',
+325 silly get     'accept-ranges': 'bytes',
+325 silly get     date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+325 silly get     via: '1.1 varnish',
+325 silly get     age: '283',
+325 silly get     connection: 'keep-alive',
+325 silly get     'x-served-by': 'cache-atl6249-ATL',
+325 silly get     'x-cache': 'HIT',
+325 silly get     'x-cache-hits': '1',
+325 silly get     'x-timer': 'S1484302966.243950,VS0,VE0',
+325 silly get     vary: 'Accept-Encoding' } ]
+326 verbose get saving insight to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\insight\.cache.json
+327 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+328 http 200 https://registry.npmjs.org/update-notifier
+329 verbose headers { server: 'nginx/1.10.1',
+329 verbose headers   'content-type': 'application/json',
+329 verbose headers   'last-modified': 'Tue, 03 Jan 2017 15:52:45 GMT',
+329 verbose headers   etag: 'W/"586bc8cd-c4f6"',
+329 verbose headers   'content-encoding': 'gzip',
+329 verbose headers   'cache-control': 'max-age=300',
+329 verbose headers   'content-length': '6835',
+329 verbose headers   'accept-ranges': 'bytes',
+329 verbose headers   date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+329 verbose headers   via: '1.1 varnish',
+329 verbose headers   age: '71',
+329 verbose headers   connection: 'keep-alive',
+329 verbose headers   'x-served-by': 'cache-atl6239-ATL',
+329 verbose headers   'x-cache': 'HIT',
+329 verbose headers   'x-cache-hits': '1',
+329 verbose headers   'x-timer': 'S1484302966.245212,VS0,VE0',
+329 verbose headers   vary: 'Accept-Encoding' }
+330 silly get cb [ 200,
+330 silly get   { server: 'nginx/1.10.1',
+330 silly get     'content-type': 'application/json',
+330 silly get     'last-modified': 'Tue, 03 Jan 2017 15:52:45 GMT',
+330 silly get     etag: 'W/"586bc8cd-c4f6"',
+330 silly get     'content-encoding': 'gzip',
+330 silly get     'cache-control': 'max-age=300',
+330 silly get     'content-length': '6835',
+330 silly get     'accept-ranges': 'bytes',
+330 silly get     date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+330 silly get     via: '1.1 varnish',
+330 silly get     age: '71',
+330 silly get     connection: 'keep-alive',
+330 silly get     'x-served-by': 'cache-atl6239-ATL',
+330 silly get     'x-cache': 'HIT',
+330 silly get     'x-cache-hits': '1',
+330 silly get     'x-timer': 'S1484302966.245212,VS0,VE0',
+330 silly get     vary: 'Accept-Encoding' } ]
+331 verbose get saving update-notifier to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\update-notifier\.cache.json
+332 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+333 silly mapToRegistry name nopt
+334 silly mapToRegistry using default registry
+335 silly mapToRegistry registry https://registry.npmjs.org/
+336 silly mapToRegistry data Result {
+336 silly mapToRegistry   raw: 'nopt',
+336 silly mapToRegistry   scope: null,
+336 silly mapToRegistry   name: 'nopt',
+336 silly mapToRegistry   rawSpec: '',
+336 silly mapToRegistry   spec: 'latest',
+336 silly mapToRegistry   type: 'tag' }
+337 silly mapToRegistry uri https://registry.npmjs.org/nopt
+338 verbose addRemoteTarball https://registry.npmjs.org/nopt/-/nopt-3.0.1.tgz not in flight; adding
+339 verbose addRemoteTarball [ 'https://registry.npmjs.org/nopt/-/nopt-3.0.1.tgz',
+339 verbose addRemoteTarball   'bce5c42446a3291f47622a370abbf158fbbacbfd' ]
+340 info retry fetch attempt 1 at 6:22:45 PM
+341 info attempt registry request try #1 at 6:22:45 PM
+342 http fetch GET https://registry.npmjs.org/nopt/-/nopt-3.0.1.tgz
+343 silly addNameRange number 2 { name: 'update-notifier',
+343 silly addNameRange   range: '>=0.5.0 <0.6.0',
+343 silly addNameRange   hasData: true }
+344 silly addNameRange versions [ 'update-notifier',
+344 silly addNameRange   [ '0.1.0',
+344 silly addNameRange     '0.1.1',
+344 silly addNameRange     '0.1.2',
+344 silly addNameRange     '0.1.3',
+344 silly addNameRange     '0.1.4',
+344 silly addNameRange     '0.1.5',
+344 silly addNameRange     '0.1.6',
+344 silly addNameRange     '0.1.7',
+344 silly addNameRange     '0.1.8',
+344 silly addNameRange     '0.1.9',
+344 silly addNameRange     '0.1.10',
+344 silly addNameRange     '0.2.0',
+344 silly addNameRange     '0.2.1',
+344 silly addNameRange     '0.2.2',
+344 silly addNameRange     '0.3.0',
+344 silly addNameRange     '0.3.1',
+344 silly addNameRange     '0.3.2',
+344 silly addNameRange     '0.4.0',
+344 silly addNameRange     '0.5.0',
+344 silly addNameRange     '0.6.0',
+344 silly addNameRange     '0.6.1',
+344 silly addNameRange     '0.6.2',
+344 silly addNameRange     '0.6.3',
+344 silly addNameRange     '0.7.0',
+344 silly addNameRange     '1.0.0',
+344 silly addNameRange     '1.0.1',
+344 silly addNameRange     '1.0.2',
+344 silly addNameRange     '1.0.3' ] ]
+345 silly addNamed update-notifier@0.5.0
+346 verbose addNamed "0.5.0" is a plain semver version for update-notifier
+347 silly addNameRange number 2 { name: 'insight', range: '>=0.8.2 <0.9.0', hasData: true }
+348 silly addNameRange versions [ 'insight',
+348 silly addNameRange   [ '0.1.0',
+348 silly addNameRange     '0.1.1',
+348 silly addNameRange     '0.1.2',
+348 silly addNameRange     '0.1.3',
+348 silly addNameRange     '0.2.0',
+348 silly addNameRange     '0.3.0',
+348 silly addNameRange     '0.3.1',
+348 silly addNameRange     '0.4.0',
+348 silly addNameRange     '0.4.1',
+348 silly addNameRange     '0.4.2',
+348 silly addNameRange     '0.4.3',
+348 silly addNameRange     '0.5.0',
+348 silly addNameRange     '0.5.1',
+348 silly addNameRange     '0.5.2',
+348 silly addNameRange     '0.5.3',
+348 silly addNameRange     '0.6.0',
+348 silly addNameRange     '0.7.0',
+348 silly addNameRange     '0.8.0',
+348 silly addNameRange     '0.8.1',
+348 silly addNameRange     '0.8.2',
+348 silly addNameRange     '0.8.3',
+348 silly addNameRange     '0.8.4' ] ]
+349 silly addNamed insight@0.8.4
+350 verbose addNamed "0.8.4" is a plain semver version for insight
+351 silly mapToRegistry name insight
+352 silly mapToRegistry using default registry
+353 silly mapToRegistry registry https://registry.npmjs.org/
+354 silly mapToRegistry data Result {
+354 silly mapToRegistry   raw: 'insight',
+354 silly mapToRegistry   scope: null,
+354 silly mapToRegistry   name: 'insight',
+354 silly mapToRegistry   rawSpec: '',
+354 silly mapToRegistry   spec: 'latest',
+354 silly mapToRegistry   type: 'tag' }
+355 silly mapToRegistry uri https://registry.npmjs.org/insight
+356 verbose addRemoteTarball https://registry.npmjs.org/insight/-/insight-0.8.4.tgz not in flight; adding
+357 verbose addRemoteTarball [ 'https://registry.npmjs.org/insight/-/insight-0.8.4.tgz',
+357 verbose addRemoteTarball   '671caf65b47c9fe8c3d1b3206cf45bb211b75884' ]
+358 silly cache afterAdd update-notifier@0.5.0
+359 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\update-notifier\0.5.0\package\package.json not in flight; writing
+360 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+361 info retry fetch attempt 1 at 6:22:45 PM
+362 info attempt registry request try #1 at 6:22:45 PM
+363 http fetch GET https://registry.npmjs.org/insight/-/insight-0.8.4.tgz
+364 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\update-notifier\0.5.0\package\package.json written
+365 http 200 https://registry.npmjs.org/cordova-lib
+366 verbose headers { server: 'nginx/1.10.1',
+366 verbose headers   'content-type': 'application/json',
+366 verbose headers   'last-modified': 'Tue, 13 Dec 2016 00:02:14 GMT',
+366 verbose headers   etag: 'W/"584f3a86-d6ee7"',
+366 verbose headers   'content-encoding': 'gzip',
+366 verbose headers   'cache-control': 'max-age=300',
+366 verbose headers   'content-length': '27155',
+366 verbose headers   'accept-ranges': 'bytes',
+366 verbose headers   date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+366 verbose headers   via: '1.1 varnish',
+366 verbose headers   age: '132',
+366 verbose headers   connection: 'keep-alive',
+366 verbose headers   'x-served-by': 'cache-atl6236-ATL',
+366 verbose headers   'x-cache': 'HIT',
+366 verbose headers   'x-cache-hits': '2',
+366 verbose headers   'x-timer': 'S1484302966.243842,VS0,VE0',
+366 verbose headers   vary: 'Accept-Encoding' }
+367 silly get cb [ 200,
+367 silly get   { server: 'nginx/1.10.1',
+367 silly get     'content-type': 'application/json',
+367 silly get     'last-modified': 'Tue, 13 Dec 2016 00:02:14 GMT',
+367 silly get     etag: 'W/"584f3a86-d6ee7"',
+367 silly get     'content-encoding': 'gzip',
+367 silly get     'cache-control': 'max-age=300',
+367 silly get     'content-length': '27155',
+367 silly get     'accept-ranges': 'bytes',
+367 silly get     date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+367 silly get     via: '1.1 varnish',
+367 silly get     age: '132',
+367 silly get     connection: 'keep-alive',
+367 silly get     'x-served-by': 'cache-atl6236-ATL',
+367 silly get     'x-cache': 'HIT',
+367 silly get     'x-cache-hits': '2',
+367 silly get     'x-timer': 'S1484302966.243842,VS0,VE0',
+367 silly get     vary: 'Accept-Encoding' } ]
+368 verbose get saving cordova-lib to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\cordova-lib\.cache.json
+369 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+370 http fetch 200 https://registry.npmjs.org/nopt/-/nopt-3.0.1.tgz
+371 silly mapToRegistry name cordova-lib
+372 silly mapToRegistry using default registry
+373 silly mapToRegistry registry https://registry.npmjs.org/
+374 silly mapToRegistry data Result {
+374 silly mapToRegistry   raw: 'cordova-lib',
+374 silly mapToRegistry   scope: null,
+374 silly mapToRegistry   name: 'cordova-lib',
+374 silly mapToRegistry   rawSpec: '',
+374 silly mapToRegistry   spec: 'latest',
+374 silly mapToRegistry   type: 'tag' }
+375 silly mapToRegistry uri https://registry.npmjs.org/cordova-lib
+376 verbose addRemoteTarball https://registry.npmjs.org/cordova-lib/-/cordova-lib-6.4.0.tgz not in flight; adding
+377 verbose addRemoteTarball [ 'https://registry.npmjs.org/cordova-lib/-/cordova-lib-6.4.0.tgz',
+377 verbose addRemoteTarball   'a3ad3c366c60baf104701a67a7877af75555ed33' ]
+378 info retry fetch attempt 1 at 6:22:45 PM
+379 info attempt registry request try #1 at 6:22:45 PM
+380 http fetch GET https://registry.npmjs.org/cordova-lib/-/cordova-lib-6.4.0.tgz
+381 silly fetchAndShaCheck shasum bce5c42446a3291f47622a370abbf158fbbacbfd
+382 verbose addTmpTarball C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\nopt\-\nopt-3.0.1.tgz not in flight; adding
+383 verbose addTmpTarball already have metadata; skipping unpack for nopt@3.0.1
+384 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+385 silly cache afterAdd nopt@3.0.1
+386 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\nopt\3.0.1\package\package.json not in flight; writing
+387 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+388 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\nopt\3.0.1\package\package.json written
+389 http fetch 200 https://registry.npmjs.org/insight/-/insight-0.8.4.tgz
+390 silly fetchAndShaCheck shasum 671caf65b47c9fe8c3d1b3206cf45bb211b75884
+391 verbose addTmpTarball C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\insight\-\insight-0.8.4.tgz not in flight; adding
+392 verbose addTmpTarball already have metadata; skipping unpack for insight@0.8.4
+393 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+394 silly cache afterAdd insight@0.8.4
+395 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\insight\0.8.4\package\package.json not in flight; writing
+396 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+397 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\insight\0.8.4\package\package.json written
+398 http fetch 200 https://registry.npmjs.org/cordova-lib/-/cordova-lib-6.4.0.tgz
+399 http 200 https://registry.npmjs.org/underscore
+400 verbose headers { server: 'nginx/1.10.1',
+400 verbose headers   'content-type': 'application/json',
+400 verbose headers   'last-modified': 'Sun, 01 Jan 2017 19:03:49 GMT',
+400 verbose headers   etag: 'W/"58695295-ab80"',
+400 verbose headers   'content-encoding': 'gzip',
+400 verbose headers   'cache-control': 'max-age=300',
+400 verbose headers   'content-length': '7158',
+400 verbose headers   'accept-ranges': 'bytes',
+400 verbose headers   date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+400 verbose headers   via: '1.1 varnish',
+400 verbose headers   age: '77',
+400 verbose headers   connection: 'keep-alive',
+400 verbose headers   'x-served-by': 'cache-atl6246-ATL',
+400 verbose headers   'x-cache': 'HIT',
+400 verbose headers   'x-cache-hits': '1',
+400 verbose headers   'x-timer': 'S1484302966.245386,VS0,VE0',
+400 verbose headers   vary: 'Accept-Encoding' }
+401 silly get cb [ 200,
+401 silly get   { server: 'nginx/1.10.1',
+401 silly get     'content-type': 'application/json',
+401 silly get     'last-modified': 'Sun, 01 Jan 2017 19:03:49 GMT',
+401 silly get     etag: 'W/"58695295-ab80"',
+401 silly get     'content-encoding': 'gzip',
+401 silly get     'cache-control': 'max-age=300',
+401 silly get     'content-length': '7158',
+401 silly get     'accept-ranges': 'bytes',
+401 silly get     date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+401 silly get     via: '1.1 varnish',
+401 silly get     age: '77',
+401 silly get     connection: 'keep-alive',
+401 silly get     'x-served-by': 'cache-atl6246-ATL',
+401 silly get     'x-cache': 'HIT',
+401 silly get     'x-cache-hits': '1',
+401 silly get     'x-timer': 'S1484302966.245386,VS0,VE0',
+401 silly get     vary: 'Accept-Encoding' } ]
+402 verbose get saving underscore to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\underscore\.cache.json
+403 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+404 silly mapToRegistry name underscore
+405 silly mapToRegistry using default registry
+406 silly mapToRegistry registry https://registry.npmjs.org/
+407 silly mapToRegistry data Result {
+407 silly mapToRegistry   raw: 'underscore',
+407 silly mapToRegistry   scope: null,
+407 silly mapToRegistry   name: 'underscore',
+407 silly mapToRegistry   rawSpec: '',
+407 silly mapToRegistry   spec: 'latest',
+407 silly mapToRegistry   type: 'tag' }
+408 silly mapToRegistry uri https://registry.npmjs.org/underscore
+409 verbose addRemoteTarball https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz not in flight; adding
+410 verbose addRemoteTarball [ 'https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz',
+410 verbose addRemoteTarball   '6bbaf0877500d36be34ecaa584e0db9fef035209' ]
+411 info retry fetch attempt 1 at 6:22:48 PM
+412 info attempt registry request try #1 at 6:22:48 PM
+413 http fetch GET https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz
+414 http fetch 200 https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz
+415 silly fetchAndShaCheck shasum 6bbaf0877500d36be34ecaa584e0db9fef035209
+416 verbose addTmpTarball C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\underscore\-\underscore-1.7.0.tgz not in flight; adding
+417 verbose addTmpTarball already have metadata; skipping unpack for underscore@1.7.0
+418 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+419 silly cache afterAdd underscore@1.7.0
+420 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\underscore\1.7.0\package\package.json not in flight; writing
+421 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+422 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\underscore\1.7.0\package\package.json written
+423 http 200 https://registry.npmjs.org/q
+424 verbose headers { server: 'nginx/1.10.1',
+424 verbose headers   'content-type': 'application/json',
+424 verbose headers   'last-modified': 'Sat, 31 Dec 2016 06:32:27 GMT',
+424 verbose headers   etag: 'W/"586750fb-23932"',
+424 verbose headers   'content-encoding': 'gzip',
+424 verbose headers   'cache-control': 'max-age=300',
+424 verbose headers   'content-length': '19475',
+424 verbose headers   'accept-ranges': 'bytes',
+424 verbose headers   date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+424 verbose headers   via: '1.1 varnish',
+424 verbose headers   age: '147',
+424 verbose headers   connection: 'keep-alive',
+424 verbose headers   'x-served-by': 'cache-atl6245-ATL',
+424 verbose headers   'x-cache': 'HIT',
+424 verbose headers   'x-cache-hits': '1',
+424 verbose headers   'x-timer': 'S1484302966.243997,VS0,VE0',
+424 verbose headers   vary: 'Accept-Encoding' }
+425 silly get cb [ 200,
+425 silly get   { server: 'nginx/1.10.1',
+425 silly get     'content-type': 'application/json',
+425 silly get     'last-modified': 'Sat, 31 Dec 2016 06:32:27 GMT',
+425 silly get     etag: 'W/"586750fb-23932"',
+425 silly get     'content-encoding': 'gzip',
+425 silly get     'cache-control': 'max-age=300',
+425 silly get     'content-length': '19475',
+425 silly get     'accept-ranges': 'bytes',
+425 silly get     date: 'Fri, 13 Jan 2017 10:22:46 GMT',
+425 silly get     via: '1.1 varnish',
+425 silly get     age: '147',
+425 silly get     connection: 'keep-alive',
+425 silly get     'x-served-by': 'cache-atl6245-ATL',
+425 silly get     'x-cache': 'HIT',
+425 silly get     'x-cache-hits': '1',
+425 silly get     'x-timer': 'S1484302966.243997,VS0,VE0',
+425 silly get     vary: 'Accept-Encoding' } ]
+426 verbose get saving q to C:\Users\Milan\AppData\Roaming\npm-cache\registry.npmjs.org\q\.cache.json
+427 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+428 silly mapToRegistry name q
+429 silly mapToRegistry using default registry
+430 silly mapToRegistry registry https://registry.npmjs.org/
+431 silly mapToRegistry data Result {
+431 silly mapToRegistry   raw: 'q',
+431 silly mapToRegistry   scope: null,
+431 silly mapToRegistry   name: 'q',
+431 silly mapToRegistry   rawSpec: '',
+431 silly mapToRegistry   spec: 'latest',
+431 silly mapToRegistry   type: 'tag' }
+432 silly mapToRegistry uri https://registry.npmjs.org/q
+433 verbose addRemoteTarball https://registry.npmjs.org/q/-/q-1.0.1.tgz not in flight; adding
+434 verbose addRemoteTarball [ 'https://registry.npmjs.org/q/-/q-1.0.1.tgz',
+434 verbose addRemoteTarball   '11872aeedee89268110b10a718448ffb10112a14' ]
+435 info retry fetch attempt 1 at 6:22:55 PM
+436 info attempt registry request try #1 at 6:22:55 PM
+437 http fetch GET https://registry.npmjs.org/q/-/q-1.0.1.tgz
+438 http fetch 200 https://registry.npmjs.org/q/-/q-1.0.1.tgz
+439 silly fetchAndShaCheck shasum 11872aeedee89268110b10a718448ffb10112a14
+440 verbose addTmpTarball C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\q\-\q-1.0.1.tgz not in flight; adding
+441 verbose addTmpTarball already have metadata; skipping unpack for q@1.0.1
+442 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+443 silly cache afterAdd q@1.0.1
+444 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\q\1.0.1\package\package.json not in flight; writing
+445 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+446 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\q\1.0.1\package\package.json written
+447 silly fetchAndShaCheck shasum a3ad3c366c60baf104701a67a7877af75555ed33
+448 verbose addTmpTarball C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\cordova-lib\-\cordova-lib-6.4.0.tgz not in flight; adding
+449 verbose addTmpTarball already have metadata; skipping unpack for cordova-lib@6.4.0
+450 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+451 silly cache afterAdd cordova-lib@6.4.0
+452 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\cordova-lib\6.4.0\package\package.json not in flight; writing
+453 verbose correctMkdir C:\Users\Milan\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+454 verbose afterAdd C:\Users\Milan\AppData\Roaming\npm-cache\cordova-lib\6.4.0\package\package.json written
+455 info retry will retry, error on last attempt: Error: read ECONNRESET
+456 info retry will retry, error on last attempt: Error: read ECONNRESET
+457 silly fetchAndShaCheck shasum 6770de0d6200ad6f94a1abe8939b5bd9ece139e3
+458 verbose about to build C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+459 verbose unlock done using C:\Users\Milan\AppData\Roaming\npm-cache\_locks\cordova-1fb861027f9616ae.lock for C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+460 verbose stack Error: shasum check failed for C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\cordova-common\-\cordova-common-1.5.1.tgz
+460 verbose stack Expected: 6770de0d6200ad6f94a1abe8939b5bd9ece139e3
+460 verbose stack Actual:   ac5d43fc8a48280e3a46bd0f19f8011a7d88b1a4
+460 verbose stack From:     https://registry.npmjs.org/cordova-common/-/cordova-common-1.5.1.tgz
+460 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\sha\index.js:25:8
+460 verbose stack     at ReadStream.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\sha\index.js:72:7)
+460 verbose stack     at emitNone (events.js:72:20)
+460 verbose stack     at ReadStream.emit (events.js:166:7)
+460 verbose stack     at endReadableNT (_stream_readable.js:921:12)
+460 verbose stack     at nextTickCallbackWith2Args (node.js:442:9)
+460 verbose stack     at process._tickCallback (node.js:356:17)
+461 verbose cwd C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+462 error Windows_NT 10.0.14393
+463 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "cordova"
+464 error node v4.6.0
+465 error npm  v2.15.9
+466 error shasum check failed for C:\Users\Milan\AppData\Local\Temp\npm-1548-ae5778bd\registry.npmjs.org\cordova-common\-\cordova-common-1.5.1.tgz
+466 error Expected: 6770de0d6200ad6f94a1abe8939b5bd9ece139e3
+466 error Actual:   ac5d43fc8a48280e3a46bd0f19f8011a7d88b1a4
+466 error From:     https://registry.npmjs.org/cordova-common/-/cordova-common-1.5.1.tgz
+467 error If you need help, you may report this error at:
+467 error     <https://github.com/npm/npm/issues>
+468 verbose exit [ 1, true ]
+469 verbose unbuild node_modules\cordova
+470 info preuninstall cordova@6.4.0
+471 info uninstall cordova@6.4.0
+472 verbose unbuild rmStuff cordova@6.4.0 from C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules
+473 silly gentlyRm C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\.bin\cordova.cmd is being gently removed
+474 silly gentlyRm verifying C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo is an npm working directory
+475 silly gentlyRm containing path C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo is under npm's control, in C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+476 silly gentlyRm deletion target C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\.bin\cordova.cmd is under C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+477 verbose gentlyRm vacuuming from C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\.bin\cordova.cmd up to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+478 silly gentlyRm C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\.bin\cordova is being gently removed
+479 silly gentlyRm verifying C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo is an npm working directory
+480 silly gentlyRm containing path C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo is under npm's control, in C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+481 silly gentlyRm deletion target C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\.bin\cordova is under C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+482 verbose gentlyRm vacuuming from C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\.bin\cordova up to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+483 info postuninstall cordova@6.4.0
+484 silly gentlyRm C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova is being purged from base C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
+485 verbose gentlyRm don't care about contents; nuking C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+486 silly vacuum-fs purging C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules\cordova
+487 silly vacuum-fs removing C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo\node_modules
+488 silly vacuum-fs finished vacuuming up to C:\Users\Milan\Documents\Harvard\Fall 2016\D4D\LaotuRepo
