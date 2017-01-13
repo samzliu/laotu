@@ -127,6 +127,11 @@ def isphone(num):
     else:
         return True
 
+def hasStandard(product):
+    return product['standard_geo'] or product['standard_producer'] or product['standard_raw'] or \
+    product['standard_production'] or product['standard_storage'] or product['standard_tech'] or \
+    product['standard_package'] or product['standard_price']
+
 #pages are below .................................................................
 
 @app.route('/')
@@ -250,7 +255,7 @@ def show_products_list_category(category):
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
-    return render_template('product.html', product=product, producer=producer)
+    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product))
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity=1):
