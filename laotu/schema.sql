@@ -24,7 +24,6 @@ create table product (
     category text not null,
     quantity integer not null,
     price decimal(7,2) not null,
-    location text not null,
     description text not null,
     producer_id integer not null,
     FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
