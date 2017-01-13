@@ -5,6 +5,11 @@ function dropDownQuantity() {
     document.getElementById("myDropdown").classList.toggle("show");
 }
 
+// Opens the link provided
+function gotoURL(url) {
+  window.open(url, "_self");
+}
+
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {

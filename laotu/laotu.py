@@ -15,16 +15,19 @@ import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
+from flask.ext.uploads import UploadSet, IMAGES, configure_uploads 
 
 from strings import *
 
 # configuration
-#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
 #DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
+#UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
+UPLOADED_PHOTOS_DEST = '/tmp/photos'
 
 # test keys right now
 stripe_keys = {
@@ -42,6 +45,9 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
     tables = ['user', 'producer', 'product', 'trans'], title = 'Admin Page', h1 = 'Admin Page')
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+
+upload_photos = UploadSet('photos', IMAGES)
+configure_uploads(app, upload_photos)
 
 if __name__ == '__main__':
     app.run()
@@ -265,6 +271,24 @@ def add_product(product_id, quantity=1):
         flash(FLASH_CARTED)
         return redirect(url_for('show_products_list'))
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        photo = request.files.get('photo')
+        title = request.form.get('title')
+        if not (photo and title):
+            flash("You must fill in all the fields")
+        else:
+            try:
+                filename = upload_photos.save(photo)
+            except UploadNotAllowed:
+                flash("The upload was not allowed")
+            else:
+                #store filename database
+                flash("Upload successful")
+                return redirect(url_for('home'))
+    return render_template('upload.html')
+        
 @app.route('/cart')
 def get_cart():
     """Displays cart"""
@@ -359,7 +383,7 @@ def categories():
 @app.route('/category/<category>')
 def category(category):
     products_list = query_db("""select * from product where category like ?""", (category,))
-    return render_template('products_list.html', products_list=products)
+    return render_template('products_list.html', products_list=products_list)
 
 @app.route('/stories')
 def stories():

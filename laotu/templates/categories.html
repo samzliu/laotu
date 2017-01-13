@@ -6,13 +6,12 @@
     {{ self.title() }}
 {% endblock %}
 {% block main %}
-    {% if categories %}
-        <em>Product categories:</em>    
-        <ul class="categories">
+    {% if categories %} 
     {% for category in categories %}
-        <li><em><a href={{ url_for('show_products_list_category', category=category.category) }}>{{ category.category }}</a></em>
+        <div class="category" onclick="gotoURL('{{ url_for('show_products_list_category', category=category.category) }}')">
+            <h1 style="text-align: center; tex">{{ category.category }}</h1>
+        </div>
     {% endfor %}
-        </ul>
     {% else %}
         <em>No categories found, try again later</em>
     {% endif %}
