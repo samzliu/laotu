@@ -80,19 +80,20 @@ div.product_main {
 div.product_main div.product-info {
     position: absolute; 
     width: 58%;  
-    height: 100%;
-    left: 40%; 
-    top: 0px;
+    height: 120%;
+    right: 40%; 
+    bottom: 0%;
     padding-left: 2%;
 }
 
-div.product_main div.product-title {
+div.product_main div.product-info div.product-title {
     height: 130px; 
     width: 100%; 
-    border-bottom: 1px solid green;
 }
 
-div.product_main div.product-price {
+div.product_main div.product-info div.product-price {
+    position: absolute;
+    bottom: 10%;
 
 }
 
@@ -100,8 +101,9 @@ div.product_description {
     background-color: rgba(119,170,68,0.4);
     position: relative; 
     margin: 1rem auto;
-    width: 80%;
+    width: 90%;
     top: 0px;
+    right: 7%;
 }
 
 div.product-list div.product-info {

@@ -9,7 +9,10 @@
 
     <title>{% block title %}Welcome{% endblock %} | LaoTu</title>
 
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" media="screen and (min-width: 400px)"/>
+
+    <!-- CSS Page for a mobile screen -->
+    <link href="{{ url_for('static', filename='css/style-mobile.css') }}" rel="stylesheet" media="screen and (max-width: 400px)"/>
 
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
