@@ -246,11 +246,33 @@ div.error {
 .dropbtn {
     background-color: #4CAF50;
     color: white;
-    padding: 16px;
-    font-size: 16px;
     border: none;
     cursor: pointer;
 }
+.dropbtn-red {
+    background-color: #EB1936;
+    position:absolute;
+    color: white;
+    height: 100%;
+    width: calc((100% + 30px) * .3 - 15px );
+    vertical-align:center;
+    font-size: 16px;
+    border: none;
+}
+.dropbtn-green {
+    background-color: #4CAF50;
+    position:absolute;
+    color: white;
+    height: 100%;
+    border: none;
+    right:0px;
+    width: calc((100% + 30px) * .7 - 15px );
+    font-size:16px;
+}
+.dropbtn-red:hover, .dropbtn-red:focus {
+    background-color: #A60032;
+}
+
 
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {

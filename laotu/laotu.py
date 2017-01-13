@@ -22,8 +22,8 @@ from strings import *
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-#DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
+#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -353,8 +353,13 @@ def update_product(product_id, quantity):
 @app.route('/pay')
 def pay():
     # check that all items are still in stock
-    purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
-
+    purchases = query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
+    join product on cart.product_id=product.product_id where cart.user_id=?''', [session['user_id']])
+    for purchase in purchases:
+        if purchase['inventory'] < purchase['quantity']:
+            out_of_stock_message = FLASH_OUT_OF_STOCK % (purchase['title'], purchase['title'])
+            flash(out_of_stock_message)
+            return redirect(url_for('get_cart'))
     amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
     if amount < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
@@ -377,7 +382,8 @@ def charge():
       pass
 
     # update all the databases
-    purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
+    purchases = query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
+    join product on cart.product_id=product.product_id where cart.user_id=?''', [session['user_id']])
     db = get_db()
     # check that all products are in stock
     for purchase in purchases:
