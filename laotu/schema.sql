@@ -17,6 +17,52 @@ create table producer (
     location text
 );
 
+drop table if exists standards;
+create table standards (
+    standards_id integer primary key autoincrement,
+    organic_cert_1 boolean default 0,
+    organic_cert_2 boolean default 0,
+    organic_cert_3 boolean default 0,
+    organic_cert_4 boolean default 0,
+    organic_cert_5 boolean default 0,
+    organic_cert_6 boolean default 0,
+    organic_cert_7 boolean default 0,
+    organic_cert_8 boolean default 0,
+    quality_cert_1 boolean default 0,
+    quality_cert_2 boolean default 0,
+    producer_benifit_1 boolean default 0,
+    producer_benifit_2 boolean default 0,
+    producer_benifit_3 boolean default 0,
+    producer_benifit_4 boolean default 0,
+    producer_benifit_5 boolean default 0,
+    producer_benifit_6 boolean default 0,
+    consumer_benifit_1 boolean default 0,
+    local_1 boolean default 0,
+    local_2 boolean default 0,
+    local_3 boolean default 0,
+    package_1 boolean default 0,
+    package_2 boolean default 0,
+    ethnic_1 boolean default 0,
+    ethnic_2 boolean default 0,
+    ethnic_3 boolean default 0,
+    ethnic_4 boolean default 0,
+    ethnic_5 boolean default 0,
+    ethnic_6 boolean default 0,
+    ethnic_7 boolean default 0,
+    ethnic_8 boolean default 0,
+    ethnic_9 boolean default 0,
+    ethnic_10 boolean default 0,
+    production_1 boolean default 0,
+    production_2 boolean default 0,
+    production_3 boolean default 0,
+    production_4 boolean default 0,
+    production_5 boolean default 0,
+    craft_1 boolean default 0,
+    craft_2 boolean default 0,
+    craft_3 boolean default 0,
+    craft_4 boolean default 0
+);
+
 drop table if exists product;
 create table product (
     product_id integer primary key autoincrement,
@@ -33,55 +79,16 @@ create table product (
     standard_tech text,
     standard_package text,
     standard_price text,
-    FOREIGN KEY (producer_id) REFERENCES producer(producer_id)
-);
-
-drop table if exists standards;
-create table standards (
-    standard_id integer primary key autoincrement,
-    product_id integer unique,
-    FOREIGN KEY (product_id) REFERENCES product(producer_id)
-    organic_cert_1 boolean default 0
-    organic_cert_2 boolean default 0
-    organic_cert_3 boolean default 0
-    organic_cert_4 boolean default 0
-    organic_cert_5 boolean default 0
-    organic_cert_6 boolean default 0
-    organic_cert_7 boolean default 0
-    organic_cert_8 boolean default 0
-    quality_cert_1 boolean default 0
-    quality_cert_2 boolean default 0
-    producer_benifit_1 boolean default 0
-    producer_benifit_2 boolean default 0
-    producer_benifit_3 boolean default 0
-    producer_benifit_4 boolean default 0
-    producer_benifit_5 boolean default 0
-    producer_benifit_6 boolean default 0
-    consumer_benifit_1 boolean default 0
-    local_1 boolean default 0
-    local_2 boolean default 0
-    local_3 boolean default 0
-    package_1 boolean default 0
-    package_2 boolean default 0
-    ethnic_1 boolean default 0
-    ethnic_2 boolean default 0
-    ethnic_3 boolean default 0
-    ethnic_4 boolean default 0
-    ethnic_5 boolean default 0
-    ethnic_6 boolean default 0
-    ethnic_7 boolean default 0
-    ethnic_8 boolean default 0
-    ethnic_9 boolean default 0
-    ethnic_10 boolean default 0
-    production_1 boolean default 0
-    production_2 boolean default 0
-    production_3 boolean default 0
-    production_4 boolean default 0
-    production_5 boolean default 0
-    craft_1 boolean default 0
-    craft_2 boolean default 0
-    craft_3 boolean default 0
-    craft_4 boolean default 0
+    product_photo_filename_1 text,
+    product_photo_filename_2 text,
+    product_photo_filename_3 text,
+    laotu_book_photo_filename_1 text,
+    laotu_book_photo_filename_2 text,
+    laotu_book_photo_filename_3 text,
+    laotu_book_photo_filename_4 text,
+    standards_id integer unique,
+    FOREIGN KEY (producer_id) REFERENCES producer(producer_id),
+    FOREIGN KEY (standards_id) REFERENCES standards(standards_id)
 );
 
 drop table if exists trans;
