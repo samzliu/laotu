@@ -1,18 +1,18 @@
 {% extends "layout.html" %}
 {% block title %}
-    Categories
+    产品类别
 {% endblock %}
 {% block header %}
     {{ self.title() }}
 {% endblock %}
 {% block main %}
-    {% if categories %} 
-    {% for category in categories %}
-        <div class="category" onclick="gotoURL('{{ url_for('show_products_list_category', category=category.category) }}')">
-            <h1 style="text-align: center; tex">{{ category.category }}</h1>
+    {% if tags %} 
+    {% for tag in tags %}
+        <div class="category" onclick="gotoURL('{{ url_for('category', category=tag.name) }}')">
+            <h1 style="text-align: center; tex">{{ tag.name }}</h1>
         </div>
     {% endfor %}
     {% else %}
-        <em>No categories found, try again later</em>
+        <em>没发现产品类别, 稍后再试。</em>
     {% endif %}
 {% endblock %}
