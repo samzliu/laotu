@@ -343,6 +343,9 @@ def update_product(product_id, quantity):
 def pay():
     # change amount here
     amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
+    if amount < 500:
+        flash(FLASH_AMOUNT_TOO_SMALL)
+        return redirect(url_for('get_cart'))
     return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])

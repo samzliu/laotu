@@ -57,6 +57,7 @@ FLASH_CART_PRODUCT =u'您已经将此产品添加到您的购物车。您无法�
 FLASH_UNCARTED =u'产品已从购物车中删除'
 FLASH_CLEARED =u'购物车已清除'
 FLASH_UPDATED =u'购物车已更新'
+FLASH_AMOUNT_TOO_SMALL =u'我们不能接受5元以下的购买'
 FLASH_PURCHASE =u'您的购买成功'
 FLASH_UPLOAD_FIELDS =u'您必须填写所有字段'
 FLASH_UPLOAD_FORBIDDEN =u'上传不允许'
