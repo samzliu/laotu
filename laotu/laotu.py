@@ -357,7 +357,7 @@ def charge():
 
     # update all the databases
     db = get_db()
-    purchases = query_db('select * from cart join product on cart.product_id=product.product_id')
+    purchases = query_db('select * from cart join product on cart.product_id=product.product_id where cart.user_id=?', [session['user_id']])
     purchase_rows = []
     # check that all products are in stock for the specified quantity
     for purchase in purchases:
