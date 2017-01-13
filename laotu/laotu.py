@@ -281,8 +281,8 @@ def add_product(product_id, quantity):
     # otherwise add to cart
     else:
         db = get_db()
-        db.execute('''insert into cart (user_id, product_id, quantity) \
-        values (?, ?, ?)''', (session['user_id'], product_id, quantity))
+        db.execute('''insert into cart (user_id, product_id, quantity) values
+                    (?, ?, ?)''', (session['user_id'], product_id, quantity))
         db.commit()
         flash(FLASH_CARTED)
         return redirect(url_for('show_products_list'))
@@ -366,6 +366,7 @@ def update_product(product_id, quantity):
 
 @app.route('/pay')
 def pay():
+    """Displays the pay page with the Stripe Checkout Button."""
     # get all the user's purchases
     purchases = query_db('''select cart.product_id, cart.quantity, \
                             product.title, product.price, \
@@ -395,35 +396,44 @@ def pay():
         # keep track of the transaction id for each product in the cart
         transaction_ids.append(cursor.lastrowid)
         # update product inventory
-        db.execute('''update product set quantity = quantity - ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+        db.execute('''update product set quantity = quantity - ? where
+            product_id = ?''', (purchase['quantity'], purchase['product_id']))
     db.commit()
-    # store the amount the user must pay in the session
-    session['amount'] = query_db('''select sum(product.price*cart.quantity) from cart \
-                                    join product on cart.product_id=product.product_id''', one=True)[0]
     # store the transaction_ids in the session
     session['transaction_ids'] = transaction_ids
+    # store the amount the user must pay in the session
+    session['amount'] = query_db('''select sum(product.price*cart.quantity)
+                                    from cart join product on cart.product_id=
+                                    product.product_id''', one=True)[0]
+    # if the user is spending less than 5 yuan, flash message
     if session['amount'] < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
     return render_template('pay.html', key=stripe_keys['publishable_key'],
-                            amount=session['amount'], transaction_ids=session['transaction_ids'])
+                            amount=session['amount'],
+                            transaction_ids=session['transaction_ids'])
 
 def undo_hold():
-    """put products back into product table. Do nothing to the transactions (they remain there as uncomfirmed)"""
+    """Undo the hold on products that was initiated during checkout."""
     db = get_db()
     for trans_id in session['transaction_ids']:
-        purchase = query_db('select * from trans where trans_id = ?', [trans_id])[0]
-        db.execute('''update product set quantity = quantity + ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
+        # get the transaction details
+        purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
+        # Put products back into product table
+        db.execute('''update product set quantity=quantity + ? where
+                product_id=?''', (purchase['quantity'], purchase['product_id']))
+        # Do nothing to the transactions (they remain there as uncomfirmed).
     db.commit()
 
 @app.route('/charge', methods=['POST'])
 def charge():
+    """Charge the user."""
     try:
         charge = stripe.Charge.create(
             amount=session['amount'], # Amount in cents
             currency="cny",
             source=request.form['stripeToken'])
-    # for any exception, undo the hold
+    # for any exception, undo the hold and flash a message
     except stripe.error.CardError as e:
         # The account has been declined
         undo_hold()
@@ -459,13 +469,15 @@ def charge():
     else:
         db = get_db()
         for trans_id in session['transaction_ids']:
-            db.execute('''update trans set confirmed = 1 where trans_id = ?''', [trans_id])
+            # confirm the transaction
+            db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
         # empty the cart
         db.execute('''delete from cart where user_id = ?''', [session['user_id']])
         db.commit()
         # remove the variables amount and transaction_ids from session
         session.pop('amount', None)
         session.pop('transaction_ids', None)
+        # flash message that purchase was succesful
         flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
@@ -517,13 +529,18 @@ def category(category):
 
 @app.route('/stories')
 def stories():
+    """Display the stories page."""
     return render_template('stories.html')
 
 @app.route('/<int:producer_id>/show_farmer')
 def show_farmer(producer_id):
-    producer_products = query_db('select * from product where producer_id= ?', [producer_id])
-    producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
-    return render_template('products_list.html', products_list=producer_products, producer=producer)
+    """Show details of the farmer, including all his products."""
+    producer_products = query_db('select * from product where producer_id= ?',
+                                [producer_id])
+    producer = query_db('select * from producer where producer_id=?',
+                        [producer_id], one=True)
+    return render_template('products_list.html',
+                            products_list=producer_products, producer=producer)
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product_db():
