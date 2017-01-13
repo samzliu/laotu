@@ -40,8 +40,8 @@
   {% endfor %}
 
   {% if items %}
-  <div style="position:relative; right: 5%; width: 80%; margin: 1rem auto; z-index: -1">
-    <button class="dropbtn" onclick="gotoURL('{{ url_for('pay')}}')" style="width: 100%; padding:0px;">
+  <div style="position: relative; left: 10px">
+    <button onclick="handleButtonClick('{{ url_for('pay')}}')" class="dropbtn">
       <h1>Total Price: {{total}} CNY</h1>
       <h1>Pay For Items</h1>
     </button>
