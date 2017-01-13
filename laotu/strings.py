@@ -64,6 +64,7 @@ FLASH_UPLOAD_FIELDS =u'您必须填写所有字段'
 FLASH_UPLOAD_FORBIDDEN =u'上传不允许'
 FLASH_UPLOAD_SUCCESSFUL =u'上传成功'
 FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购买的%s的数量，或从您的购物车中删除。'
+FLASH_PROD_ADD_SUCCESSFUL='Added product to database!'
 
 #Food Standard Tags
 ORGANIC_CERT_1 = "中国国家有机认证"
@@ -108,5 +109,23 @@ CRAFT_2 = "可降解原料"
 CRAFT_3 = "传统使用的原料"
 CRAFT_4 = "传统工艺"
 
+
+# Error messages for adding products
+ERR_NO_PROD_TITLE = "You need to provide a title for this product."
+ERR_NO_PROD_QUANTITY = "You need to provide a quantity for this product."
+ERR_INVALID_PROD_QUANTITY = "Please provide a valid quantity for this product."
+ERR_NO_PROD_PRICE = "You need to provide a price for this product."
+ERR_INVALID_PROD_PRICE = "You need to provide a valid (integer) price for this product."
+ERR_NO_PROD_DESCRIPTION = "You need to provide a description for this product."
+ERR_NO_PROD_PRODUCER_ID = "You need to provide a producer id for this product."
+ERR_INVALID_PROD_PRODUCER_ID = "You need to provide a valid producer id for this product."
+ERR_NO_STANDARD_GEO = "Please provide a standard geo."
+ERR_NO_STANDARD_PRODUCER = "Please provide a standard producer."
+ERR_NO_STANDARD_RAW = "Please provide a standard raw."
+ERR_NO_STANDARD_PRODUCTION = "Please provide a standard production."
+ERR_NO_STANDARD_STORAGE = "Please provide a standard storage."
+ERR_NO_STANDARD_TECH = "Please provide a standard tech."
+ERR_NO_STANDARD_PACKAGE = "Please provide a standard package."
+ERR_NO_STANDARD_PRICE = "Please provide a standard price."
 
 

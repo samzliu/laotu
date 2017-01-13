@@ -455,6 +455,93 @@ def show_farmer(producer_id):
     producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
     return render_template('products_list.html', products_list=producer_products, producer=producer)
 
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product_db():
+    """Add a product to the database."""
+    print "Hello there!"
+    error = None
+    errtype = None
+    # check if a string is an integer
+    def is_int(s):
+        try:
+            int(s)
+            return True 
+        except ValueError:
+            return False
+            
+    if request.method == 'POST':
+        print "Made it here."
+        print request.form
+        if not request.form['title']:
+            error = ERR_NO_PROD_TITLE
+            errtype = 'title'
+        elif not request.form['quantity']:
+            error = ERR_NO_PROD_QUANTITY
+            errtype = 'quantity'
+        elif not is_int(request.form['quantity']):
+            error = ERR_INVALID_PROD_QUANTITY
+            errtype = 'quantity'
+        elif not request.form['price']:
+            error = ERR_NO_PROD_PRICE
+            errtype = 'price'
+        elif not is_int(request.form['price']):
+            error = ERR_INVALID_PROD_PRICE
+            errtype = 'price'
+        elif not request.form['description']:
+            error = ERR_NO_PROD_DESCRIPTION
+            errtype = 'description'
+        elif not request.form['producerid']:
+            error = ERR_NO_PROD_PRODUCER_ID
+            errtype = 'producerid'
+        elif len(query_db('''select * from producer where producer_id=?''', \
+            (request.form['producerid'],))) == 0:
+            error = ERR_INVALID_PROD_PRODUCER_ID
+            errtype = 'producerid'
+        elif not request.form['standard_geo']:
+            error = ERR_NO_STANDARD_GEO
+            errtype = 'standard_geo'
+        elif not request.form['standard_producer']:
+            error = ERR_NO_STANDARD_PRODUCER
+            errtype = 'standard_producer'
+        elif not request.form['standard_raw']:
+            error = ERR_NO_STANDARD_RAW
+            errtype = 'standard_raw'
+        elif not request.form['standard_production']:
+            error = ERR_NO_STANDARD_PRODUCTION
+            errtype = 'standard_production'
+        elif not request.form['standard_storage']:
+            error = ERR_NO_STANDARD_STORAGE
+            errtype = 'standard_storage'
+        elif not request.form['standard_tech']:
+            error = ERR_NO_STANDARD_TECH
+            errtype = 'standard_tech'
+        elif not request.form['standard_package']:
+            error = ERR_NO_STANDARD_PACKAGE
+            errtype = 'standard_price'
+        elif not request.form['standard_price']:
+            error = ERR_NO_STANDARD_PRICE
+            errtype = 'standard_price'
+        else:
+            db = get_db()
+            db.execute('''insert into product (
+              title, quantity, price, description, producer_id, standard_geo, 
+              standard_producer, standard_raw, standard_production, standard_storage, 
+              standard_tech, standard_package, standard_price) 
+              values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+              [request.form['title'], int(request.form['quantity']), \
+                  int(request.form['price']), request.form['description'], \
+                  int(request.form['producerid']), request.form['standard_geo'],\
+                  request.form['standard_producer'], request.form['standard_raw'],\
+                  request.form['standard_production'], request.form['standard_storage'],\
+                  request.form['standard_tech'], request.form['standard_package'],\
+                  request.form['standard_price']])
+            db.commit()
+            flash(FLASH_PROD_ADD_SUCCESSFUL)
+            error = None
+            errtype = errtype
+    return render_template('add_product.html', error=error, errtype=errtype)
+
+
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
 app.jinja_env.filters['gravatar'] = gravatar_url
