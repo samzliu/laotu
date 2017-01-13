@@ -31,11 +31,47 @@
 
 
 	<div class="product_description">
-		<h1>Farmer: {{producer.user_name}}</h1>
+		<h2>Farmer: {{producer.user_name}}</h2>
 		Click <a href="{{ url_for('show_farmer', producer_id=producer.producer_id)}}">here</a> to learn more about {{producer.user_name}}.<br>
 		Location: {{producer.location}}<br>
 		<br>
 		{{product.description}}
+	</div>
+
+	<div class="standards_container">
+		<h1>Laotu Standards</h1>
+		<div class="standard">
+			<h2>Geo</h2>
+			{{ product.standard_geo }}
+		</div>
+		<div class="standard">
+			<h2>Producer</h2>
+			{{ product.standard_producer }}
+		</div>
+		<div class="standard">
+			<h2>Raw</h2>
+			{{ product.standard_raw }}
+		</div>
+		<div class="standard">
+			<h2>Production</h2>
+			{{ product.standard_production }}
+		</div>
+		<div class="standard">
+			<h2>Storage</h2>
+			{{ product.standard_storage }}
+		</div>
+		<div class="standard">
+			<h2>Tech</h2>
+			{{ product.standard_tech }}
+		</div>
+		<div class="standard">
+			<h2>Package</h2>
+			{{ product.standard_package }}
+		</div>
+		<div class="standard">
+			<h2>Price</h2>
+			{{ product.standard_price }}
+		</div>
 	</div>
 
 

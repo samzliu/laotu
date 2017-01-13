@@ -33,7 +33,6 @@ Tasks:
 High prority:
     - images (Sam)
     - translate to Chinese (Nat)
-    - product(id) page (Milan)
     - product page (Carl)
     - multiple categories (Carl)
     - blog/splashpage (Sam)

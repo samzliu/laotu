@@ -42,6 +42,7 @@ create table trans (
     trans_id integer primary key autoincrement,
     product_id integer not null,
     user_id integer not null,
+    quantity integer not null,
     trans_date date not null,
     amount decimal(7,2) not null,
     FOREIGN KEY (product_id) REFERENCES product(producer_id),
