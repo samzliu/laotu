@@ -57,7 +57,7 @@ a {
 /*
  * Products
  */
-div.productlist {
+div.product-list {
     position: relative;
     width: 90%; 
     right: 5%;
@@ -94,7 +94,7 @@ div.product_description {
     top: 0px;
 }
 
-div.product-list div.info {
+div.product-list div.product-info {
     position: relative; 
     height: 100%; 
     width: 70%;
@@ -104,9 +104,16 @@ div.product-list div.info {
     margin: 1rem auto;
 }
 
-div.product-list div.info div.title {
+div.product-list div.product-info div.product-title {
     width: 100%;
     height: 70%; 
+}
+
+div.product-list div.product-info div.product-price {
+    position: absolute; 
+    height: 30%; 
+    width: 100%; 
+    top: 70%;
 }
 
 div.category {
