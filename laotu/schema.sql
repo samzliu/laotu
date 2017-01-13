@@ -89,6 +89,7 @@ create table trans (
     trans_id integer primary key autoincrement,
     product_id integer not null,
     user_id integer not null,
+    quantity integer not null,
     trans_date date not null,
     amount decimal(7,2) not null,
     FOREIGN KEY (product_id) REFERENCES product(producer_id),
@@ -104,17 +105,9 @@ create table cart (
 );
 
 
-
--- drop table if exists follower;
--- create table follower (
---   who_id integer,
---   whom_id integer
--- );
---
--- drop table if exists message;
--- create table message (
---   message_id integer primary key autoincrement,
---   author_id integer not null,
---   text text not null,
---   pub_date integer
--- );
+drop table if exists tag;
+create table tag (
+    tag_id integer primary key autoincrement,
+    name text not null,
+    importance integer not null   
+);

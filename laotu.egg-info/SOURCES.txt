@@ -1,6 +1,7 @@
 MANIFEST.in
 README
 setup.cfg
+laotu/_init_.py
 laotu/laotu.py
 laotu/schema.sql
 laotu/strings.py
@@ -15,6 +16,7 @@ laotu/static/products.js
 laotu/static/utility.js
 laotu/static/css/product_list.css
 laotu/static/css/sidebar.css
+laotu/static/css/style-mobile.css
 laotu/static/css/style.css
 laotu/static/css/font-awesome-4.7.0/HELP-US-OUT.txt
 laotu/static/css/font-awesome-4.7.0/css/font-awesome.css
