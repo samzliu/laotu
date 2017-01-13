@@ -263,28 +263,6 @@ div.error {
     width: 90%;
 }
 
-div.flashes {
-    background: #F3F5F6;
-    color: #000000;
-    width: 70%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-/*ul.flashes {
-    list-style: none;
-    margin: 10px 10px 0 10px;
-    padding: 0;
-}
-
-ul.flashes li {
-    background: #B9F3ED;
-    border: 1px solid #81CEC6;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    padding: 4px;
-    font-size: 13px;
-}*/
-
-
 /* Dropdown Button */
 .dropbtn {
     background-color: #4CAF50;

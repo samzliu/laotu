@@ -12,8 +12,9 @@
 			<div class="product-title">
 				<h1>{{product.title}}</h1>
 			</div>
+
 			<div class="product-price">
-				<h2>Price: ${{product.price}}</h2>
+				<h2>Price: &#165 {{ product.price/100 }}</h2>
 				<div class="dropdown">
 				  <button onclick="dropDownQuantity()" class="dropbtn">Add product to cart</button>
 				  <div id="myDropdown" class="dropdown-content">

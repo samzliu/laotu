@@ -24,3 +24,30 @@ the application will greet you onhttp://localhost:5000/
 
 You betcha.  Run the `python setup.py test` file to
 see the tests pass.
+
+
+
+Tasks:
+
+
+High prority:
+    - images (Sam)
+    - translate to Chinese (Nat)
+    - product(id) page (Milan)
+    - product page (Carl)
+    - multiple categories (Carl)
+    - blog/splashpage (Sam)
+    - database updates: show transactions, decrease quantity (Lily)
+    - admin authentication 
+    - 
+    
+    - formatting
+    - wechat
+    - conversion and rollout
+
+
+Low priority:
+    - guest checkout
+    - producer registration
+
+
