@@ -19,8 +19,8 @@ import re
 from strings import *
 
 # configuration
-DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-#DATABASE = '/tmp/laotu.db'
+#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
 #DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
@@ -39,8 +39,9 @@ stripe.api_key = stripe_keys['secret_key']
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE)
-app.register_blueprint(sqliteAdminBP, url_prefix='/sqlite')
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
+    tables = ['user', 'producer', 'product', 'trans'], title = 'Admin Page', h1 = 'Admin Page')
+app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 if __name__ == '__main__':
     app.run()
@@ -150,19 +151,22 @@ def login():
     if g.user:
         return redirect(url_for('home'))
     error = None
+    errtype = None
     if request.method == 'POST':
         user = query_db('''select * from user where
             email = ?''', [request.form['email']], one=True)
         if user is None:
             error = ERR_INVALID_EMAIL
+            errtype = "email"
         elif not check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = ERR_INVALID_PWD
+            errtype = "password"
         else:
             flash(FLASH_LOGGED)
             session['user_id'] = user['user_id']
             return redirect(url_for('home'))
-    return render_template('login.html', error=error)
+    return render_template('login.html', error=error, errtype=errtype)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -228,7 +232,7 @@ def about():
 
 @app.route('/products_list')
 def show_products_list():
-    return render_template('products_list.html', products=query_db('''
+    return render_template('products_list.html', products_list=query_db('''
     select * from product'''))
 
 @app.route('/products_list/<category>')
@@ -250,11 +254,16 @@ def add_product(product_id, quantity=1):
         return redirect(url_for('register'))
     if product_id is None:
         abort(404)
-    db = get_db()
-    db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
-    db.commit()
-    flash(FLASH_CARTED)
-    return redirect(url_for('show_products_list'))
+    elif query_db('select 1 from cart where product_id = ?', [product_id], one=True):
+        flash('''You have already added this product to your cart. \
+        You cannot add a product twice. If you need to change the quantity, please edit your cart.''')
+        return redirect(url_for('show_product', product_id=product_id))
+    else:
+        db = get_db()
+        db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
+        db.commit()
+        flash(FLASH_CARTED)
+        return redirect(url_for('show_products_list'))
 
 @app.route('/cart')
 def get_cart():
@@ -307,19 +316,16 @@ def update_product(product_id, quantity):
     flash('The cart has been updated')
     return redirect(url_for('get_cart'))
 
-
 @app.route('/pay')
 def pay():
     # change amount here
-    amount = query_db('select sum(price) from cart', one=True)[0]
-    print amount
+    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
     return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
 
 @app.route('/charge', methods=['POST'])
 def charge():
     # ideally, want to just keep this variable from the pay function
-    # also, the currency is in jiao (i.e. Chinese "cents"), so 350 is just 3.50 yuan
-    amount = query_db('select sum(price) from cart', one=True)[0]*100
+    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
 
     try:
       charge = stripe.Charge.create(
@@ -345,7 +351,6 @@ def search_results(query):
     results = products # this will be more general later
     return render_template('search_results.html', results=results, query=query)
 
-
 @app.route('/categories')
 def categories():
     categories = query_db("""select distinct category from product""")
@@ -356,6 +361,15 @@ def category(category):
     products = query_db("""select * from product where category like ?""", (category,))
     return render_template('products_list.html', products=products)
 
+@app.route('/stories')
+def stories():
+    return render_template('stories.html')
+
+@app.route('/<int:producer_id>/show_farmer')
+def show_farmer(producer_id):
+    producer_products = query_db('select * from product where producer_id= ?', [producer_id])
+    producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
+    return render_template('farmer.html', producer_products=producer_products, producer=producer)
 
 # add some filters to jinja
 app.jinja_env.filters['datetimeformat'] = format_datetime
