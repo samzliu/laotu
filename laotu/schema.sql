@@ -37,9 +37,10 @@ create table product (
 );
 
 drop table if exists standards;
-create table standards )
+create table standards (
     standard_id integer primary key autoincrement,
-    product_id integer unique FOREIGN KEY REFERENCES product(producer_id)
+    product_id integer unique,
+    FOREIGN KEY (product_id) REFERENCES product(producer_id)
     organic_cert_1 boolean default 0
     organic_cert_2 boolean default 0
     organic_cert_3 boolean default 0
