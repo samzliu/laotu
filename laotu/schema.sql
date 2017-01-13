@@ -21,7 +21,6 @@ drop table if exists product;
 create table product (
     product_id integer primary key autoincrement,
     title text not null,
-    category text not null,
     quantity integer not null,
     price decimal(7,2) not null,
     description text not null,
@@ -61,4 +60,11 @@ create table tag (
     tag_id integer primary key autoincrement,
     name text not null,
     importance integer not null   
+);
+
+drop table if exists product_to_tag;
+create table product_to_tag (
+    relation_id integer primary key autoincrement,
+    product_id integer not null,
+    tag_id integer not null
 );

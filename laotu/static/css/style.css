@@ -57,18 +57,7 @@ a {
 /*
  * Products
  */
-div.product-list {
-    position: relative;
-    width: 90%; 
-    right: 5%;
-    max-width: 600px;
-    height: 150px; 
-    border: 1px #77AA44; 
-    margin: 1rem auto;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: rgba(119,170,68,0.6);
-    transition: 0.3s;
-}
+
 
 div.product_main {
     height: 300px; 
