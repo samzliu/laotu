@@ -71,34 +71,42 @@ div.product-list {
 }
 
 div.product_main {
-    height: 300px; 
+    height: 450px; 
     width: 90%;/*700px;*/ 
     position: relative; 
+    right: 7%;
     margin: 1rem auto;
 }
 
 div.product_main div.product-image {
-    height: 100%;
-    width: 40%;
+    height: 50%;
+    width: 100%;
 }
 
 div.product_main div.product-info {
     position: absolute; 
-    width: 58%;  
-    height: 100%;
-    left: 40%; 
-    top: 0px;
+    width: 98%;  
+    height: 50%;
+    top: 50%; 
+    bottom: 0%;
     padding-left: 2%;
 }
 
-div.product_main div.product-title {
-    height: 130px; 
+div.product_main div.product-info div.product-title {
+    height: 40%; 
     width: 100%; 
     border-bottom: 1px solid green;
 }
 
-div.product_main div.product-price {
+div.product_main div.product-info div.product-price {
+    position: absolute;
+    bottom: 10%;
 
+}
+
+div.product_main div.product-info div.product-price div.dropdown div.dropbtn {
+    width: 10%;
+    height: 10%;
 }
 
 div.product_description {
@@ -107,13 +115,29 @@ div.product_description {
     margin: 1rem auto;
     width: 90%;
     top: 0px;
+    right: 7%;
 }
 
-div.standards_container {
+div.product-list div.product-info {
     position: relative; 
+    height: 100%; 
+    width: 70%;
+    left: 17%;
+    bottom: 165px;
+    font-size: 14px; 
     margin: 1rem auto;
-    width: 90%;
-    top: 0px;
+}
+
+div.product-list div.product-info div.product-title {
+    width: 100%;
+    height: 70%; 
+}
+
+div.product-list div.product-info div.product-price {
+    position: absolute; 
+    height: 30%; 
+    width: 100%; 
+    top: 70%;
 }
 
 div.category {
@@ -252,6 +276,28 @@ div.error {
     font-size: 13px;
     width: 90%;
 }
+
+div.flashes {
+    background: #F3F5F6;
+    color: #000000;
+    width: 70%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+/*ul.flashes {
+    list-style: none;
+    margin: 10px 10px 0 10px;
+    padding: 0;
+}
+
+ul.flashes li {
+    background: #B9F3ED;
+    border: 1px solid #81CEC6;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    padding: 4px;
+    font-size: 13px;
+}*/
+
 
 /* Dropdown Button */
 .dropbtn {
