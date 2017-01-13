@@ -2,7 +2,8 @@
 {% block title %}{{producer.user_name}}'s Products{% endblock %}
 {% block header %}{{producer.user_name}}'s Products{% endblock %}
 {% block main %}
-  {{producer.user_name}}'s products! Click for more information and to add product to cart.
+  <!--producer's products. click for more info or to add product to cart-->
+  {{producer.user_name}}的产品。 点击获取更多信息并将产品添加到购物车。
   {% if producer_products %}
     {% for product in producer_products %}
       <div class="product-list" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
@@ -21,8 +22,12 @@
         </div>
       </div>
     {% endfor %}
-    <footer class="panel-footer"><a href="{{ url_for('get_cart')}}">Go to cart</a></footer>
+    <footer class="panel-footer"><a href="{{ url_for('get_cart')}}">去购物车</a></footer>
   {% else %}
-    <footer class="panel-footer"><em>{{producer.user_name}} currently has no products.</em> <a href="{{ url_for('get_cart')}}">Go to cart</a></footer>
+    <footer class="panel-footer">
+      <!-- producer currently has no products -->
+      <em>{{producer.user_name}} 目前没有产品。</em> 
+      <a href="{{ url_for('get_cart')}}">去购物车</a>
+  </footer>
   {% endif %}
 {% endblock %}

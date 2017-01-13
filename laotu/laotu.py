@@ -243,6 +243,20 @@ def show_product(product_id):
     stories = [product['stand1'], product['stand2'], product['stand3'], product['stand4']] 
     return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product), photos=photo, stories=stories)
 
+@app.route('/del/<int:product_id>')
+def del_product(product_id):
+    #insert admin authentication
+    product = query_db('select * from product where product_id = ?', [product_id], one=True)
+    #delete photos
+    for i in range(14,21):
+        os.remove(os.path.join(UPLOADED_PHOTOS_DEST, product[i]))
+    db = get_db()
+    db.execute('''delete from product where product_id = ?''', (product_id,))
+    db.commit()
+        
+    
+    
+    
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
     """Adds a product to the cart."""

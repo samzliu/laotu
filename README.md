@@ -31,6 +31,7 @@ Tasks:
 
 
 High prority:
+
     - images (Sam)
     - translate to Chinese (Nat)
     - product page (Carl)
