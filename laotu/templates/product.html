@@ -16,7 +16,7 @@
 			<div class="product-price">
 				<h2>Price: &#165 {{ product.price/100 }}</h2>
 			</div>
-				{% if product.quantity == 0 %}
+				{% if product.quantity <= 0 %}
 					This product is out of stock.
 				{% else %}
 					{% if product.quantity <= 5 %}
