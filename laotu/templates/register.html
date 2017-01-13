@@ -6,56 +6,56 @@
       <form action="" method="post" class="sleek-form" onload="errorcheck()">
 
         {% if errtype=="thename" %}
-        <input type="text" name="name" class="form-err" value="{{ request.form.name }}" placeholder="Name"> 
+        <input type="text" name="name" class="form-err" value="{{ request.form.name }}" placeholder="名字"> 
         {% else %}
-        <input type="text" name="name" class="form-text" value="{{ request.form.name }}" placeholder="Name"> 
+        <input type="text" name="name" class="form-text" value="{{ request.form.name }}" placeholder="名字"> 
         {% endif %}
         
         {% if errtype=="email" %}
-        <input type="text" name="email" class="form-err" value="{{ request.form.email }}" placeholder="Email">
+        <input type="text" name="email" class="form-err" value="{{ request.form.email }}" placeholder="电子邮件">
         {% else %}
-        <input type="text" name="email" class="form-text" value="{{ request.form.email }}" placeholder="Email">
+        <input type="text" name="email" class="form-text" value="{{ request.form.email }}" placeholder="电子邮件">
         {% endif %}
         
         {% if errtype=="password1" or errtype=="password" %}
-        <input type="password" name="password" class="form-err"   placeholder="Password">
+        <input type="password" name="password" class="form-err"   placeholder="密码">
         {% else %}
-        <input type="password" name="password" class="form-password"   placeholder="Password">
+        <input type="password" name="password" class="form-password"   placeholder="密码">
         {% endif %}
 
         {% if errtype=="password2" or errtype=="password" %}
-        <input type="password" name="password2" class="form-err"   placeholder="Confirm Password">
+        <input type="password" name="password2" class="form-err"   placeholder="证实密码">
         {% else %}
-        <input type="password" name="password2" class="form-password"   placeholder="Confirm Password">
+        <input type="password" name="password2" class="form-password"   placeholder="证实密码">
         {% endif %}
 
         {% if errtype=="address" %}
-        <input type="text" name="address" class="form-err" value="{{ request.form.address }}" placeholder="Address">
+        <input type="text" name="address" class="form-err" value="{{ request.form.address }}" placeholder="地址">
         {% else %}
-        <input type="text" name="address" class="form-text" value="{{ request.form.address }}" placeholder="Address">
+        <input type="text" name="address" class="form-text" value="{{ request.form.address }}" placeholder="地址">
         {% endif %}
 
         {% if errtype=="phone" %}
-        <input type="text" name="phone" class="form-err" value="{{ request.form.phone }}" placeholder="Phone">
+        <input type="text" name="phone" class="form-err" value="{{ request.form.phone }}" placeholder="电话号">
         {% else %}
-        <input type="text" name="phone" class="form-text" value="{{ request.form.phone }}" placeholder="Phone">
+        <input type="text" name="phone" class="form-text" value="{{ request.form.phone }}" placeholder="电话号">
         {% endif %}
-        <div class="actions"><input type="submit" class="form-submit" value="Sign Up"></div>
+        <div class="actions"><input type="submit" class="form-submit" value="注册"></div>
       </form>  
   {% else %}
       <form action="" method="post" class="sleek-form" onload="errorcheck()">
-        <input type="text" name="name" id="name" class="form-text" value="{{ request.form.name }}" placeholder="Name"> 
-        <input type="text" name="email" id="email" class="form-text" value="{{ request.form.email }}" placeholder="Email">
-        <input type="password" name="password" id="password" class="form-password"   placeholder="Password">
-        <input type="password" name="password2" id="password2" class="form-password"   placeholder="Confirm Password">
-        <input type="text" name="address" id="address" class="form-text" value="{{ request.form.address }}" placeholder="Address">
-        <input type="text" name="phone" id="phone" class="form-text" value="{{ request.form.phone }}" placeholder="Phone">
-        <div class="actions"><input type="submit" class="form-submit" value="Sign Up"></div>
+        <input type="text" name="name" id="name" class="form-text" value="{{ request.form.name }}" placeholder="名字"> 
+        <input type="text" name="email" id="email" class="form-text" value="{{ request.form.email }}" placeholder="电子邮件">
+        <input type="password" name="password" id="password" class="form-password"   placeholder="密码">
+        <input type="password" name="password2" id="password2" class="form-password"   placeholder="证实密码">
+        <input type="text" name="address" id="address" class="form-text" value="{{ request.form.address }}" placeholder="地址">
+        <input type="text" name="phone" id="phone" class="form-text" value="{{ request.form.phone }}" placeholder="电话号">
+        <div class="actions"><input type="submit" class="form-submit" value="注册"></div>
       </form>  
   {% endif %}
 
   <footer class="panel-footer">
-        Already have an account? <a href="{{ url_for('login')}}">Sign In</a>
+        已经有账户? <a href="{{ url_for('login')}}">登录</a>
     </footer>
 {% endblock %}
 
