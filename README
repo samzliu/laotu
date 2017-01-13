@@ -1,35 +1,26 @@
+# laotu
 
-                         LaoTu 
+~ To use:
 
+2. install the app from the root of the project directory
 
-    ~ How do I run this?
+pip install --editable .
 
-      1. Make sure the database path in laotu.py is appropriate for your OS 
+3. tell flask about the right application:
 
-      2. install the app from the root of the project directory
+export FLASK_APP=laotu
 
-         pip install --editable .
+4. fire up a shell and run this:
 
-      3. tell flask about the right application (if windows, use set instead of export):
+python -m flask initdb
 
-         export FLASK_APP=laotu
+5. now you can run application in test mode:
 
-      4. fire up a shell and run this:
+PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7 python -m flask run
 
-         flask initdb
+the application will greet you onhttp://localhost:5000/
 
-      5. now you can run minitwit:
+~ Is it tested?
 
-         flask run
-
-         the application will greet you on
-         http://localhost:5000/
-
-
-         Tests:
-         
-        Run the `python setup.py test` file to
-            see the tests pass.
-
-            
-         
+You betcha.  Run the `python setup.py test` file to
+see the tests pass.

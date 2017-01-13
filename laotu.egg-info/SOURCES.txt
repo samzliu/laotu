@@ -56,7 +56,6 @@ laotu/static/images/Thumbs.db
 laotu/static/images/laotu-logo.png
 laotu/static/images/laotu.png
 laotu/static/images/menu.png
-laotu/templates/.DS_Store
 laotu/templates/about.html
 laotu/templates/cart.html
 laotu/templates/categories.html
@@ -69,3 +68,4 @@ laotu/templates/product.html
 laotu/templates/products_list.html
 laotu/templates/register.html
 laotu/templates/search_results.html
+laotu/templates/upload.html
