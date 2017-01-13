@@ -3,10 +3,14 @@
 
 {% block header %}购物车{% endblock %}
 {% block main %}
-  <a style="position:absolute; right:70px;" class="clear" href="{{ url_for('clear_cart')}}">Clear cart</a>
+  <div style="width: 150px; position:relative; left: 250px; margin: 1rem auto;">
+    <h1><a class="clear" href="{{ url_for('clear_cart')}}">Clear cart</a></h1>
+  </div>
+
+  <br><br>
   {% for item in items %}
-    <div class="product" onclick="handleButtonClick('{{ url_for('show_product', product_id=item.product_id)}}')">
-      <div style="position: absolute; width: 150px; height: 150px; background-color: white;text-align: center;">
+    <div class="productlist" onclick="gotoURL('{{ url_for('show_product', product_id=item.product_id)}}')">
+      <div class="pic">
         <!-- Image goes here -->
         <span style="width:100%;display:inline-block;vertical-align:center;"> </span>
         <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%; vertical-align:center;">
@@ -21,7 +25,7 @@
     <div style="position: relative; left: 10px">
       <button onclick="handleButtonClick('{{ url_for('remove_product', product_id=item.product_id)}}')" class="dropbtn">去掉</button>
       <div class="dropdown">
-      <button onclick="dropDownQuantity()" class="dropbtn">Update Product (e.g. change quantity)</button>
+      <button onclick="dropDownQuantity()" class="dropbtn">Update Product</button>
       <div id="myDropdown" class="dropdown-content">
         <a href="{{ url_for('update_product', product_id=item.product_id, quantity=1)}}">1</a>
         <a href="{{ url_for('update_product', product_id=item.product_id, quantity=2)}}">2</a>
@@ -34,10 +38,15 @@
   {% else %}
     <em>There's nothing in your cart.</em>
   {% endfor %}
-  <div style="position:relative; top: 20px">
-    <button class="dropbtn" onclick="handleButtonClick('{{ url_for('pay')}}')" style="position:relative; left: 10px; width: 800px; height: 100px; padding:0px">
+
+  {% if items %}
+  <div style="position:relative; right: 5%; width: 80%; margin: 1rem auto; z-index: -1">
+    <button class="dropbtn" onclick="gotoURL('{{ url_for('pay')}}')" style="width: 100%; padding:0px;">
       <h1>Total Price: {{total}} CNY</h1>
       <h1>Pay For Items</h1>
     </button>
   </div>
+  {% endif %}
+
+
 {% endblock %}
