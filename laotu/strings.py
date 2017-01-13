@@ -33,6 +33,7 @@
 # FLASH_UPLOAD_FIELDS = "You must fill in all the fields"
 # FLASH_UPLOAD_FORBIDDEN = "The upload was not allowed"
 # FLASH_UPLOAD_SUCCESSFUL = "Upload successful"
+# FLASH_OUT_OF_STOCK = "We do not have enough %s in our inventory. Please change the quantity of meat you would like to purchase, or remove the item from your shopping cart."
 
 #Error messages ...............................................................
 ERR_INVALID_EMAIL =u'无效的电子邮件'
@@ -62,6 +63,7 @@ FLASH_PURCHASE =u'您的购买成功'
 FLASH_UPLOAD_FIELDS =u'您必须填写所有字段'
 FLASH_UPLOAD_FORBIDDEN =u'上传不允许'
 FLASH_UPLOAD_SUCCESSFUL =u'上传成功'
+FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购买的%s的数量，或从您的购物车中删除。'
 FLASH_PROD_ADD_SUCCESSFUL='Added product to database!'
 
 #Food Standard Tags
