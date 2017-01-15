@@ -33,20 +33,18 @@ Tasks:
 High prority:
 
     - images (Sam)
-    - translate to Chinese (Nat)
     - product page (Carl)
     - multiple categories (Carl)
     - blog/splashpage (Sam)
-    - admin authentication 
     - transaction and confirmation emails
-    - add product seperate page 
     
-    - formatting
+    - formatting and translation
     - wechat
     - conversion and rollout
 
 
 Low priority:
+    - 404 page
     - guest checkout
     - producer registration
     - next page 
