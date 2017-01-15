@@ -17,12 +17,13 @@ from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads, UploadNotAllowed
 from datetime import datetime
+from threading import Timer
 
 from strings import *
 
 from functools import wraps
 
-from flask_mail import Mail, Message 
+from flask_mail import Mail, Message
 
 from threading import Thread
 
@@ -88,6 +89,8 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 upload_photos = UploadSet('photos', IMAGES)
 configure_uploads(app, upload_photos)
+timer_on = False
+
 
 if __name__ == '__main__':
     app.run()
@@ -96,7 +99,7 @@ if __name__ == '__main__':
 
 def admin_required(f):
     """
-    Decorate routes to require admin login. Add @admin_required below @app.route 
+    Decorate routes to require admin login. Add @admin_required below @app.route
     for any endpoint that should require admin authentication
 
     decorators: http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
@@ -109,7 +112,7 @@ def admin_required(f):
     return decorated_function
 
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-     tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
+     tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'],
      title = 'Admin Page', h1 = 'Admin Page',
      decorator = admin_required)
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
@@ -117,7 +120,7 @@ app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 # other decorators ............................................................
 def async(f):
     """
-    runs f asynchronously 
+    runs f asynchronously
     https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-email-support
 
     make f asynchronous by adding @async above definition
@@ -137,7 +140,7 @@ def send_async_email(app, msg):
 
 def send_mail(to, subject, message, html="", sender="natsapptester@gmail.com"):
     """
-    to: a list of strings 
+    to: a list of strings
     subject: a string
     message: a string or render_template("some jinja formatted .txt here")
     html: a string of html markup or render_template("some jinja formatted .html here")
@@ -146,14 +149,14 @@ def send_mail(to, subject, message, html="", sender="natsapptester@gmail.com"):
     """
     msg = Message(subject, sender=sender, recipients=to)
     msg.body = message
-    msg.html = html 
+    msg.html = html
     send_async_email(app, msg)
 
 # IM NOT SURE IF THIS IS LIKE... ASYNC BUT I HOPE IT IS
 def send_bulk_mail(to, message, sender=("Laotu Noreply", "noreply@laotu.com")):
     """
-    Opens connection to email host that is automatically closed once all emails 
-    are sent. 
+    Opens connection to email host that is automatically closed once all emails
+    are sent.
 
     https://pythonhosted.org/Flask-Mail/
 
@@ -371,13 +374,13 @@ def show_product(product_id):
                         [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?',
                         str(product['producer_id']), one=True)
-    photos = [product['product_photo_filename_1'], 
-                        product['product_photo_filename_2'], 
+    photos = [product['product_photo_filename_1'],
+                        product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
-    stories = [product['laotu_book_photo_filename_1'], 
-                        product['laotu_book_photo_filename_2'], 
-                        product['laotu_book_photo_filename_3'], 
-                        product['laotu_book_photo_filename_4']] 
+    stories = [product['laotu_book_photo_filename_1'],
+                        product['laotu_book_photo_filename_2'],
+                        product['laotu_book_photo_filename_3'],
+                        product['laotu_book_photo_filename_4']]
     return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=stories)
 
@@ -495,12 +498,17 @@ def update_product(product_id, quantity):
 @app.route('/pay')
 def pay():
     """Displays the pay page with the Stripe Checkout Button."""
+    global timer_on
     # get all the user's purchases
     purchases = query_db('''select cart.product_id, cart.quantity, \
                             product.title, product.price, \
                             product.quantity as inventory from cart \
                             join product on cart.product_id=product.product_id \
                             where cart.user_id=?''', [session['user_id']])
+    # if there are no purchases, go back to cart
+    if len(purchases)==0:
+        flash(FLASH_NO_PURCHASES)
+        return redirect(url_for('get_cart'))
     # check that all items are still in stock
     for purchase in purchases:
         # if the user wishes to purchase more than is in stock, flash message
@@ -509,26 +517,32 @@ def pay():
                                                          purchase['title'])
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
-    # else, put all the items in hold while user pays
-    db = get_db()
-    cursor = db.cursor()
-    transaction_ids = []
-    for purchase in purchases:
-        # add transactions to history, one row for each product
-        cursor.execute('''insert into trans (
-                        product_id, user_id, quantity, trans_date, amount)
-                        values (?,?,?,?,?)''',
-                        (purchase['product_id'], session['user_id'],
-                        purchase['quantity'], datetime.utcnow(),
-                        purchase['price']*purchase['quantity']))
-        # keep track of the transaction id for each product in the cart
-        transaction_ids.append(cursor.lastrowid)
-        # update product inventory
-        db.execute('''update product set quantity = quantity - ? where
-            product_id = ?''', (purchase['quantity'], purchase['product_id']))
-    db.commit()
-    # store the transaction_ids in the session
-    session['transaction_ids'] = transaction_ids
+    # if all items are still in stock, put all items on hold while user pays
+    if not timer_on:
+        print "Putting on hold"
+        db = get_db()
+        cursor = db.cursor()
+        transaction_ids = []
+        for purchase in purchases:
+            print "going through purchase"
+            # add transactions to history, one row for each product
+            cursor.execute('''insert into trans (
+                            product_id, user_id, quantity, trans_date, amount)
+                            values (?,?,?,?,?)''',
+                            (purchase['product_id'], session['user_id'],
+                            purchase['quantity'], datetime.utcnow(),
+                            purchase['price']*purchase['quantity']))
+            # keep track of the transaction id for each product in the cart
+            transaction_ids.append(cursor.lastrowid)
+            # update product inventory
+            db.execute('''update product set quantity = quantity - ? where
+                product_id = ?''', (purchase['quantity'], purchase['product_id']))
+        db.commit()
+        print "hold complete"
+        # store the transaction_ids in the session
+        session['transaction_ids'] = transaction_ids
+        timer_on = True
+        Timer(60, undo_hold, [session['transaction_ids']]).start()
     # store the amount the user must pay in the session
     session['amount'] = query_db('''select sum(product.price*cart.quantity)
                                     from cart join product on cart.product_id=
@@ -537,25 +551,58 @@ def pay():
     if session['amount'] < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
+    print "before render"
     return render_template('pay.html', key=stripe_keys['publishable_key'],
                             amount=session['amount'],
                             transaction_ids=session['transaction_ids'])
 
-def undo_hold():
+def undo_hold(transaction_ids):
     """Undo the hold on products that was initiated during checkout."""
-    db = get_db()
-    for trans_id in session['transaction_ids']:
-        # get the transaction details
-        purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
-        # Put products back into product table
-        db.execute('''update product set quantity=quantity + ? where
-                product_id=?''', (purchase['quantity'], purchase['product_id']))
-        # Do nothing to the transactions (they remain there as uncomfirmed).
-    db.commit()
+    global timer_on
+    print "in undo_hold"
+    with app.app_context():
+            db = get_db()
+            for trans_id in transaction_ids:
+                # get the transaction details
+                purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
+                # if the purchase was unconfirmed
+                if purchase['confirmed']==0:
+                    print "product put back"
+                    # Put products back into product table
+                    db.execute('''update product set quantity=quantity + ? where
+                            product_id=?''', (purchase['quantity'], purchase['product_id']))
+                # Do nothing to the transactions (they remain there as uncomfirmed).
+            db.commit()
+    timer_on = False
+    print "undo_hold over"
+    # if make_new_context:
+    #     with app.test_request_context():
+    #         db = get_db()
+    #         for trans_id in transaction_ids:
+    #             # get the transaction details
+    #             purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
+    #             # Put products back into product table
+    #             db.execute('''update product set quantity=quantity + ? where
+    #                     product_id=?''', (purchase['quantity'], purchase['product_id']))
+    #             # Do nothing to the transactions (they remain there as uncomfirmed).
+    #         db.commit()
+    # else:
+    #     db = get_db()
+    #     for trans_id in transaction_ids:
+    #         # get the transaction details
+    #         purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
+    #         # Put products back into product table
+    #         db.execute('''update product set quantity=quantity + ? where
+    #                 product_id=?''', (purchase['quantity'], purchase['product_id']))
+    #         # Do nothing to the transactions (they remain there as uncomfirmed).
+    #     db.commit()
+    # print 'undone'
+    # return False
 
 @app.route('/charge', methods=['POST'])
 def charge():
     """Charge the user."""
+    global timer_on
     try:
         charge = stripe.Charge.create(
             amount=session['amount'], # Amount in cents
@@ -564,37 +611,39 @@ def charge():
     # for any exception, undo the hold and flash a message
     except stripe.error.CardError as e:
         # The account has been declined
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.RateLimitError as e:
         # Too many requests made to the API too quickly
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.InvalidRequestError as e:
         # Invalid parameters were supplied to Stripe's API
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.AuthenticationError as e:
         # Authentication with Stripe's API failed
         # (maybe you changed API keys recently)
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.APIConnectionError as e:
         # Network communication with Stripe failed
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.StripeError as e:
         # Display a very generic error to the user, and maybe send
         # yourself an email
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_ERROR)
     except Exception as e:
         # Something else happened, completely unrelated to Stripe
-        undo_hold()
+        undo_hold(session['transaction_ids'])
         flash(FLASH_CARD_FAILURE)
 
     # if charge successful, then change the transactions to confirmed
     else:
+        timer_on = False
+        print "timer_on is now ", timer_on
         db = get_db()
         for trans_id in session['transaction_ids']:
             # confirm the transaction
@@ -602,7 +651,7 @@ def charge():
         # empty the cart
         db.execute('''delete from cart where user_id = ?''', [session['user_id']])
         db.commit()
-        # remove the variables amount and transaction_ids from session
+        # remove the variables amount, transaction_ids, and timer from session
         session.pop('amount', None)
         session.pop('transaction_ids', None)
         # flash message that purchase was succesful
@@ -616,19 +665,19 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    #products = query_db("""select product.* from product 
-    #    where product.title like ? 
+    #products = query_db("""select product.* from product
+    #    where product.title like ?
     #    or product.description like ?""",
     #    ('%' + query + '%', '%' + query + '%'))
     products = query_db("""select distinct product.* from
         product
-        inner join tag 
+        inner join tag
         inner join product_to_tag
         on ((product.product_id=product_to_tag.product_id
         and product_to_tag.tag_id=tag.tag_id
         and tag.name like ?)
         or product.title like ?
-        or product.description like ?)""", 
+        or product.description like ?)""",
         ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
 
     tags = query_db("""select * from tag where name like ?""",
@@ -728,11 +777,11 @@ def add_product_db():
             db = get_db()
             print(filenames)
             db.execute('''insert into product (
-                title, quantity, price, description, producer_id, standard_geo, 
-                standard_producer, standard_raw, standard_production, standard_storage, 
+                title, quantity, price, description, producer_id, standard_geo,
+                standard_producer, standard_raw, standard_production, standard_storage,
                 standard_tech, standard_package, standard_price,
-                product_photo_filename_1, product_photo_filename_2, product_photo_filename_3, 
-                laotu_book_photo_filename_1, laotu_book_photo_filename_2, laotu_book_photo_filename_3, laotu_book_photo_filename_4) 
+                product_photo_filename_1, product_photo_filename_2, product_photo_filename_3,
+                laotu_book_photo_filename_1, laotu_book_photo_filename_2, laotu_book_photo_filename_3, laotu_book_photo_filename_4)
                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)''',
                 [request.form['title'], int(request.form['quantity']), \
                     int(request.form['price']), request.form['description'], \
@@ -741,16 +790,16 @@ def add_product_db():
                     request.form['standard_production'], request.form['standard_storage'],\
                     request.form['standard_tech'], request.form['standard_package'],\
                     request.form['standard_price']] + filenames)
-            db.execute('''insert into standards (organic_cert_1, organic_cert_2, organic_cert_3, 
-                organic_cert_4, organic_cert_5, organic_cert_6, organic_cert_7, organic_cert_8, 
-                quality_cert_1, quality_cert_2, producer_benifit_1, producer_benifit_2, 
-                producer_benifit_3, producer_benifit_4, producer_benifit_5, producer_benifit_6, 
-                consumer_benifit_1, local_1, local_2, local_3, package_1, package_2, ethnic_1, 
-                ethnic_2, ethnic_3, ethnic_4, ethnic_5, ethnic_6, ethnic_7, ethnic_8, ethnic_9, 
-                ethnic_10, production_1, production_2, production_3, production_4, production_5, 
+            db.execute('''insert into standards (organic_cert_1, organic_cert_2, organic_cert_3,
+                organic_cert_4, organic_cert_5, organic_cert_6, organic_cert_7, organic_cert_8,
+                quality_cert_1, quality_cert_2, producer_benifit_1, producer_benifit_2,
+                producer_benifit_3, producer_benifit_4, producer_benifit_5, producer_benifit_6,
+                consumer_benifit_1, local_1, local_2, local_3, package_1, package_2, ethnic_1,
+                ethnic_2, ethnic_3, ethnic_4, ethnic_5, ethnic_6, ethnic_7, ethnic_8, ethnic_9,
+                ethnic_10, production_1, production_2, production_3, production_4, production_5,
                 craft_1, craft_2, craft_3, craft_4) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
                 ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', [(standard in request.form) for
-                standard in 
+                standard in
                 ["ORGANIC_CERT_1","ORGANIC_CERT_2","ORGANIC_CERT_3","ORGANIC_CERT_4",
                 "ORGANIC_CERT_5","ORGANIC_CERT_6","ORGANIC_CERT_7", "ORGANIC_CERT_8",
                 "QUALITY_CERT_1","QUALITY_CERT_2","PRODUCER_BENIFIT_1", "PRODUCER_BENIFIT_2",
@@ -796,7 +845,7 @@ def adminauth():
         elif not check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = ERR_INVALID_PWD
-        elif query_db('''select * from admin where 
+        elif query_db('''select * from admin where
             user_id = ?''', [user[0]], one=True) is None:
             error = ERR_NOT_ADMIN
         else:
@@ -806,4 +855,4 @@ def adminauth():
             #alt make a global?
             flash(FLASH_LOGGED_ADMIN)
             return redirect(request.args.get('next'))
-    return render_template('adminauth.html', error=error)    
+    return render_template('adminauth.html', error=error)
