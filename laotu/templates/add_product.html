@@ -2,111 +2,44 @@
 {% block title %}Add Product{% endblock %}
 {% block header %}Add Product to Database{% endblock %}
 {% block main %}
-  {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
-      <form action="" method="post" class="sleek-form" onload="errorcheck()">
+    {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
 
-        {% if errtype=="title" %}
-        <input type="text" name="title" class="form-err" value="{{ request.form.title }}" placeholder="Product title"> 
-        {% else %}
-        <input type="text" name="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title"> 
-        {% endif %}
-        
-        {% if errtype=="quantity" %}
-        <input type="text" name="quantity" class="form-err" value="{{ request.form.quantity }}" placeholder="Product quantity">
-        {% else %}
-        <input type="text" name="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity">
-        {% endif %}
-        
-        {% if errtype=="price"%}
-        <input type="text" name="price" class="form-err" value="{{ request.form.price }}"  placeholder="Price (in jiao)">
-        {% else %}
-        <input type="text" name="price" class="form-text" value="{{ request.form.price }}" placeholder="Price (in jiao)">
-        {% endif %}
-
-        {% if errtype=="description" %}
-        <textarea name="description" class="form-paragraph-err" value="{{ request.form.description }}" placeholder="Product description"></textarea>
-        {% else %}
-        <textarea name="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="description" cols="40" rows="5"></textarea>
-        {% endif %}
-
+  
+      <form action="" method="post" class="sleek-form" onload="errorcheck()" enctype=multipart/form-data>
+        <input type="text" maxlength="10" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True> 
+        <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
+        <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)" required=True>
+        <textarea name="description" maxlength="200" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5" required=True></textarea>
+        <input type="text" name="producerid" id="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer" required=True>
         {% if errtype=="producerid" %}
-        <input type="text" name="producerid" class="form-err" value="{{ request.form.producerid }}" placeholder="ID of producer">
+        <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" placeholder="ID of producer" required=True>
         {% else %}
-        <input type="text" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer">
+        <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer" required = True>
         {% endif %}
-        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
-        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
-        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
-        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
-        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
-        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
-        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
-        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
+        <textarea name="standard_geo" maxlength="200" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Geographic Location and Enviroment" cols="40" rows="5"></textarea>
+        <textarea name="standard_producer" maxlength="200" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Producer" cols="40" rows="5"></textarea>
+        <textarea name="standard_raw" maxlength="200" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Raw Materials" cols="40" rows="5"></textarea>
+        <textarea name="standard_production" maxlength="200" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="Production Method" cols="40" rows="5"></textarea>
+        <textarea name="standard_storage" maxlength="200" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Storage" cols="40" rows="5"></textarea>
+        <textarea name="standard_tech" maxlength="200" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Technologies" cols="40" rows="5"></textarea>
+        <textarea name="standard_package" maxlength="200" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Packaging and Shipping" cols="40" rows="5"></textarea>
+        <textarea name="standard_price" maxlength="200" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Comparative Pricing" cols="40" rows="5"></textarea>
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
+        Product Photo 1 (required): 
+        <input type=file name=photo_1 required=True><br>
+        Product Photo 2:
+        <input type=file name=photo_2><br>
+        Product Photo 3:
+        <input type=file name=photo_3><br>
+        LaoTu Book Page 1:
+        <input type=file name=book_1><br>
+        LaoTu Book Page 2:
+        <input type=file name=book_2><br>
+        LaoTu Book Page 3:
+        <input type=file name=book_3><br>
+        LaoTu Book Page 4:
+        <input type=file name=book_4><br>
 
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_1" value="{{ request.form.ORGANIC_CERT_1 }}"> 中国国家有机认证<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_2" value="{{ request.form.ORGANIC_CERT_2 }}"> 美国有机认证<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_3" value="{{ request.form.ORGANIC_CERT_3 }}"> 其他国际有机认证<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_4" value="{{ request.form.ORGANIC_CERT_4 }}"> 高校科研项目长期驻点<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_5" value="{{ request.form.ORGANIC_CERT_5 }}"> 公益项目长期驻点<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_6" value="{{ request.form.ORGANIC_CERT_6 }}"> CSA体系认证<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_7" value="{{ request.form.ORGANIC_CERT_7 }}"> PGS体系认证<br>
-        <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_8" value="{{ request.form.ORGANIC_CERT_8 }}"> 欧盟有机认证<br>
-        <input class="form-checkbox" type="checkbox" name="QUALITY_CERT_1" value="{{ request.form.QUALITY_CERT_1 }}"> 绿色食品认证<br>
-        <input class="form-checkbox" type="checkbox" name="QUALITY_CERT_2" value="{{ request.form.QUALITY_CERT_2 }}">  无公害食品认证<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_1" value="{{ request.form.PRODUCER_BENIFIT_1 }}"> 公平贸易认证<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_2" value="{{ request.form.PRODUCER_BENIFIT_2 }}"> 没有公平贸易认证但是实际操作是公平贸易<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_3" value="{{ request.form.PRODUCER_BENIFIT_3 }}"> 来自女性生产者<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_4" value="{{ request.form.PRODUCER_BENIFIT_4 }}"> 来自残障人士生产者<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_5" value="{{ request.form.PRODUCER_BENIFIT_5 }}"> 来自老年生产者<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_6" value="{{ request.form.PRODUCER_BENIFIT_6 }}"> 来自农民工生产者<br>
-        <input class="form-checkbox" type="checkbox" name="CONSUMER_BENIFIT_1" value="{{ request.form.CONSUMER_BENIFIT_1 }}"> 实际操作上消费者得到同类产品市场较低价格（公平定价)<br>
-        <input class="form-checkbox" type="checkbox" name="LOCAL_1" value="{{ request.form.LOCAL_1 }}"> 本地留种<br>
-        <input class="form-checkbox" type="checkbox" name="LOCAL_2" value="{{ request.form.LOCAL_2 }}"> 本地传统物种<br>
-        <input class="form-checkbox" type="checkbox" name="LOCAL_3" value="{{ request.form.LOCAL_3 }}"> 本地生产本地销售<br>
-        <input class="form-checkbox" type="checkbox" name="PACKAGE_1" value="{{ request.form.PACKAGE_1 }}"> 环保材料包装<br>
-        <input class="form-checkbox" type="checkbox" name="PACKAGE_2" value="{{ request.form.PACKAGE_2 }}"> 废旧材料包装<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_1" value="{{ request.form.ETHNIC_1 }}"> 藏区<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_2" value="{{ request.form.ETHNIC_2 }}"> 内蒙古少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_3" value="{{ request.form.ETHNIC_3 }}"> 西北少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_4" value="{{ request.form.ETHNIC_4 }}"> 新疆少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_5" value="{{ request.form.ETHNIC_5 }}"> 东北少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_6" value="{{ request.form.ETHNIC_6 }}"> 西南少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_7" value="{{ request.form.ETHNIC_7 }}"> 华北少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_8" value="{{ request.form.ETHNIC_8 }}"> 江浙沪少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_9" value="{{ request.form.ETHNIC_9 }}"> 长江中游少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_10" value="{{ request.form.ETHNIC_10 }}"> 珠三角少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCTION_1" value="{{ request.form.PRODUCTION_1 }}"> 安全种子<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCTION_2" value="{{ request.form.PRODUCTION_2 }}"> 无农药<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCTION_3" value="{{ request.form.PRODUCTION_3 }}"> 无化肥<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCTION_4" value="{{ request.form.PRODUCTION_4 }}"> 散养<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCTION_5" value="{{ request.form.PRODUCTION_5 }}"> 不使用化学饲料<br>
-        <input class="form-checkbox" type="checkbox" name="CRAFT_1" value="{{ request.form.CRAFT_1 }}"> 本地生产的原料<br>
-        <input class="form-checkbox" type="checkbox" name="CRAFT_2" value="{{ request.form.CRAFT_2 }}"> 可降解原料<br>
-        <input class="form-checkbox" type="checkbox" name="CRAFT_3" value="{{ request.form.CRAFT_3 }}"> 传统使用的原料<br>
-        <input class="form-checkbox" type="checkbox" name="CRAFT_4" value="{{ request.form.CRAFT_4 }}"> 传统工艺<br>
-
-        <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
-      </form>  
-
-  {% else %}
-      <form action="" method="post" class="sleek-form" onload="errorcheck()">
-        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title"> 
-        <input type="text" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity">
-        <input type="text" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)">
-        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5"></textarea>
-        <input type="text" name="producerid" id="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer">
-
-        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Standard GEO" cols="40" rows="5"></textarea>
-        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Standard producer" cols="40" rows="5"></textarea>
-        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Standard Raw" cols="40" rows="5"></textarea>
-        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="standard_production" cols="40" rows="5"></textarea>
-        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Standard storage" cols="40" rows="5"></textarea>
-        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Standard tech" cols="40" rows="5"></textarea>
-        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Standard package" cols="40" rows="5"></textarea>
-        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Standard price" cols="40" rows="5"></textarea>
-
-        <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_1" value="{{ request.form.ORGANIC_CERT_1 }}"> 中国国家有机认证 <br>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_2" value="{{ request.form.ORGANIC_CERT_2 }}"> 美国有机认证<br>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_3" value="{{ request.form.ORGANIC_CERT_3 }}"> 其他国际有机认证<br>
@@ -149,11 +82,8 @@
         <input class="form-checkbox" type="checkbox" name="CRAFT_3" value="{{ request.form.CRAFT_3 }}"> 传统使用的原料<br>
         <input class="form-checkbox" type="checkbox" name="CRAFT_4" value="{{ request.form.CRAFT_4 }}"> 传统工艺<br>
 
-
-
         <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
       </form>  
-  {% endif %}
 {% endblock %}
 
 

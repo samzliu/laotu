@@ -15,7 +15,7 @@ import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
-from flask.ext.uploads import UploadSet, IMAGES, configure_uploads
+from flask.ext.uploads import UploadSet, IMAGES, configure_uploads, UploadNotAllowed
 from datetime import datetime
 
 from strings import *
@@ -27,25 +27,28 @@ DATABASE = '/tmp/laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
-#UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
 DEFAULT_IMPORTANCE = 100
 
-# test keys right now
+app = Flask(__name__)
+app.config.from_object(__name__)
+app.config.from_envvar('laotu_SETTINGS', silent=True)
+
+# keys to connect to the Stripe API, specify via command line
+# test keys:
+# PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh
+# SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7
+# to view dashboard: https://dashboard.stripe.com/test/dashboard
 stripe_keys = {
   'secret_key': os.environ['SECRET_KEY'],
   'publishable_key': os.environ['PUBLISHABLE_KEY']
 }
-
 stripe.api_key = stripe_keys['secret_key']
 
-
-# create our little application :)
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config.from_envvar('laotu_SETTINGS', silent=True)
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-    tables = ['user', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
+# admin page
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE, tables = ['user',
+    'producer', 'product', 'standards', 'trans', 'tag', 'product_to_tag'],
+    title = 'Admin Page', h1 = 'Admin Page')
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 upload_photos = UploadSet('photos', IMAGES)
@@ -102,17 +105,6 @@ def get_user_id(email):
     return rv[0] if rv else None
 
 
-def format_datetime(timestamp):
-    """Format a timestamp for display."""
-    return datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d @ %H:%M')
-
-
-def gravatar_url(email, size=80):
-    """Return the gravatar image for the given email address."""
-    return 'http://www.gravatar.com/avatar/%s?d=identicon&s=%d' % \
-        (md5(email.strip().lower().encode('utf-8')).hexdigest(), size)
-
-
 @app.before_request
 def before_request():
     g.user = None
@@ -120,7 +112,7 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
-#validation functions
+# validation functions
 def isphone(num):
     if re.match("(\d{3}[-\.\s]??\d{4}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{4}[-\.\s]??\d{4}"
                 "|\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\d{4}[-\.\s]??\d{3}[-\.\s]??\d{4})",
@@ -130,11 +122,12 @@ def isphone(num):
         return True
 
 def hasStandard(product):
-    return product['standard_geo'] or product['standard_producer'] or product['standard_raw'] or \
-    product['standard_production'] or product['standard_storage'] or product['standard_tech'] or \
-    product['standard_package'] or product['standard_price']
+    return product['standard_geo'] or product['standard_producer'] or \
+            product['standard_raw'] or product['standard_production'] or \
+            product['standard_storage'] or product['standard_tech'] or \
+            product['standard_package'] or product['standard_price']
 
-#pages are below .................................................................
+# pages are below .................................................................
 
 @app.route('/')
 def home():
@@ -214,9 +207,12 @@ def register():
         else:
             db = get_db()
             db.execute('''insert into user (
-              email, pw_hash, name, address, phone) values (?, ?, ?, ?, ?)''',
-              [request.form['email'],
-               generate_password_hash(request.form['password']),request.form['name'], request.form['address'], request.form['phone']])
+                email, pw_hash, name, address, phone) values (?, ?, ?, ?, ?)''',
+                [request.form['email'],
+                generate_password_hash(request.form['password']),
+                request.form['name'],
+                request.form['address'],
+                request.form['phone']])
             db.commit()
             flash(FLASH_REGISTERED)
             return redirect(url_for('login'))
@@ -232,10 +228,12 @@ def logout():
 
 @app.route('/about')
 def about():
+    """Shows the About page."""
     return render_template('about.html')
 
 @app.route('/products_list')
 def show_products_list():
+    """Displays the list of products."""
     return render_template('products_list.html', products_list=query_db('''
     select * from product'''), producer=None)
 
@@ -246,9 +244,13 @@ def show_products_list_category(category):
 
 @app.route('/<int:product_id>')
 def show_product(product_id):
-    product = query_db('select * from product where product_id = ?', [product_id], one=True)
-    producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
-    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product))
+    """Displays a single product in detail."""
+    product = query_db('select * from product where product_id = ?',
+                        [product_id], one=True)
+    producer = query_db('select * from producer where producer_id = ?',
+                        str(product['producer_id']), one=True)
+    return render_template('product.html', product=product, producer=producer,
+                            hasStandard=hasStandard(product))
 
 @app.route('/del/<int:product_id>')
 def del_product(product_id):
@@ -260,22 +262,26 @@ def del_product(product_id):
     db = get_db()
     db.execute('''delete from product where product_id = ?''', (product_id,))
     db.commit()
-    
-    
+
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
     """Adds a product to the cart."""
-    if not g.user:
+    # user musts be logged in to access cart functionality
+    if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
+    # if the product has no product_id
     if product_id is None:
         abort(404)
+    # if product is already in the user's cart, flash a message
     elif query_db('select 1 from cart where product_id = ?', [product_id], one=True):
         flash(FLASH_CART_PRODUCT)
         return redirect(url_for('show_product', product_id=product_id))
+    # otherwise add to cart
     else:
         db = get_db()
-        db.execute('''insert into cart (user_id, product_id, quantity) values (?, ?, ?)''', (session['user_id'], product_id, quantity))
+        db.execute('''insert into cart (user_id, product_id, quantity) values
+                    (?, ?, ?)''', (session['user_id'], product_id, quantity))
         db.commit()
         flash(FLASH_CARTED)
         return redirect(url_for('show_products_list'))
@@ -300,12 +306,15 @@ def upload():
 
 @app.route('/cart')
 def get_cart():
-    """Displays cart"""
-    if not g.user:
+    """Displays cart."""
+    # user musts be logged in to access cart functionality
+    if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
-    items=query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
-    join product on cart.product_id=product.product_id where cart.user_id = ?''',[session['user_id']])
+    items = query_db('''select cart.product_id, cart.quantity, product.title, \
+                        product.price, product.quantity as inventory from cart \
+                        join product on cart.product_id=product.product_id \
+                        where cart.user_id = ?''',[session['user_id']])
     total = 0
     for item in items:
         total += float(item['quantity']) * float(item['price'])/float(100)
@@ -314,20 +323,23 @@ def get_cart():
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):
     """Removes a product to the cart."""
+    # user musts be logged in to access cart functionality
     if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
     if product_id is None:
         abort(404)
     db = get_db()
-    db.execute('''delete from cart where user_id = ? and product_id = ?''', (session['user_id'],product_id))
+    db.execute('''delete from cart where user_id = ? and product_id = ?''',
+                (session['user_id'],product_id))
     db.commit()
     flash(FLASH_UNCARTED)
     return redirect(url_for('get_cart'))
 
 @app.route('/clear_cart')
 def clear_cart():
-    """Clears everything from cart"""
+    """Clears everything in cart"""
+    # user musts be logged in to access cart functionality
     if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
@@ -339,63 +351,133 @@ def clear_cart():
 
 @app.route('/<int:product_id>/<int:quantity>/update_product')
 def update_product(product_id, quantity):
-    """Updates a product from cart"""
+    """Updates a product's quantity in cart"""
+    # user musts be logged in to access cart functionality
     if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
         return render_template('login.html')
     db = get_db()
-    db.execute('''update cart set quantity = ? where user_id = ? and product_id = ?''', (quantity,session['user_id'], product_id))
+    db.execute('''update cart set quantity = ? where user_id = ? and \
+                product_id = ?''', (quantity,session['user_id'], product_id))
     db.commit()
     flash(FLASH_UPDATED)
     return redirect(url_for('get_cart'))
 
 @app.route('/pay')
 def pay():
+    """Displays the pay page with the Stripe Checkout Button."""
+    # get all the user's purchases
+    purchases = query_db('''select cart.product_id, cart.quantity, \
+                            product.title, product.price, \
+                            product.quantity as inventory from cart \
+                            join product on cart.product_id=product.product_id \
+                            where cart.user_id=?''', [session['user_id']])
     # check that all items are still in stock
-    purchases = query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
-    join product on cart.product_id=product.product_id where cart.user_id=?''', [session['user_id']])
     for purchase in purchases:
+        # if the user wishes to purchase more than is in stock, flash message
         if purchase['inventory'] < purchase['quantity']:
-            out_of_stock_message = FLASH_OUT_OF_STOCK % (purchase['title'], purchase['title'])
+            out_of_stock_message = FLASH_OUT_OF_STOCK % (purchase['title'],
+                                                         purchase['title'])
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
-    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
-    if amount < 500:
+    # else, put all the items in hold while user pays
+    db = get_db()
+    cursor = db.cursor()
+    transaction_ids = []
+    for purchase in purchases:
+        # add transactions to history, one row for each product
+        cursor.execute('''insert into trans (
+                        product_id, user_id, quantity, trans_date, amount)
+                        values (?,?,?,?,?)''',
+                        (purchase['product_id'], session['user_id'],
+                        purchase['quantity'], datetime.utcnow(),
+                        purchase['price']*purchase['quantity']))
+        # keep track of the transaction id for each product in the cart
+        transaction_ids.append(cursor.lastrowid)
+        # update product inventory
+        db.execute('''update product set quantity = quantity - ? where
+            product_id = ?''', (purchase['quantity'], purchase['product_id']))
+    db.commit()
+    # store the transaction_ids in the session
+    session['transaction_ids'] = transaction_ids
+    # store the amount the user must pay in the session
+    session['amount'] = query_db('''select sum(product.price*cart.quantity)
+                                    from cart join product on cart.product_id=
+                                    product.product_id''', one=True)[0]
+    # if the user is spending less than 5 yuan, flash message
+    if session['amount'] < 500:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
-    return render_template('pay.html', key=stripe_keys['publishable_key'], amount=amount) # the amount in the cart
+    return render_template('pay.html', key=stripe_keys['publishable_key'],
+                            amount=session['amount'],
+                            transaction_ids=session['transaction_ids'])
+
+def undo_hold():
+    """Undo the hold on products that was initiated during checkout."""
+    db = get_db()
+    for trans_id in session['transaction_ids']:
+        # get the transaction details
+        purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
+        # Put products back into product table
+        db.execute('''update product set quantity=quantity + ? where
+                product_id=?''', (purchase['quantity'], purchase['product_id']))
+        # Do nothing to the transactions (they remain there as uncomfirmed).
+    db.commit()
 
 @app.route('/charge', methods=['POST'])
 def charge():
-    # ideally, want to just keep this variable from the pay function
-    amount = query_db('select sum(product.price*cart.quantity) from cart join product on cart.product_id=product.product_id', one=True)[0]
-
+    """Charge the user."""
     try:
-      charge = stripe.Charge.create(
-          amount=amount, # Amount in cents
-          currency="cny",
-          source=request.form['stripeToken']
-      )
+        charge = stripe.Charge.create(
+            amount=session['amount'], # Amount in cents
+            currency="cny",
+            source=request.form['stripeToken'])
+    # for any exception, undo the hold and flash a message
     except stripe.error.CardError as e:
-      # The Alipay account has been declined
-      pass
+        # The account has been declined
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
+    except stripe.error.RateLimitError as e:
+        # Too many requests made to the API too quickly
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
+    except stripe.error.InvalidRequestError as e:
+        # Invalid parameters were supplied to Stripe's API
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
+    except stripe.error.AuthenticationError as e:
+        # Authentication with Stripe's API failed
+        # (maybe you changed API keys recently)
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
+    except stripe.error.APIConnectionError as e:
+        # Network communication with Stripe failed
+        undo_hold()
+        flash(FLASH_PAYMENT_ERROR)
+    except stripe.error.StripeError as e:
+        # Display a very generic error to the user, and maybe send
+        # yourself an email
+        undo_hold()
+        flash(FLASH_ERROR)
+    except Exception as e:
+        # Something else happened, completely unrelated to Stripe
+        undo_hold()
+        flash(FLASH_CARD_FAILURE)
 
-    # update all the databases
-    purchases = query_db('''select cart.product_id, cart.quantity, product.title, product.price, product.quantity as inventory from cart \
-    join product on cart.product_id=product.product_id where cart.user_id=?''', [session['user_id']])
-    db = get_db()
-    # check that all products are in stock
-    for purchase in purchases:
-        # add transactions to history, one row for each product
-        db.execute('''insert into trans (product_id, user_id, quantity, trans_date, amount) \
-        values (?,?,?,?,?)''', (purchase['product_id'], session['user_id'], purchase['quantity'],
-        datetime.utcnow(), purchase['price']*purchase['quantity']))
-        # update product inventory
-        db.execute('''update product set quantity = quantity - ? where product_id = ?''', (purchase['quantity'], purchase['product_id']))
-    # clear the cart
-    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
-    db.commit()
-    flash(FLASH_PURCHASE)
+    # if charge successful, then change the transactions to confirmed
+    else:
+        db = get_db()
+        for trans_id in session['transaction_ids']:
+            # confirm the transaction
+            db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
+        # empty the cart
+        db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+        db.commit()
+        # remove the variables amount and transaction_ids from session
+        session.pop('amount', None)
+        session.pop('transaction_ids', None)
+        # flash message that purchase was succesful
+        flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
 @app.route('/search', methods=['POST'])
@@ -423,7 +505,7 @@ def category(category):
         on product.product_id=product_to_tag.product_id
         and product_to_tag.tag_id=?""", (tag_id,))
     # one importance level away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
         tag
         inner join product
         inner join product_to_tag
@@ -434,7 +516,7 @@ def category(category):
         return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
 
     # multiple importance levels away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
         tag
         inner join product
         inner join product_to_tag
@@ -446,50 +528,35 @@ def category(category):
 
 @app.route('/stories')
 def stories():
+    """Display the stories page."""
     return render_template('stories.html')
 
 @app.route('/<int:producer_id>/show_farmer')
 def show_farmer(producer_id):
-    producer_products = query_db('select * from product where producer_id= ?', [producer_id])
-    producer = query_db('select * from producer where producer_id=?', [producer_id], one=True)
-    return render_template('products_list.html', products_list=producer_products, producer=producer)
+    """Show details of the farmer, including all his products."""
+    producer_products = query_db('select * from product where producer_id= ?',
+                                [producer_id])
+    producer = query_db('select * from producer where producer_id=?',
+                        [producer_id], one=True)
+    return render_template('products_list.html',
+                            products_list=producer_products, producer=producer)
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product_db():
     """Add a product to the database."""
-    print "Hello there!"
     error = None
     errtype = None
     # check if a string is an integer
     def is_int(s):
         try:
             int(s)
-            return True 
+            return True
         except ValueError:
             return False
-            
+
     if request.method == 'POST':
-        print "Made it here."
-        print request.form
-        if not request.form['title']:
-            error = ERR_NO_PROD_TITLE
-            errtype = 'title'
-        elif not request.form['quantity']:
-            error = ERR_NO_PROD_QUANTITY
-            errtype = 'quantity'
-        elif not is_int(request.form['quantity']):
-            error = ERR_INVALID_PROD_QUANTITY
-            errtype = 'quantity'
-        elif not request.form['price']:
-            error = ERR_NO_PROD_PRICE
-            errtype = 'price'
-        elif not is_int(request.form['price']):
-            error = ERR_INVALID_PROD_PRICE
-            errtype = 'price'
-        elif not request.form['description']:
-            error = ERR_NO_PROD_DESCRIPTION
-            errtype = 'description'
-        elif not request.form['producerid']:
+        photos = request.files
+        if not request.form['producerid']:
             error = ERR_NO_PROD_PRODUCER_ID
             errtype = 'producerid'
         elif len(query_db('''select * from producer where producer_id=?''', \
@@ -497,20 +564,52 @@ def add_product_db():
             error = ERR_INVALID_PROD_PRODUCER_ID
             errtype = 'producerid'
         else:
-            print "PRODUCER_BENEFIT" + request.form['PRODUCER_BENEFIT_1']
+            try:
+                filenames = [None]*7
+                i = 0
+                for photo in photos:
+                    if len(photos.get(photo).filename) != 0:
+                        filenames[i] = upload_photos.save(photos.get(photo))
+                    i = i + 1
+            except UploadNotAllowed:
+                error = FLASH_UPLOAD_FORBIDDEN
+                errtype = 'uploaderror'
+                return render_template('add_product.html', error=error, errtype=errtype)
+
+            #store filename database
             db = get_db()
             db.execute('''insert into product (
-              title, quantity, price, description, producer_id, standard_geo, 
-              standard_producer, standard_raw, standard_production, standard_storage, 
-              standard_tech, standard_package, standard_price) 
-              values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              [request.form['title'], int(request.form['quantity']), \
-                  int(request.form['price']), request.form['description'], \
-                  int(request.form['producerid']), request.form['standard_geo'],\
-                  request.form['standard_producer'], request.form['standard_raw'],\
-                  request.form['standard_production'], request.form['standard_storage'],\
-                  request.form['standard_tech'], request.form['standard_package'],\
-                  request.form['standard_price']])
+                title, quantity, price, description, producer_id, standard_geo, 
+                standard_producer, standard_raw, standard_production, standard_storage, 
+                standard_tech, standard_package, standard_price,
+                product_photo_filename_1, product_photo_filename_2, product_photo_filename_3, 
+                laotu_book_photo_filename_1, laotu_book_photo_filename_2, laotu_book_photo_filename_3, laotu_book_photo_filename_4) 
+                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)''',
+                [request.form['title'], int(request.form['quantity']), \
+                    int(request.form['price']), request.form['description'], \
+                    int(request.form['producerid']), request.form['standard_geo'],\
+                    request.form['standard_producer'], request.form['standard_raw'],\
+                    request.form['standard_production'], request.form['standard_storage'],\
+                    request.form['standard_tech'], request.form['standard_package'],\
+                    request.form['standard_price']] + filenames)
+            db.execute('''insert into standards (organic_cert_1, organic_cert_2, organic_cert_3, 
+                organic_cert_4, organic_cert_5, organic_cert_6, organic_cert_7, organic_cert_8, 
+                quality_cert_1, quality_cert_2, producer_benifit_1, producer_benifit_2, 
+                producer_benifit_3, producer_benifit_4, producer_benifit_5, producer_benifit_6, 
+                consumer_benifit_1, local_1, local_2, local_3, package_1, package_2, ethnic_1, 
+                ethnic_2, ethnic_3, ethnic_4, ethnic_5, ethnic_6, ethnic_7, ethnic_8, ethnic_9, 
+                ethnic_10, production_1, production_2, production_3, production_4, production_5, 
+                craft_1, craft_2, craft_3, craft_4) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+                ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', [(standard in request.form) for
+                standard in 
+                ["ORGANIC_CERT_1","ORGANIC_CERT_2","ORGANIC_CERT_3","ORGANIC_CERT_4",
+                "ORGANIC_CERT_5","ORGANIC_CERT_6","ORGANIC_CERT_7", "ORGANIC_CERT_8",
+                "QUALITY_CERT_1","QUALITY_CERT_2","PRODUCER_BENIFIT_1", "PRODUCER_BENIFIT_2",
+                "PRODUCER_BENIFIT_3","PRODUCER_BENIFIt_4","PRODUCER_BENIFIT_5",
+                "PRODUCER_BENIFIT_6", "CONSUMER_BENIFIT_1", "LOCAL_1","LOCAL_2","LOCAL_3","PACKAGE_1",
+                "PACKAGE_2","ETHNIC_1","ETHNIC_2","ETHNIC_3","ETHNIC_4","ETHNIC_5","ETHNIC_6",
+                "ETHNIC_7","ETHNIC_8","ETHNIC_9","ETHNIC_10","PRODUCTION_1","PRODUCTION_2",
+                "PRODUCTION_3","PRODUCTION_4","PRODUCTION_5","CRAFT_1","CRAFT_2","CRAFT_3","CRAFT_4"]])
             db.commit()
 
             tag_list = request.form['tags'].split(';')
@@ -532,8 +631,3 @@ def add_product_db():
             error = None
             errtype = errtype
     return render_template('add_product.html', error=error, errtype=errtype)
-
-
-# add some filters to jinja
-app.jinja_env.filters['datetimeformat'] = format_datetime
-app.jinja_env.filters['gravatar'] = gravatar_url
