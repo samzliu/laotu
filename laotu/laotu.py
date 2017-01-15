@@ -260,8 +260,6 @@ def del_product(product_id):
     db = get_db()
     db.execute('''delete from product where product_id = ?''', (product_id,))
     db.commit()
-        
-    
     
     
 @app.route('/<int:product_id>/<int:quantity>/add_product')
@@ -410,7 +408,7 @@ def search_results(query):
     products = query_db("""select * from product where title like ? or description like ?""",
         ('%' + query + '%', '%' + query + '%'))
     results = products # this will be more general later
-    return render_template('search_results.html', results=results, query=query)
+    return render_template('products_list.html', products_list=results, message="Search results for " + query + ":")
 
 @app.route('/categories')
 def categories():
@@ -433,7 +431,7 @@ def category(category):
         and product_to_tag.tag_id=?
         where tag.importance=?+1""", (tag_id, tag_id))
     if len(tags_list) > 0:
-        return render_template('products_list.html', products_list=products_list, tags_list=tags_list)
+        return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
 
     # multiple importance levels away
     tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from 
@@ -499,9 +497,7 @@ def add_product_db():
             error = ERR_INVALID_PROD_PRODUCER_ID
             errtype = 'producerid'
         else:
-            print request.form['tags']
-                
-                
+            print "PRODUCER_BENEFIT" + request.form['PRODUCER_BENEFIT_1']
             db = get_db()
             db.execute('''insert into product (
               title, quantity, price, description, producer_id, standard_geo, 

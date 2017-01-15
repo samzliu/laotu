@@ -105,18 +105,6 @@ div.standards_container {
     top: 0px;
 }
 
-div.category {
-    height: 50px; 
-    width: 40%; 
-    position: relative; 
-    margin: 1rem auto; 
-    background-color: rgba(119,170,68,0.6);
-    padding: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: rgba(119,170,68,0.6);
-    transition: 0.3s;
-}
-
 h1 {
     font-size: 23px;
 }
@@ -140,7 +128,6 @@ input {
     :-ms-input-placeholder {
         color: rgba(255,255,255,0.7);
     }
-    /*
     &:focus {
         outline: 0 transparent solid;
         ::-webkit-input-placeholder {
@@ -153,7 +140,6 @@ input {
             color: rgba(0,0,0,0.7);
         }
     }
-    */
 }
 
 .sleek-form {
@@ -225,6 +211,8 @@ input {
     transition: 250ms background ease-in;
 }
 
+.form-checkbox {
+}
 
 
 
