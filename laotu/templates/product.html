@@ -12,9 +12,11 @@
 			</div>
 			<div class="product-img-lst">
 			{% for photo in photos %}
+				{% if photo !="" %}
 				<div class="img-lst-element" onclick="updateMainPic('{{ photo }}')">
 					<img src="{{ photo }}" style="max-width:100%; max-height:100%">
 				</div>
+				{% endif %}
 			{% endfor %}
 			</div>
 		</div>
