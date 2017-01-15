@@ -373,6 +373,10 @@ def pay():
                             product.quantity as inventory from cart \
                             join product on cart.product_id=product.product_id \
                             where cart.user_id=?''', [session['user_id']])
+    # if there are no purchases
+    if len(purchases)==0:
+        flash("You have nothing in your cart. Please add items before paying.")
+        return redirect(url_for('get_cart'))
     # check that all items are still in stock
     for purchase in purchases:
         # if the user wishes to purchase more than is in stock, flash message
@@ -381,7 +385,7 @@ def pay():
                                                          purchase['title'])
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
-    # else, put all the items in hold while user pays
+    # if all items are still in stock, put all items on hold while user pays
     db = get_db()
     cursor = db.cursor()
     transaction_ids = []
