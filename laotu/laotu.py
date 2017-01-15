@@ -79,7 +79,7 @@ stripe_keys = {
 stripe.api_key = stripe_keys['secret_key']
 
 
-# create our little application :)
+# create our BIGGGGG application >:^)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
@@ -605,9 +605,17 @@ def search_results(query):
         or product.description like ?)""", 
         ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
 
-    tags = query_db("""select * from tag where name like ?""",
-        ('%' + query + '%',))
-    print products
+    tags = query_db("""select distinct tag.* from tag 
+        inner join product
+        inner join product_to_tag
+        on ((product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=tag.tag_id
+        and (product.title like ?
+        or product.description like ?))
+        or tag.name like ?)
+        limit 5""",
+        ('%' + query + '%','%' + query + '%','%' + query + '%'))
+    print tags 
 
     return render_template('products_list.html', products_list=products, message="Search results for \"" + query + "\":", tags_list=tags )
 
