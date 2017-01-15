@@ -70,7 +70,7 @@ def admin_required(f):
         #if ADMIN NOT LOGGED IN:
         # print("REQUEST")
         # print(request.path)
-        if request.args.get('adm') != 'y':
+        if not g.user or not session['admin']:
             return redirect(url_for("adminauth", next=request.path))
         return f(*args, **kwargs)
     return decorated_function
@@ -205,6 +205,7 @@ def login():
         else:
             flash(FLASH_LOGGED)
             session['user_id'] = user['user_id']
+            session['admin'] = False
             return redirect(url_for('home'))
     return render_template('login.html', error=error, errtype=errtype)
 
@@ -485,8 +486,8 @@ def adminauth():
     if request.method == 'POST':
         user = query_db('''select * from user where
             email = ?''', [request.form['email']], one=True)
-        print("NEXT:"),
-        print(request.args.get('next'))
+        # print("NEXT:"),
+        # print(request.args.get('next'))
         if user is None:
             error = ERR_INVALID_EMAIL
         elif not check_password_hash(user['pw_hash'],
@@ -496,10 +497,12 @@ def adminauth():
             user_id = ?''', [user[0]], one=True) is None:
             error = ERR_NOT_ADMIN
         else:
-            flash(FLASH_LOGGED_ADMIN)
-            print(url_for('products')+'?adm=1')
+            session['user_id'] = user['user_id']
+            session['admin'] = True
+            # print(url_for('products')+'?adm=1')
             #alt make a global?
-            return redirect(request.args.get('next')+'?adm=y')
+            flash(FLASH_LOGGED_ADMIN)
+            return redirect(request.args.get('next'))
     return render_template('adminauth.html', error=error)    
 
 # add some filters to jinja
