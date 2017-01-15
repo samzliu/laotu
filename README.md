@@ -53,4 +53,6 @@ Low priority:
     - download csv of transactions from admin page 
     - user transaction history 
 
+For mail functionality pip install flask_mail==0.9.0
+
 
