@@ -75,7 +75,7 @@ def admin_required(f):
         #if ADMIN NOT LOGGED IN:
         # print("REQUEST")
         # print(request.path)
-        if not g.user or not session['admin']:
+        if not g.user or 'admin' not in session or not session['admin']:
             return redirect(url_for("adminauth", next=request.path))
         return f(*args, **kwargs)
     return decorated_function
@@ -95,8 +95,8 @@ def admin_required(f):
 
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
      tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
-     title = 'Admin Page', h1 = 'Admin Page',
-     decorator = admin_required)
+     title = 'Admin Page', h1 = 'Admin Page')
+     #decorator = admin_required)
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 # helper functions ............................................................
@@ -595,6 +595,7 @@ def show_farmer(producer_id):
                             products_list=producer_products, producer=producer)
 
 @app.route('/add_product', methods=['GET', 'POST'])
+@admin_required
 def add_product_db():
     """Add a product to the database."""
     error = None
@@ -631,6 +632,7 @@ def add_product_db():
 
             #store filename database
             db = get_db()
+            print(filenames)
             db.execute('''insert into product (
                 title, quantity, price, description, producer_id, standard_geo, 
                 standard_producer, standard_raw, standard_production, standard_storage, 
@@ -658,7 +660,7 @@ def add_product_db():
                 ["ORGANIC_CERT_1","ORGANIC_CERT_2","ORGANIC_CERT_3","ORGANIC_CERT_4",
                 "ORGANIC_CERT_5","ORGANIC_CERT_6","ORGANIC_CERT_7", "ORGANIC_CERT_8",
                 "QUALITY_CERT_1","QUALITY_CERT_2","PRODUCER_BENIFIT_1", "PRODUCER_BENIFIT_2",
-                "PRODUCER_BENIFIT_3","PRODUCER_BENIFIt_4","PRODUCER_BENIFIT_5",
+                "PRODUCER_BENIFIT_3","PRODUCER_BENIFIT_4","PRODUCER_BENIFIT_5",
                 "PRODUCER_BENIFIT_6", "CONSUMER_BENIFIT_1", "LOCAL_1","LOCAL_2","LOCAL_3","PACKAGE_1",
                 "PACKAGE_2","ETHNIC_1","ETHNIC_2","ETHNIC_3","ETHNIC_4","ETHNIC_5","ETHNIC_6",
                 "ETHNIC_7","ETHNIC_8","ETHNIC_9","ETHNIC_10","PRODUCTION_1","PRODUCTION_2",
@@ -710,9 +712,3 @@ def adminauth():
             flash(FLASH_LOGGED_ADMIN)
             return redirect(request.args.get('next'))
     return render_template('adminauth.html', error=error)    
-
-
-
-# add some filters to jinja
-app.jinja_env.filters['datetimeformat'] = format_datetime
-app.jinja_env.filters['gravatar'] = gravatar_url
