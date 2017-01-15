@@ -46,9 +46,6 @@ stripe.api_key = stripe_keys['secret_key']
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
-    tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], title = 'Admin Page', h1 = 'Admin Page')
-app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 upload_photos = UploadSet('photos', IMAGES)
 configure_uploads(app, upload_photos)
@@ -87,6 +84,12 @@ def admin_required(f):
 #             return redirect(url_for("login", next=request.url))
 #         return f(*args, **kwargs)
 #     return decorated_function
+
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
+     tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
+     title = 'Admin Page', h1 = 'Admin Page',
+     decorator = admin_required)
+app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 # helper functions ............................................................
 def get_db():
@@ -171,12 +174,11 @@ def hasStandard(product):
 
 #pages are below .................................................................
 
+
 @app.route('/')
 def home():
     """Home page"""
     return render_template('home.html')
-
-
 
 @app.route('/products')
 @admin_required
