@@ -63,6 +63,7 @@ laotu/static/images/menu-green.png
 laotu/static/images/menu.png
 laotu/templates/.DS_Store
 laotu/templates/about.html
+laotu/templates/add_product.html
 laotu/templates/adminauth.html
 laotu/templates/cart.html
 laotu/templates/categories.html
