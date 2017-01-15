@@ -38,12 +38,14 @@ High prority:
     - multiple categories (Carl)
     - blog/splashpage (Sam)
     - anyone wanna give admin autologout a shot? (i.e. setting session['admin'] to False after loading an admin page) here's a ref on func decorators http://thecodeship.com/patterns/guide-to-python-function-decorators/
-    - transaction and confirmation emails (Nat will humbly attempt)
     - add product seperate page 
     
     - formatting
     - wechat
     - conversion and rollout
+    - Fix up order confirmation email templates (.txt and .html) to look how the laotu people want them to (also maybe include links for the item pages on the .html template)
+    - probably Laotu or the producer should also get an email when someone places an order so they...know...to...proceed...with delivery?
+    - setup the emails to get sent from an actual laotu email address (which one tho)
 
 
 Low priority:
@@ -52,6 +54,9 @@ Low priority:
     - next page 
     - download csv of transactions from admin page 
     - user transaction history 
+
+Pending testing:
+    - test order confirmation email with an actual transaction? how? idk but
 
 For mail functionality pip install flask_mail==0.9.0 
 

@@ -76,6 +76,10 @@ FLASH_PROD_ADD_SUCCESSFUL =u'将产品添加到数据库！'
 FLASH_LOGGED_ADMIN = "Welcome, admin."
 
 
+#Purchase and emails
+PURCHASE_CONFIRMATION_EMAIL_SUBJECT = "Purchase Confirmation from Laotu"
+
+
 #Food Standard Tags
 ORGANIC_CERT_1 = "中国国家有机认证"
 ORGANIC_CERT_2 = "美国有机认证"

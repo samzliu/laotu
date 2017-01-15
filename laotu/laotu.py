@@ -48,11 +48,19 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 # mail config
 # gmail config:
+# DEFAULT_EMAIL_SENDER = os.environ['EMAIL_ADDRESS']
+# DEFAULT_EMAIL_PASSWORD = os.environ['EMAIL_PW']
+DEFAULT_EMAIL_SENDER = 'natsapptester@gmail.com'
+DEFAULT_EMAIL_PASSWORD = 'securepassword123'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'natsapptester@gmail.com'
-app.config['MAIL_PASSWORD'] = 'securepassword123'
+app.config['MAIL_USERNAME'] = DEFAULT_EMAIL_SENDER
+app.config['MAIL_PASSWORD'] = DEFAULT_EMAIL_PASSWORD
 app.config['MAIL_USE_SSL'] = True
+
+# receives test emails:
+EMAIL_TEST_RECIPIENT = ''
+
 
 mail = Mail(app)
 
@@ -139,11 +147,12 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-def send_mail(to, subject, message, html, sender="natsapptester@gmail.com"):
+def send_mail(to, subject, message, html="", sender=DEFAULT_EMAIL_SENDER):
     """
     to: a list of strings
     subject: a string
-    message: a string
+    message: a string or render_template("some jinja formatted .txt here")
+    html: a string of html markup or render_template("some jinja formatted .html here")
     sender: an address string or a touple (name, address)
 
     """
@@ -673,61 +682,92 @@ def undo_hold(transaction_ids, user_id):
 def charge():
     """Charge the user."""
     global timer_on_users
-    try:
-        charge = stripe.Charge.create(
-            amount=session['amount'], # Amount in cents
-            currency="cny",
-            source=request.form['stripeToken'])
-    # for any exception, undo the hold and flash a message
-    except stripe.error.CardError as e:
-        # The account has been declined
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.RateLimitError as e:
-        # Too many requests made to the API too quickly
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.InvalidRequestError as e:
-        # Invalid parameters were supplied to Stripe's API
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.AuthenticationError as e:
-        # Authentication with Stripe's API failed
-        # (maybe you changed API keys recently)
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.APIConnectionError as e:
-        # Network communication with Stripe failed
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.StripeError as e:
-        # Display a very generic error to the user, and maybe send
-        # yourself an email
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_ERROR)
-    except Exception as e:
-        # Something else happened, completely unrelated to Stripe
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_CARD_FAILURE)
+    # try:
+    #     charge = stripe.Charge.create(
+    #         amount=session['amount'], # Amount in cents
+    #         currency="cny",
+    #         source=request.form['stripeToken'])
+    # # for any exception, undo the hold and flash a message
+    # except stripe.error.CardError as e:
+    #     # The account has been declined
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.RateLimitError as e:
+    #     # Too many requests made to the API too quickly
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.InvalidRequestError as e:
+    #     # Invalid parameters were supplied to Stripe's API
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.AuthenticationError as e:
+    #     # Authentication with Stripe's API failed
+    #     # (maybe you changed API keys recently)
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.APIConnectionError as e:
+    #     # Network communication with Stripe failed
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.StripeError as e:
+    #     # Display a very generic error to the user, and maybe send
+    #     # yourself an email
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_ERROR)
+    # except Exception as e:
+    #     # Something else happened, completely unrelated to Stripe
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_CARD_FAILURE)
 
-    # if charge successful, then change the transactions to confirmed
-    else:
-        db = get_db()
-        for trans_id in session['transaction_ids']:
-            # confirm the transaction
-            db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
-        # empty the cart
-        db.execute('''delete from cart where user_id = ?''', [session['user_id']])
-        db.commit()
-        # remove the variables amount, transaction_ids, and timer from session
-        session.pop('amount', None)
-        session.pop('transaction_ids', None)
-        # flash message that purchase was succesful
-        flash(FLASH_PURCHASE)
+    # # if charge successful, then change the transactions to confirmed
+    # else:
+    db = get_db()
+    itemlist = []
+    totalprice = 0
+    for trans_id in session['transaction_ids']:
+        # confirm the transaction
+        db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
+        # get product info for email
+        product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
+        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0], 
+                         'quantity': product['quantity'],
+                         'price': product['amount']})
+        totalprice += product['amount']        
+    
+    # send order confirmation email
+    send_mail([query_db('select email from user where user_id=?',[session['user_id']])[0][0]], 
+                PURCHASE_CONFIRMATION_EMAIL_SUBJECT, 
+                render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
+                render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
+
+    # empty the cart
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    # remove the variables amount, transaction_ids, and timer from session
+    session.pop('amount', None)
+    session.pop('transaction_ids', None)
+    # flash message that purchase was succesful
+    flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
+@app.route('/emailtest')
+@admin_required
+def transaction_email_test():
+    db = get_db()
+    itemlist = []
+    totalprice = 0
+    for trans_id in session['transaction_ids']:
+        product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
+        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0], 
+                         'quantity': product['quantity'],
+                         'price': product['amount']})
+        totalprice += product['amount']
+    # must have an EMAIL_TEST_RECIPIENT to send test email    
+    # send_mail([EMAIL_TEST_RECIPIENT], 'test mail from laotu', 
+                # render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
+                # render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
 
-
+    return render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice)
 
 ### Farmer Pages ###
 @app.route('/stories')
