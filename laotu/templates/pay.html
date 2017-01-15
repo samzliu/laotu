@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}付钱{% endblock %}
 {% block main %}
+<head><meta http-equiv="refresh" content="60;url={{url_for('get_cart')}}" /></head>
   <form action="/charge" method="post">
   <article>
     <label>

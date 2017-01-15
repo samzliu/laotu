@@ -17,7 +17,7 @@ from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads, UploadNotAllowed
 from datetime import datetime
-from threading import Timer
+from threading import Timer, Lock
 
 from strings import *
 
@@ -40,6 +40,7 @@ SECRET_KEY = 'development key'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
 DEFAULT_IMPORTANCE = 100
+
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -93,8 +94,8 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 upload_photos = UploadSet('photos', IMAGES)
 configure_uploads(app, upload_photos)
-timer_on = False
-
+timer_on_users = []
+mutex = Lock()
 
 if __name__ == '__main__':
     app.run()
@@ -361,25 +362,94 @@ def logout():
 
 
 
-### Listing pages ###
+### Product, tag, and miscellaneous pages ###
+
+def render_listing(products_list=None, tags_list=None, specific_tag=None, message=None, 
+        tag_limit=True):
+    overflow = (tags_list and len(tags_list) > 3 and tag_limit)
+    if overflow:
+        tags_list = tags_list[0:3]
+    return render_template('listing.html', \
+        products_list=products_list,\
+        tags_list=tags_list,\
+        overflow=overflow,\
+        specific_tag=specific_tag,\
+        message=message)
+
+
+# show a listing of all products
 @app.route('/products_list')
 def show_products_list():
     """Displays the list of products."""
-    return render_template('products_list.html', products_list=query_db('''
-    select * from product'''), producer=None)
+    products_list=query_db('''select * from product''')
+    message="All products!"
+    return render_listing(products_list=products_list, message=message)
 
-@app.route('/products_list/<category>')
-def show_products_list_category(category):
-    return render_template('products_list.html', products_list=query_db('''
-        select * from product where category = ?''', (category,)))
 
-@app.route('/categories')
-def categories():
+# show a listing of products under tag, and related categories
+@app.route('/products_list/<tag>')
+def show_products_list_tag(tag):
+    tag = query_db("""select * from tag where name=?""", (tag,), one=True)
+    tag_id = tag['tag_id']
+    products_list = query_db("""select * from product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?""", (tag_id,))
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance>?
+        order by importance""", (tag_id, tag_id))
+    message="Products and tags related to \"" + tag['name'] + "\":"
+
+    return render_listing(products_list=products_list, tags_list=tags_list,\
+        specific_tag=tag, message=message)
+
+# show a list of all tags
+@app.route('/tags')
+def show_tags_list():
     tags = query_db("""select * from tag order by importance asc""")
-    return render_template('categories.html', tags=tags)
+    message="All tags!"
+    return render_listing(tags_list=tags, message=message, tag_limit=False)
 
-@app.route('/categories/<category>')
-def specific_categories(category):
+# show a list of tags related to a specific tag
+@app.route('/tags/<tag>')
+def show_tags_list_tag(tag):
+    tag = query_db("""select * from tag where name=?""", (tag,), one=True)
+    tag_id = tag['tag_id']
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance>?
+        order by importance""", (tag_id, tag_id))
+    message="Categories related to \"" + tag['name'] + "\"."
+    return render_listing(tags_list=tags_list, message=message, tag_limit=False)
+
+# search reroute
+@app.route('/search', methods=['POST'])
+def search():
+    print("here")
+    return redirect(url_for('search_results', query=request.form['search']))
+
+# search results page
+@app.route('/search_results/<query>')
+def search_results(query):
+    products = query_db("""select distinct product.* from
+        product
+        inner join tag
+        inner join product_to_tag
+        on ((product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=tag.tag_id
+        and tag.name like ?)
+        or product.title like ?
+        or product.description like ?)""",
+        ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
     tags = query_db("""select distinct tag.* from tag 
         inner join product
         inner join product_to_tag
@@ -388,44 +458,13 @@ def specific_categories(category):
         and (product.title like ?
         or product.description like ?))
         or tag.name like ?)""",
-        ('%' + tag + '%','%' + tag + '%','%' + tag + '%'))
-
-    return render_template('categories.html', tags=tags, specific_tag=tag)
-
-@app.route('/category/<category>')
-def category(category):
-    tag_id = query_db("""select tag_id from tag where name=?""", (category,), one=True)[0]
-    products_list = query_db("""select * from product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?""", (tag_id,))
-    # one importance level away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
-        tag
-        inner join product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?
-        where tag.importance=?+1""", (tag_id, tag_id))
-    if len(tags_list) > 0:
-        return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
-
-    # multiple importance levels away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
-        tag
-        inner join product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?
-        and tag.tag_id<>?
-        where tag.importance>?""", (tag_id, tag_id, tag_id))
-    return render_template('products_list.html', products_list=products_list,\
-         tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
+        ('%' + query + '%','%' + query + '%','%' + query + '%'))
+    message="Search results for \"" + query + "\":"
+    return render_listing(products_list=products, tags_list=tags, message=message)
 
 
 
-
-### Individual product pages ###
+### Individual product page ###
 @app.route('/<int:product_id>')
 def show_product(product_id):
     """Displays a single product in detail."""
@@ -535,7 +574,7 @@ def update_product(product_id, quantity):
 @app.route('/pay')
 def pay():
     """Displays the pay page with the Stripe Checkout Button."""
-    global timer_on
+    global timer_on_users
     # get all the user's purchases
     purchases = query_db('''select cart.product_id, cart.quantity, \
                             product.title, product.price, \
@@ -555,7 +594,7 @@ def pay():
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
     # if all items are still in stock, put all items on hold while user pays
-    if not timer_on:
+    if session['user_id'] not in timer_on_users:
         print "Putting on hold"
         db = get_db()
         cursor = db.cursor()
@@ -578,8 +617,14 @@ def pay():
         print "hold complete"
         # store the transaction_ids in the session
         session['transaction_ids'] = transaction_ids
-        timer_on = True
-        Timer(60, undo_hold, [session['transaction_ids']]).start()
+        mutex.acquire()
+        try:
+            timer_on_users.append(session['user_id'])
+        finally:
+            mutex.release()
+        # Timer(1, undo_hold, [session['transaction_ids'], session['user_id']]).start()
+        Timer(1, undo_hold, [session['transaction_ids'], session['user_id']]).start()
+
     # store the amount the user must pay in the session
     session['amount'] = query_db('''select sum(product.price*cart.quantity)
                                     from cart join product on cart.product_id=
@@ -593,10 +638,16 @@ def pay():
                             amount=session['amount'],
                             transaction_ids=session['transaction_ids'])
 
-def undo_hold(transaction_ids):
+def undo_hold(transaction_ids, user_id):
     """Undo the hold on products that was initiated during checkout."""
-    global timer_on
+    global timer_on_users
+    products_put_back = False
     print "in undo_hold"
+    mutex.acquire()
+    try:
+        timer_on_users.remove(user_id)
+    finally:
+        mutex.release()
     with app.app_context():
             db = get_db()
             for trans_id in transaction_ids:
@@ -604,42 +655,21 @@ def undo_hold(transaction_ids):
                 purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
                 # if the purchase was unconfirmed
                 if purchase['confirmed']==0:
+                    products_put_back = True
                     print "product put back"
                     # Put products back into product table
                     db.execute('''update product set quantity=quantity + ? where
                             product_id=?''', (purchase['quantity'], purchase['product_id']))
                 # Do nothing to the transactions (they remain there as uncomfirmed).
             db.commit()
-    timer_on = False
-    print "undo_hold over"
-    # if make_new_context:
-    #     with app.test_request_context():
-    #         db = get_db()
-    #         for trans_id in transaction_ids:
-    #             # get the transaction details
-    #             purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
-    #             # Put products back into product table
-    #             db.execute('''update product set quantity=quantity + ? where
-    #                     product_id=?''', (purchase['quantity'], purchase['product_id']))
-    #             # Do nothing to the transactions (they remain there as uncomfirmed).
-    #         db.commit()
-    # else:
-    #     db = get_db()
-    #     for trans_id in transaction_ids:
-    #         # get the transaction details
-    #         purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
-    #         # Put products back into product table
-    #         db.execute('''update product set quantity=quantity + ? where
-    #                 product_id=?''', (purchase['quantity'], purchase['product_id']))
-    #         # Do nothing to the transactions (they remain there as uncomfirmed).
-    #     db.commit()
-    # print 'undone'
-    # return False
+            print "undo_hold over"
+            print "after undo_hold timer_on_users is ", timer_on_users
+
 
 @app.route('/charge', methods=['POST'])
 def charge():
     """Charge the user."""
-    global timer_on
+    global timer_on_users
     try:
         charge = stripe.Charge.create(
             amount=session['amount'], # Amount in cents
@@ -648,39 +678,37 @@ def charge():
     # for any exception, undo the hold and flash a message
     except stripe.error.CardError as e:
         # The account has been declined
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.RateLimitError as e:
         # Too many requests made to the API too quickly
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.InvalidRequestError as e:
         # Invalid parameters were supplied to Stripe's API
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.AuthenticationError as e:
         # Authentication with Stripe's API failed
         # (maybe you changed API keys recently)
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.APIConnectionError as e:
         # Network communication with Stripe failed
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.StripeError as e:
         # Display a very generic error to the user, and maybe send
         # yourself an email
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_ERROR)
     except Exception as e:
         # Something else happened, completely unrelated to Stripe
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_CARD_FAILURE)
 
     # if charge successful, then change the transactions to confirmed
     else:
-        timer_on = False
-        print "timer_on is now ", timer_on
         db = get_db()
         itemlist = []
         for trans_id in session['transaction_ids']:
@@ -700,45 +728,6 @@ def charge():
         # flash message that purchase was succesful
         flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
-
-
-
-
-### Searching functions ###
-@app.route('/search', methods=['POST'])
-def search():
-    print("here")
-    return redirect(url_for('search_results', query=request.form['search']))
-
-@app.route('/search_results/<query>')
-def search_results(query):
-    products = query_db("""select distinct product.* from
-        product
-        inner join tag
-        inner join product_to_tag
-        on ((product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=tag.tag_id
-        and tag.name like ?)
-        or product.title like ?
-        or product.description like ?)""",
-        ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
-
-    tags = query_db("""select distinct tag.* from tag 
-        inner join product
-        inner join product_to_tag
-        on ((product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=tag.tag_id
-        and (product.title like ?
-        or product.description like ?))
-        or tag.name like ?)""",
-        ('%' + query + '%','%' + query + '%','%' + query + '%'))
-    overflow=False
-    if len(tags) > 5:
-        overflow=True
-        tags = tags[0:5]
-
-    return render_template('products_list.html', products_list=products, message="Search results for \"" + query + "\":", tags_list=tags, overflow=overflow)
-
 
 
 

@@ -95,7 +95,7 @@
     margin: 10px;
 }
 
-.product-list-message {
+.product-list-message, .tags-list-message {
     position: relative;
     font-size: 13pt;
     font-weight: bold;
@@ -103,7 +103,7 @@
     margin: 10px;
 }
 
-.product-category {
+.product-tag {
     position: relative;
     height: 50px;
     width: 40%;    
@@ -117,7 +117,7 @@
     transition: 0.3s;
 }
 
-.product-category h1 {
+.product-tag h1 {
     position: absolute;
     top: 30%;
     left: 50%;
