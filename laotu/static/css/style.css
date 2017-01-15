@@ -201,18 +201,6 @@ div.story-container div.story-main {
     height: 80%; 
 }
 
-div.category {
-    height: 50px; 
-    width: 40%; 
-    position: relative; 
-    margin: 1rem auto; 
-    background-color: rgba(119,170,68,0.6);
-    padding: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: rgba(119,170,68,0.6);
-    transition: 0.3s;
-}
-
 h1 {
     font-size: 23px;
 }
@@ -274,6 +262,56 @@ input {
 
     transition: 250ms background ease-in;
 }
+
+.form-paragraph {
+    position: relative;
+    left: -30px;
+    margin: 1rem auto;
+    padding: .5rem;
+
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 8pt;
+
+    background: transparent;
+    outline: none;
+    border: 0 solid;
+    border-bottom: 1px solid green;
+    color: black;
+
+    display: block;
+    width: 70%; 
+    max-width: 460px;
+
+    transition: 250ms background ease-in;
+}
+
+.form-paragraph-err {
+    position: relative;
+    left: -30px;
+    margin: 1rem auto;
+    padding: .5rem;
+
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 8pt;
+
+    background: #FAE4E4;
+    outline: none;
+    border: 0 solid;
+    border-bottom: 1px solid red;
+    color: black;
+
+    display: block;
+    width: 70%; 
+    max-width: 460px;
+
+    transition: 250ms background ease-in;
+}
+
+.form-checkbox {
+}
+
+
+
 
 .form-text:focus, .form-password:focus {
     background: #CCCCCC;
@@ -362,7 +400,7 @@ div.error {
     height: 100%;
     border: none;
     right:0px;
-    width: calc((100% + 30px) * .7 - 15px );
+    width: 100%;
     font-size:16px;
 }
 .dropbtn-red:hover, .dropbtn-red:focus {

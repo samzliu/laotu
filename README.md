@@ -33,11 +33,10 @@ Tasks:
 High prority:
 
     - images (Sam)
-    - translate to Chinese (Nat)
     - product page (Carl)
     - multiple categories (Carl)
     - blog/splashpage (Sam)
-    - admin authentication 
+    x admin authentication (Nat) (just missing automatic logout maybe)
     - transaction and confirmation emails
     - add product seperate page 
     

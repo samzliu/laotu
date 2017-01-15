@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}AdminAuth{% endblock %}
+{% block header %}AdminAuth{% endblock %}
+{% block main %}
+	{% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
+ 	  	<form action="" method="post" class="sleek-form">
+	{% endif %}
+ 	    	
+	<form action="" method="post" class="sleek-form">
+    	<input type="text" name="email" class="form-text" value="{{ request.form.email }}" required="true" placeholder="Email">
+
+	    <input type="password" name="password" class="form-password" value="{{ request.form.email }}" placeholder="Password">
+
+    	<input type="submit" name="Login" class="form-submit" value="Submit">
+	</form>
+{% endblock %}

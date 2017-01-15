@@ -8,8 +8,8 @@
 {% block main %}
     {% if tags %} 
     {% for tag in tags %}
-        <div class="category" onclick="gotoURL('{{ url_for('category', category=tag.name) }}')">
-            <h1 style="text-align: center; tex">{{ tag.name }}</h1>
+        <div class="product-category" onclick="gotoURL('{{ url_for('category', category=tag.name) }}')">
+            <h1>{{ tag.name }}</h1>
         </div>
     {% endfor %}
     {% else %}
