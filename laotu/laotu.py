@@ -22,6 +22,9 @@ from strings import *
 
 from functools import wraps
 
+from flask_mail import Mail, Message 
+
+
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
@@ -30,12 +33,39 @@ DATABASE = '/tmp/laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
+
+#UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
+UPLOADED_PHOTOS_DEST = '/tmp/photos'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
 DEFAULT_IMPORTANCE = 100
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
+
+# mail config
+# gmail config:
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'natsapptester@gmail.com'
+app.config['MAIL_PASSWORD'] = 'securepassword123'
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
+
+# available config options:
+# MAIL_SERVER : default ‘localhost’
+# MAIL_PORT : default 25
+# MAIL_USE_TLS : default False
+# MAIL_USE_SSL : default False
+# MAIL_DEBUG : default app.debug
+# MAIL_USERNAME : default None
+# MAIL_PASSWORD : default None
+# MAIL_DEFAULT_SENDER : default None
+# MAIL_MAX_EMAILS : default None
+# MAIL_SUPPRESS_SEND : default app.testing
+# MAIL_ASCII_ATTACHMENTS : default False
+
 
 # keys to connect to the Stripe API, specify via command line
 # test keys:
@@ -68,13 +98,10 @@ def admin_required(f):
     Decorate routes to require admin login. Add @admin_required below @app.route 
     for any endpoint that should require admin authentication
 
-    http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+    decorators: http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        #if ADMIN NOT LOGGED IN:
-        # print("REQUEST")
-        # print(request.path)
         if not g.user or 'admin' not in session or not session['admin']:
             return redirect(url_for("adminauth", next=request.path))
         return f(*args, **kwargs)
@@ -82,9 +109,45 @@ def admin_required(f):
 
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
      tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
-     title = 'Admin Page', h1 = 'Admin Page')
-     #decorator = admin_required)
+     title = 'Admin Page', h1 = 'Admin Page',
+     decorator = admin_required)
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+
+# mailing functions ...........................................................
+def send_mail(to, subject, message, sender="natsapptester@gmail.com"):
+    """
+    to: a list of strings 
+    subject: a string
+    message: a string 
+    sender: an address string or a touple (name, address)
+
+    """
+    msg = Message(subject=subject, body=message, recipients=to, sender=sender)
+    mail.send(msg)
+
+def send_bulk_mail(to, message, sender=("Laotu Noreply", "noreply@laotu.com")):
+    """
+    Opens connection to email host that is automatically closed once all emails 
+    are sent. 
+
+    https://pythonhosted.org/Flask-Mail/
+
+    to: a list of user objects with 'name' and 'email' attributes
+    message: a string
+    sender: an address string or a touple (name, address)
+
+    """
+
+    with mail.connect() as conn:
+        for user in users:
+            subject = "hello, %s" % user['name']
+            msg = Message(recipients=[user['email']],
+                      body=message,
+                      subject=subject,
+                      sender=sender)
+            conn.send(msg)
+
+# missing implementations: send mail with attachment.
 
 # helper functions ............................................................
 def get_db():
@@ -173,13 +236,6 @@ def hasStandard(product):
 def home():
     """Home page"""
     return render_template('home.html')
-
-@app.route('/products')
-@admin_required
-def products():
-    """Displays the products."""
-    return render_template('products.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -289,8 +345,15 @@ def show_product(product_id):
                         [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?',
                         str(product['producer_id']), one=True)
+    photos = [product['product_photo_filename_1'], 
+                        product['product_photo_filename_2'], 
+                        product['product_photo_filename_3']]
+    stories = [product['laotu_book_photo_filename_1'], 
+                        product['laotu_book_photo_filename_2'], 
+                        product['laotu_book_photo_filename_3'], 
+                        product['laotu_book_photo_filename_4']] 
     return render_template('product.html', product=product, producer=producer,
-                            hasStandard=hasStandard(product))
+        hasStandard=hasStandard(product), photos=photos, stories=stories)
 
 @app.route('/del/<int:product_id>')
 def del_product(product_id):

@@ -21,7 +21,7 @@ a {
 /* 
  * Small devices 
  */
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-width: 480px) {
     body {
         font-size: 14px;
     }
@@ -58,52 +58,175 @@ a {
  * Products
  */
 
+@media only screen and (min-width:480px) {
+    div.product_main {
+        height: 300px; 
+        width: 90%;
+        position: relative; 
+        margin: 1rem auto;
+    }
 
-div.product_main {
-    height: 300px; 
-    width: 90%;/*700px;*/ 
-    position: relative; 
-    margin: 1rem auto;
+    div.product_main div.product-img {
+        height: 100%;
+        width: 40%;
+    }
+
+    div.product_main div.product-info {
+        position: absolute; 
+        width: 58%;  
+        height: 100%;
+        left: 40%; 
+        top: 0px;
+        padding-left: 2%;
+    }
+
+    div.product_main div.product-info div.product-title {
+        height: 130px; 
+        width: 100%; 
+        border-bottom: 1px solid green;
+    }
+
+    div.product_main div.product-info div.product-price {
+
+    }
+
+    div.product_description {
+        background-color: rgba(119,170,68,0.4);
+        position: relative; 
+        margin: 1rem auto;
+        width: 90%;
+        top: 0px;
+    }
+
+    div.standards_container {
+        position: relative; 
+        margin: 1rem auto;
+        width: 90%;
+        top: 0px;
+        background-color: rgba(119,170,68,0.4);
+    }
+
+    div.story-container { 
+        width: 90%;
+        height: 350px;
+        position: relative; 
+        margin: 1rem auto;
+    }
 }
 
-div.product_main div.product-image {
-    height: 100%;
-    width: 40%;
+@media only screen and (max-width: 480px) {
+    div.product_main {
+        height: 450px; 
+        width: 75%;
+        position: relative; 
+        right: 15%;
+        margin: 1rem auto;
+    }
+
+    div.product_main div.product-img {
+        height: 50%;
+        width: 100%;
+    }
+
+    div.product-list div.product-info {
+        position: relative; 
+        height: 100%; 
+        width: 70%;
+        left: 17%;
+        bottom: 165px;
+        font-size: 14px; 
+        margin: 1rem auto;
+    }
+
+    div.product_main div.product-info div.product-title {
+        height: 40%; 
+        width: 100%; 
+        border-bottom: 1px solid green;
+    }
+
+    div.product_main div.product-info div.product-price {
+        position: absolute;
+        bottom: 10%;
+    }
+
+    div.product_description {
+        background-color: rgba(119,170,68,0.4);
+        position: relative; 
+        margin: 1rem auto;
+        width: 75%;
+        top: 0px;
+        right: 15%;
+    }
+
+    div.standards_container {
+        position: relative; 
+        margin: 1rem auto;
+        width: 75%;
+        top: 0px;
+        right: 15%;
+        background-color: rgba(119,170,68,0.4);
+    }
+
+    div.story-container { 
+        width: 75%;
+        height: 350px;
+        position: relative; 
+        margin: 1rem auto;
+        right: 15%;
+    }
 }
 
-div.product_main div.product-info {
-    position: absolute; 
-    width: 58%;  
-    height: 100%;
-    left: 40%; 
-    top: 0px;
-    padding-left: 2%;
+
+div.product_main div.product-img div.product-img-main {
+    position:relative; 
+    width:100%; 
+    height: 75%; 
 }
 
-div.product_main div.product-title {
-    height: 130px; 
-    width: 100%; 
-    border-bottom: 1px solid green;
+#product-image {
+    max-width:100%; 
+    max-height:100%;
+    margin: auto;
+    display: block;
 }
 
-div.product_main div.product-price {
-
+#story-image {
+    max-width:100%; 
+    max-height:100%;
+    margin: auto;
+    display: block;
 }
 
-div.product_description {
-    background-color: rgba(119,170,68,0.4);
-    position: relative; 
-    margin: 1rem auto;
-    width: 90%;
-    top: 0px;
+div.product_main div.product-img div.product-img-lst {
+    position: relative;
+    width: 100%;
+    height: 20%;
+    top: 5%;
 }
 
-div.standards_container {
-    position: relative; 
-    margin: 1rem auto;
-    width: 90%;
-    top: 0px;
+div.product_main div.product-img div.product-img-lst div.img-lst-element {
+    width:30%; 
+    height:100%; 
+    display: inline-block;
 }
+
+div.story-container div.story-main {
+    width:100%; 
+    height: 80%; 
+}
+
+div.story-container div.story-lst {
+    width: 100%;
+    height: 20%;
+}
+
+div.story-container div.story-lst div.img-lst-element {
+    width:25%; 
+    height:100%; 
+    display: inline-block
+}
+
+
 
 h1 {
     font-size: 23px;
