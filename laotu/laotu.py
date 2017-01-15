@@ -17,6 +17,7 @@ from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads
 from datetime import datetime
+from threading import Timer
 
 from strings import *
 
@@ -373,9 +374,9 @@ def pay():
                             product.quantity as inventory from cart \
                             join product on cart.product_id=product.product_id \
                             where cart.user_id=?''', [session['user_id']])
-    # if there are no purchases
+    # if there are no purchases, go back to cart
     if len(purchases)==0:
-        flash("You have nothing in your cart. Please add items before paying.")
+        flash(FLASH_NO_PURCHASES)
         return redirect(url_for('get_cart'))
     # check that all items are still in stock
     for purchase in purchases:
@@ -386,25 +387,27 @@ def pay():
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
     # if all items are still in stock, put all items on hold while user pays
-    db = get_db()
-    cursor = db.cursor()
-    transaction_ids = []
-    for purchase in purchases:
-        # add transactions to history, one row for each product
-        cursor.execute('''insert into trans (
-                        product_id, user_id, quantity, trans_date, amount)
-                        values (?,?,?,?,?)''',
-                        (purchase['product_id'], session['user_id'],
-                        purchase['quantity'], datetime.utcnow(),
-                        purchase['price']*purchase['quantity']))
-        # keep track of the transaction id for each product in the cart
-        transaction_ids.append(cursor.lastrowid)
-        # update product inventory
-        db.execute('''update product set quantity = quantity - ? where
-            product_id = ?''', (purchase['quantity'], purchase['product_id']))
-    db.commit()
-    # store the transaction_ids in the session
-    session['transaction_ids'] = transaction_ids
+    if not session.get('timer'):
+        session['timer'] = Timer(10, undo_hold, [_app_ctx_stack.top], {new_top: 1}).start()
+        db = get_db()
+        cursor = db.cursor()
+        transaction_ids = []
+        for purchase in purchases:
+            # add transactions to history, one row for each product
+            cursor.execute('''insert into trans (
+                            product_id, user_id, quantity, trans_date, amount)
+                            values (?,?,?,?,?)''',
+                            (purchase['product_id'], session['user_id'],
+                            purchase['quantity'], datetime.utcnow(),
+                            purchase['price']*purchase['quantity']))
+            # keep track of the transaction id for each product in the cart
+            transaction_ids.append(cursor.lastrowid)
+            # update product inventory
+            db.execute('''update product set quantity = quantity - ? where
+                product_id = ?''', (purchase['quantity'], purchase['product_id']))
+        db.commit()
+        # store the transaction_ids in the session
+        session['transaction_ids'] = transaction_ids
     # store the amount the user must pay in the session
     session['amount'] = query_db('''select sum(product.price*cart.quantity)
                                     from cart join product on cart.product_id=
@@ -417,8 +420,10 @@ def pay():
                             amount=session['amount'],
                             transaction_ids=session['transaction_ids'])
 
-def undo_hold():
+def undo_hold(new_top=None):
     """Undo the hold on products that was initiated during checkout."""
+    if new_top:
+            _app_ctx_stack.top=new_top
     db = get_db()
     for trans_id in session['transaction_ids']:
         # get the transaction details
@@ -471,6 +476,8 @@ def charge():
 
     # if charge successful, then change the transactions to confirmed
     else:
+        if session.get('timer'):
+            session['timer'].cancel()
         db = get_db()
         for trans_id in session['transaction_ids']:
             # confirm the transaction
@@ -478,9 +485,10 @@ def charge():
         # empty the cart
         db.execute('''delete from cart where user_id = ?''', [session['user_id']])
         db.commit()
-        # remove the variables amount and transaction_ids from session
+        # remove the variables amount, transaction_ids, and timer from session
         session.pop('amount', None)
         session.pop('transaction_ids', None)
+        session.pop('timer', None)
         # flash message that purchase was succesful
         flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
