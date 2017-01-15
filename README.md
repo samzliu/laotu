@@ -45,6 +45,7 @@ High prority:
     - conversion and rollout
     - Fix up order confirmation email templates (.txt and .html) to look how the laotu people want them to (also maybe include links for the item pages on the .html template)
     - probably Laotu or the producer should also get an email when someone places an order so they...know...to...proceed...with delivery?
+    - setup the emails to get sent from an actual laotu email address (which one tho)
 
 
 Low priority:
