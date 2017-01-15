@@ -34,6 +34,8 @@
 # FLASH_UPLOAD_FORBIDDEN = "The upload was not allowed"
 # FLASH_UPLOAD_SUCCESSFUL = "Upload successful"
 # FLASH_OUT_OF_STOCK = "We do not have enough %s in our inventory. Please change the quantity of meat you would like to purchase, or remove the item from your shopping cart."
+# FLASH_PAYMENT_ERROR = 'There was an error during payment and the transaction failed. You were not charged.'
+
 
 #Error messages ...............................................................
 ERR_INVALID_EMAIL =u'无效的电子邮件'
@@ -47,6 +49,7 @@ ERR_NO_PWD =u'您必须输入密码并确认'
 ERR_MISMATCH =u'这两个密码不匹配'
 ERR_EMAIL_TAKEN =u'电子邮件已被占用'
 ERR_NOT_ADMIN = "User is not an admin"
+
 
 
 #Flashes ................................................ ......................
@@ -65,6 +68,8 @@ FLASH_UPLOAD_FIELDS =u'您必须填写所有字段'
 FLASH_UPLOAD_FORBIDDEN =u'上传不允许'
 FLASH_UPLOAD_SUCCESSFUL =u'上传成功'
 FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购买的%s的数量，或从您的购物车中删除。'
+FLASH_PAYMENT_ERROR =u'付款时发生错误，交易失败。 你没有被起诉。'
+FLASH_PROD_ADD_SUCCESSFUL='Added product to database!'
 FLASH_LOGGED_ADMIN = "Welcome, admin."
 
 #Food Standard Tags
@@ -110,5 +115,9 @@ CRAFT_2 = "可降解原料"
 CRAFT_3 = "传统使用的原料"
 CRAFT_4 = "传统工艺"
 
+
+# Error messages for adding products
+ERR_NO_PROD_PRODUCER_ID = "You need to provide a producer id for this product."
+ERR_INVALID_PROD_PRODUCER_ID = "You need to provide a valid producer id for this product."
 
 

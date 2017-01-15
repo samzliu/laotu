@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}
+{% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
+{% endif %}
 Homepage
   <!-- {% if request.endpoint == 'public_timeline' %}
     Public Timeline
