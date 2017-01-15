@@ -25,13 +25,13 @@ from functools import wraps
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-#DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
+#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
-UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
-#UPLOADED_PHOTOS_DEST = '/tmp/photos'
+UPLOADED_PHOTOS_DEST = '/tmp/photos'
+DEFAULT_IMPORTANCE = 100
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -316,7 +316,6 @@ def del_product(product_id):
     db.execute('''delete from product where product_id = ?''', (product_id,))
     db.commit()
 
-
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
     """Adds a product to the cart."""
@@ -544,7 +543,7 @@ def search_results(query):
     products = query_db("""select * from product where title like ? or description like ?""",
         ('%' + query + '%', '%' + query + '%'))
     results = products # this will be more general later
-    return render_template('search_results.html', results=results, query=query)
+    return render_template('products_list.html', products_list=results, message="Search results for " + query + ":")
 
 @app.route('/categories')
 def categories():
@@ -567,7 +566,7 @@ def category(category):
         and product_to_tag.tag_id=?
         where tag.importance=?+1""", (tag_id, tag_id))
     if len(tags_list) > 0:
-        return render_template('products_list.html', products_list=products_list, tags_list=tags_list)
+        return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
 
     # multiple importance levels away
     tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
@@ -629,28 +628,61 @@ def add_product_db():
                 error = FLASH_UPLOAD_FORBIDDEN
                 errtype = 'uploaderror'
                 return render_template('add_product.html', error=error, errtype=errtype)
-            else:
-                db = get_db()
-                #store filename database
-                db.execute('''insert into product (
-                  title, quantity, price, description, producer_id, standard_geo, 
-                  standard_producer, standard_raw, standard_production, standard_storage, 
-                  standard_tech, standard_package, standard_price,
-                  product_photo_filename_1, product_photo_filename_2, product_photo_filename_3, 
-                  laotu_book_photo_filename_1, laotu_book_photo_filename_2, laotu_book_photo_filename_3, laotu_book_photo_filename_4) 
-                  values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)''',
-                  [request.form['title'], int(request.form['quantity']), \
-                      int(request.form['price']), request.form['description'], \
-                      int(request.form['producerid']), request.form['standard_geo'],\
-                      request.form['standard_producer'], request.form['standard_raw'],\
-                      request.form['standard_production'], request.form['standard_storage'],\
-                      request.form['standard_tech'], request.form['standard_package'],\
-                      request.form['standard_price']] + filenames)
+
+            #store filename database
+            db = get_db()
+            db.execute('''insert into product (
+                title, quantity, price, description, producer_id, standard_geo, 
+                standard_producer, standard_raw, standard_production, standard_storage, 
+                standard_tech, standard_package, standard_price,
+                product_photo_filename_1, product_photo_filename_2, product_photo_filename_3, 
+                laotu_book_photo_filename_1, laotu_book_photo_filename_2, laotu_book_photo_filename_3, laotu_book_photo_filename_4) 
+                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)''',
+                [request.form['title'], int(request.form['quantity']), \
+                    int(request.form['price']), request.form['description'], \
+                    int(request.form['producerid']), request.form['standard_geo'],\
+                    request.form['standard_producer'], request.form['standard_raw'],\
+                    request.form['standard_production'], request.form['standard_storage'],\
+                    request.form['standard_tech'], request.form['standard_package'],\
+                    request.form['standard_price']] + filenames)
+            db.execute('''insert into standards (organic_cert_1, organic_cert_2, organic_cert_3, 
+                organic_cert_4, organic_cert_5, organic_cert_6, organic_cert_7, organic_cert_8, 
+                quality_cert_1, quality_cert_2, producer_benifit_1, producer_benifit_2, 
+                producer_benifit_3, producer_benifit_4, producer_benifit_5, producer_benifit_6, 
+                consumer_benifit_1, local_1, local_2, local_3, package_1, package_2, ethnic_1, 
+                ethnic_2, ethnic_3, ethnic_4, ethnic_5, ethnic_6, ethnic_7, ethnic_8, ethnic_9, 
+                ethnic_10, production_1, production_2, production_3, production_4, production_5, 
+                craft_1, craft_2, craft_3, craft_4) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+                ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', [(standard in request.form) for
+                standard in 
+                ["ORGANIC_CERT_1","ORGANIC_CERT_2","ORGANIC_CERT_3","ORGANIC_CERT_4",
+                "ORGANIC_CERT_5","ORGANIC_CERT_6","ORGANIC_CERT_7", "ORGANIC_CERT_8",
+                "QUALITY_CERT_1","QUALITY_CERT_2","PRODUCER_BENIFIT_1", "PRODUCER_BENIFIT_2",
+                "PRODUCER_BENIFIT_3","PRODUCER_BENIFIt_4","PRODUCER_BENIFIT_5",
+                "PRODUCER_BENIFIT_6", "CONSUMER_BENIFIT_1", "LOCAL_1","LOCAL_2","LOCAL_3","PACKAGE_1",
+                "PACKAGE_2","ETHNIC_1","ETHNIC_2","ETHNIC_3","ETHNIC_4","ETHNIC_5","ETHNIC_6",
+                "ETHNIC_7","ETHNIC_8","ETHNIC_9","ETHNIC_10","PRODUCTION_1","PRODUCTION_2",
+                "PRODUCTION_3","PRODUCTION_4","PRODUCTION_5","CRAFT_1","CRAFT_2","CRAFT_3","CRAFT_4"]])
+            db.commit()
+
+            tag_list = request.form['tags'].split(';')
+            tag_list = [t.strip() for t in tag_list]
+            for tag in tag_list:
+                if len(query_db('''select * from tag where name=?''', \
+                    (tag,))) == 0:
+                    db.execute('''insert into tag (name, importance)
+                        values (?, ?)''', [tag, DEFAULT_IMPORTANCE])
+                    db.commit()
+                product_id = query_db('''select product_id from product''')[-1][0]
+                print product_id
+                tag_id = query_db('''select tag_id from tag where name=?''', (tag,))[0][0]
+                print tag_id
+                db.execute('''insert into product_to_tag (product_id, tag_id)
+                    values (?, ?)''', (product_id, tag_id))
                 db.commit()
-                error = None
-                errtype = errtype
-                flash(FLASH_PROD_ADD_SUCCESSFUL)
-                return redirect(url_for('home'))          
+            flash(FLASH_PROD_ADD_SUCCESSFUL)
+            error = None
+            errtype = errtype
     return render_template('add_product.html', error=error, errtype=errtype)
 
 
