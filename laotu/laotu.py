@@ -738,7 +738,6 @@ def show_farmer(producer_id):
                             products_list=producer_products, producer=producer)
 
 
-
 ### Admin pages ###
 @app.route('/add_product', methods=['GET', 'POST'])
 @admin_required
@@ -813,7 +812,7 @@ def add_product_db():
                 "PRODUCTION_3","PRODUCTION_4","PRODUCTION_5","CRAFT_1","CRAFT_2","CRAFT_3","CRAFT_4"]])
             db.commit()
 
-            if tag_list.strip() != "":
+            if request.form['tags'].strip() != "":
                 tag_list = request.form['tags'].split(';')
                 tag_list = [t.strip() for t in tag_list]
                 for tag in tag_list:
