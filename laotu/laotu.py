@@ -135,11 +135,12 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-def send_mail(to, subject, message, html, sender="natsapptester@gmail.com"):
+def send_mail(to, subject, message, html="", sender="natsapptester@gmail.com"):
     """
     to: a list of strings 
     subject: a string
-    message: a string 
+    message: a string or render_template("some jinja formatted .txt here")
+    html: a string of html markup or render_template("some jinja formatted .html here")
     sender: an address string or a touple (name, address)
 
     """
@@ -259,6 +260,7 @@ def hasStandard(product):
 @app.route('/')
 def home():
     """Home page"""
+    send_mail(["nataliamariapt@gmail.com"], "subj", "msg")
     return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
