@@ -259,11 +259,16 @@ def isphone(num):
     else:
         return True
 
+# Returns true if the product has any standard category filled
 def hasStandard(product):
     return product['standard_geo'] or product['standard_producer'] or \
             product['standard_raw'] or product['standard_production'] or \
             product['standard_storage'] or product['standard_tech'] or \
             product['standard_package'] or product['standard_price']
+
+# Removes empty strings from the image array
+def condenseStory(stories):
+    return [story for story in stories if story != ""]
 
 
 
@@ -483,8 +488,11 @@ def show_product(product_id):
                         product['laotu_book_photo_filename_2'],
                         product['laotu_book_photo_filename_3'],
                         product['laotu_book_photo_filename_4']]
+    condensed = condenseStory(stories)
+    print condenseStory(stories)
     return render_template('product.html', product=product, producer=producer,
-        hasStandard=hasStandard(product), photos=photos, stories=stories)
+        hasStandard=hasStandard(product), photos=photos, stories=condensed,
+        maxPage=len(condensed))
 
 
 

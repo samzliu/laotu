@@ -119,6 +119,7 @@
 		{% endif %}
 	</div>
 
+	{% if stories != [] %}
 	<div class="story-container">
 		<div id="left-arrow">
 			&#8249;
@@ -130,9 +131,11 @@
 			&#8250;
 		</div>
 	</div>
+	{% endif %}
 
 	<script type="text/javascript">
 	var story_index = 0;
+	var max_page = '{{ maxPage }}';
 
 	function updateMainPic(type, path) {
 		if (type=='product'){
