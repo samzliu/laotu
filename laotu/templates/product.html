@@ -5,9 +5,20 @@
 		<a href="{{ url_for('get_cart')}}">去购物车</a>
 	</div>
 	<div class="product_main">
-		<div class="product-image">
+		<div class="product-img">
 			<!-- Picture goes here -->
-			<img src="{{ url_for('static', filename='images/laotu-logo.png') }}", style="max-width:100%; max-height:100%">
+			<div class="product-img-main">
+				<img id="product-image" src='{{ photos[0] }}'>
+			</div>
+			<div class="product-img-lst">
+			{% for photo in photos %}
+				{% if photo !="" %}
+				<div class="img-lst-element" onclick="updateMainPic('product', '{{ photo }}')">
+					<img src="{{ photo }}" style="max-width:100%; max-height:100%; border: 1px solid green; margin:auto; display: block">
+				</div>
+				{% endif %}
+			{% endfor %}
+			</div>
 		</div>
 		<div class="product-info">
 			<div class="product-title">
@@ -45,7 +56,6 @@
 
 		</div>
 	</div>
-
 
 	<div class="product_description">
 		<h2>Farmer: {{producer.user_name}}</h2>
@@ -108,6 +118,48 @@
 		</div>
 		{% endif %}
 	</div>
+
+	<div class="story-container">
+		<div id="left-arrow">
+			&#8249;
+		</div>
+		<div class="story-main">
+			<img id="story-image" src='{{ stories[0] }}'>
+		</div>
+		<div id="right-arrow">
+			&#8250;
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var story_index = 0;
+
+	function updateMainPic(type, path) {
+		if (type=='product'){
+			$('#product-image').attr("src", path);
+		}
+		else {
+			$('#story-image').attr("src", path);
+		}
+	}
+
+	function flip_page(index) {
+		switch(index) {
+            case 0:
+                $('#story-image').attr("src", '{{ stories[0] }}');
+                break;
+            case 1:
+                $('#story-image').attr("src", '{{ stories[1] }}');
+                break;
+            case 2:
+                $('#story-image').attr("src", '{{ stories[2] }}');
+                break;
+            case 3:
+                $('#story-image').attr("src", '{{ stories[3] }}');
+                break;
+        }
+	}
+	</script>
 
 
 {% endblock %}

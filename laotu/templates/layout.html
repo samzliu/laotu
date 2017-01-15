@@ -9,10 +9,10 @@
 
     <title>{% block title %}欢迎{% endblock %} | 老土 </title>
 
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" media="screen and (min-width: 400px)"/>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
 
     <!-- CSS Page for a mobile screen -->
-    <link href="{{ url_for('static', filename='css/style-mobile.css') }}" rel="stylesheet" media="screen and (max-width: 400px)"/>
+    <!-- <link href="{{ url_for('static', filename='css/style-mobile.css') }}" rel="stylesheet" media="screen and (max-width: 400px)"/> -->
 
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
@@ -24,6 +24,10 @@
     <!-- Custom Javascript -->
     <script type="text/javascript" src="{{ url_for('static', filename='products.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='utility.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='photos.js') }}"></script>
+
+    <!-- Jgestures -->
+    <script type="text/javascript" src="{{ url_for('static', filename='jgestures.js') }}"></script>
 </head>
 
 <body>
@@ -50,7 +54,7 @@
                     <li><a href="{{ url_for('about') }}">关于老土</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">产品</a></li>
                     <li><a href="{{ url_for('stories') }}">故事</a></li>
-                    <li><a href="{{ url_for('categories') }}">产品类别</a></li>
+                    <li><a href="{{ url_for('show_tags_list') }}">产品类别</a></li>
                     <li><a href="{{ url_for('get_cart')}}">购物车</a></li>
                     <li><a href="{{ url_for('logout') }}">登出</a></li>
 
@@ -75,7 +79,7 @@
 
                     <li><a href="{{ url_for('about') }}">关于老土</a></li>
                     <li><a href="{{ url_for('show_products_list') }}">产品</a></li>
-                    <li><a href="{{ url_for('categories') }}">产品类别</a></li>
+                    <li><a href="{{ url_for('show_tags_list') }}">产品类别</a></li>
                     <li><a href="{{ url_for('register') }}">注册</a></li>
                     <li><a href="{{ url_for('login') }}">登录</a></li>
                 </ul>
@@ -129,17 +133,28 @@
     </script>
 
     <script>
-    function handleButtonClick(url) {
-        window.open(url, "_self");
-    }
-    </script>
+    var story_index = 0;
 
-    <script>
     $(document).ready(function(){
         $("#flashes").slideDown(function() {
             setTimeout(function() {
                 $("#flashes").slideUp();
             }, 7000);
+        });
+
+        // Handles swiping for the story book
+        $(document).on('click', '#right-arrow', function() {
+            if (story_index < 3) {
+                story_index++;
+                flip_page(story_index);
+            }
+        });
+
+        $(document).on('click', '#left-arrow', function() {
+            if (story_index > 0) {
+                story_index--;
+                flip_page(story_index);
+            }
         });
     });
     </script>

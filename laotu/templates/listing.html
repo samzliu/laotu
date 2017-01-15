@@ -15,24 +15,28 @@
 {% endblock %}
 
 {% block main %}
-  所有的产品! 点击获取更多信息并将产品添加到购物车。
-  <div class="product-cart-link">
-    <h1><a href="{{ url_for('get_cart')}}">去购物车</a></h1>
-  </div>
+  {% if message %}
+      <div class="product-list-message"> {{ message }} </div>
+  {% endif %}
 
   {% if tags_list %}
         {% for tag in tags_list %}
-            <div class="category" onclick="gotoURL('{{ url_for('category', category=tag.name) }}')">
-            <h1 style="text-align: center; tex">{{ tag.name }}</h1>
+            <div class="product-tag" onclick="gotoURL('{{ url_for('show_products_list_tag', tag=tag.name) }}')">
+            <h1>{{ tag.name }}</h1>
             </div>
         {% endfor %}
+        {% if overflow %}
+            <div class="overflow-message" onclick="gotoURL('{{ url_for('show_tags_list_tag', tag=specific_tag.name) }}')">
+            <h1>See more tags</h1>
+            </div>
+        {% endif %}
   {% endif %}
 
-
   {% if products_list %}
-  <div class="product-list"> <ul>
+  <div class="product-list">
   {% for product in products_list %}
-    <li class="product-list-item" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
+    <div class="product-list-item" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
+
       <div class="product-image">
         <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" class="product-image-tag">
       </div>
@@ -42,12 +46,8 @@
         <div class="product-price"> &#165 {{ '%0.2f' | format(product.price/100) }} </div>
         <div class="product-description"> {{ product.description }} </div>
       </div>
-    </li>
     </div>
   {% endfor %}
-  </ul></div>
-    
-  {% else %}
-    <em>目前还没有产品。</em>
+  </div>
   {% endif %}
 {% endblock %}
