@@ -13,8 +13,8 @@
 			<div class="product-img-lst">
 			{% for photo in photos %}
 				{% if photo !="" %}
-				<div class="img-lst-element" onclick="updateMainPic('{{ photo }}')">
-					<img src="{{ photo }}" style="max-width:100%; max-height:100%">
+				<div class="img-lst-element" onclick="updateMainPic('product', '{{ photo }}')">
+					<img src="{{ photo }}" style="max-width:100%; max-height:100%; border: 1px solid green; margin:auto; display: block">
 				</div>
 				{% endif %}
 			{% endfor %}
@@ -56,24 +56,6 @@
 
 		</div>
 	</div>
-
-	<script type="text/javascript">
-	var photo_index = 1;
-	var story_index = 0;
-
-	function updateMainPic(path) {
-		$('#product-image').attr("src", path);
-	}
-
-	$(document).ready(function() {
-		window.alert('hiiiii');
-		$(document).on('click', '#product-img', function() {
-			window.alert('fuck');
-			//$('#product-img').attr("src", '{{ photos[1] }}');
-		});
-	});
-	</script>
-
 
 	<div class="product_description">
 		<h2>Farmer: {{producer.user_name}}</h2>
@@ -137,18 +119,40 @@
 		{% endif %}
 	</div>
 
-	<div class="story_container">
+	<div class="story-container">
 		<div class="story-main">
 			<img id="story-image" src='{{ stories[0] }}'>
 		</div>
 		<div class="story-lst">
 			{% for story in stories %}
-			<div class="img-lst-element">
+			<div class="img-lst-element" onclick="updateMainPic('story', '{{ story }}')"">
 				<img src='{{ story }}' style="max-width:100%; max-height:100%">
 			</div>
 			{% endfor %}
 		</div>
 	</div>
+
+	<script type="text/javascript">
+	var photo_index = 1;
+	var story_index = 0;
+
+	function updateMainPic(type, path) {
+		if (type=='product'){
+			$('#product-image').attr("src", path);
+		}
+		else {
+			$('#story-image').attr("src", path);
+		}
+	}
+
+	$(document).ready(function() {
+		window.alert('hiiiii');
+		$(document).on('click', '#product-img', function() {
+			window.alert('fuck');
+			//$('#product-img').attr("src", '{{ photos[1] }}');
+		});
+	});
+	</script>
 
 
 {% endblock %}
