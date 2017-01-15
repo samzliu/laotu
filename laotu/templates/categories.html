@@ -5,6 +5,12 @@
 {% block header %}
     {{ self.title() }}
 {% endblock %}
+{% if specific_tag %}
+Tags related to {{ specific_tag }}
+{% else %}
+All tags!
+{% endif %}
+
 {% block main %}
     {% if tags %} 
     {% for tag in tags %}

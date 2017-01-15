@@ -85,7 +85,7 @@ stripe_keys = {
 stripe.api_key = stripe_keys['secret_key']
 
 
-# create our little application :)
+# create our BIGGGGG application >:^)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
@@ -238,7 +238,6 @@ def get_user_id(email):
                   [email], one=True)
     return rv[0] if rv else None
 
-
 @app.before_request
 def before_request():
     g.user = None
@@ -246,7 +245,7 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
-# validation functions
+### Validation functions ###
 def isphone(num):
     if re.match("(\d{3}[-\.\s]??\d{4}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{4}[-\.\s]??\d{4}"
                 "|\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\d{4}[-\.\s]??\d{3}[-\.\s]??\d{4})",
@@ -261,14 +260,22 @@ def hasStandard(product):
             product['standard_storage'] or product['standard_tech'] or \
             product['standard_package'] or product['standard_price']
 
-# pages are below .................................................................
 
 
+### Basic pages ###
 @app.route('/')
 def home():
     """Home page"""
     return render_template('home.html')
 
+@app.route('/about')
+def about():
+    """Shows the About page."""
+    return render_template('about.html')
+
+
+
+### User account pages ###
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Logs the user in."""
@@ -292,7 +299,6 @@ def login():
             session['admin'] = False
             return redirect(url_for('home'))
     return render_template('login.html', error=error, errtype=errtype)
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -346,7 +352,6 @@ def register():
             return redirect(url_for('login'))
     return render_template('register.html', error=error, errtype=errtype)
 
-
 @app.route('/logout')
 def logout():
     """Logs the user out."""
@@ -354,11 +359,9 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('home'))
 
-@app.route('/about')
-def about():
-    """Shows the About page."""
-    return render_template('about.html')
 
+
+### Listing pages ###
 @app.route('/products_list')
 def show_products_list():
     """Displays the list of products."""
@@ -370,6 +373,59 @@ def show_products_list_category(category):
     return render_template('products_list.html', products_list=query_db('''
         select * from product where category = ?''', (category,)))
 
+@app.route('/categories')
+def categories():
+    tags = query_db("""select * from tag order by importance asc""")
+    return render_template('categories.html', tags=tags)
+
+@app.route('/categories/<category>')
+def specific_categories(category):
+    tags = query_db("""select distinct tag.* from tag 
+        inner join product
+        inner join product_to_tag
+        on ((product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=tag.tag_id
+        and (product.title like ?
+        or product.description like ?))
+        or tag.name like ?)""",
+        ('%' + tag + '%','%' + tag + '%','%' + tag + '%'))
+
+    return render_template('categories.html', tags=tags, specific_tag=tag)
+
+@app.route('/category/<category>')
+def category(category):
+    tag_id = query_db("""select tag_id from tag where name=?""", (category,), one=True)[0]
+    products_list = query_db("""select * from product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?""", (tag_id,))
+    # one importance level away
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance=?+1""", (tag_id, tag_id))
+    if len(tags_list) > 0:
+        return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
+
+    # multiple importance levels away
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        and tag.tag_id<>?
+        where tag.importance>?""", (tag_id, tag_id, tag_id))
+    return render_template('products_list.html', products_list=products_list,\
+         tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
+
+
+
+
+### Individual product pages ###
 @app.route('/<int:product_id>')
 def show_product(product_id):
     """Displays a single product in detail."""
@@ -387,16 +443,24 @@ def show_product(product_id):
     return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=stories)
 
-@app.route('/del/<int:product_id>')
-def del_product(product_id):
-    #insert admin authentication
-    product = query_db('select * from product where product_id = ?', [product_id], one=True)
-    #delete photos
-    for i in range(14,21):
-        os.remove(os.path.join(UPLOADED_PHOTOS_DEST, product[i]))
-    db = get_db()
-    db.execute('''delete from product where product_id = ?''', (product_id,))
-    db.commit()
+
+
+### Cart pages ###
+@app.route('/cart')
+def get_cart():
+    """Displays cart."""
+    # user musts be logged in to access cart functionality
+    if 'user_id' not in session:
+        flash(FLASH_SIGNIN_NEEDED)
+        return redirect(url_for('register'))
+    items = query_db('''select cart.product_id, cart.quantity, product.title, \
+                        product.price, product.quantity as inventory from cart \
+                        join product on cart.product_id=product.product_id \
+                        where cart.user_id = ?''',[session['user_id']])
+    total = 0
+    for item in items:
+        total += float(item['quantity']) * float(item['price'])/float(100)
+    return render_template('cart.html', items=items, total=total)
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
 def add_product(product_id, quantity):
@@ -420,40 +484,6 @@ def add_product(product_id, quantity):
         db.commit()
         flash(FLASH_CARTED)
         return redirect(url_for('show_products_list'))
-
-@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    if request.method == 'POST':
-        photo = request.files.get('photo')
-        title = request.form.get('title')
-        if not (photo and title):
-            flash(FLASH_UPLOAD_FIELDS)
-        else:
-            try:
-                filename = upload_photos.save(photo)
-            except UploadNotAllowed:
-                flash(FLASH_UPLOAD_FORBIDDEN)
-            else:
-                #store filename database
-                flash(FLASH_UPLOAD_SUCCESSFUL)
-                return redirect(url_for('home'))
-    return render_template('upload.html')
-
-@app.route('/cart')
-def get_cart():
-    """Displays cart."""
-    # user musts be logged in to access cart functionality
-    if 'user_id' not in session:
-        flash(FLASH_SIGNIN_NEEDED)
-        return redirect(url_for('register'))
-    items = query_db('''select cart.product_id, cart.quantity, product.title, \
-                        product.price, product.quantity as inventory from cart \
-                        join product on cart.product_id=product.product_id \
-                        where cart.user_id = ?''',[session['user_id']])
-    total = 0
-    for item in items:
-        total += float(item['quantity']) * float(item['price'])/float(100)
-    return render_template('cart.html', items=items, total=total)
 
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):
@@ -498,6 +528,10 @@ def update_product(product_id, quantity):
     flash(FLASH_UPDATED)
     return redirect(url_for('get_cart'))
 
+
+
+
+### Payment functions ###
 @app.route('/pay')
 def pay():
     """Displays the pay page with the Stripe Checkout Button."""
@@ -661,6 +695,10 @@ def charge():
         flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
+
+
+
+### Searching functions ###
 @app.route('/search', methods=['POST'])
 def search():
     print("here")
@@ -668,10 +706,6 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    #products = query_db("""select product.* from product
-    #    where product.title like ?
-    #    or product.description like ?""",
-    #    ('%' + query + '%', '%' + query + '%'))
     products = query_db("""select distinct product.* from
         product
         inner join tag
@@ -683,48 +717,27 @@ def search_results(query):
         or product.description like ?)""",
         ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
 
-    tags = query_db("""select * from tag where name like ?""",
-        ('%' + query + '%',))
-    print products
-
-    return render_template('products_list.html', products_list=products, message="Search results for \"" + query + "\":", tags_list=tags )
-
-@app.route('/categories')
-def categories():
-    tags = query_db("""select * from tag where importance = 1""")
-    return render_template('categories.html', tags=tags)
-
-@app.route('/category/<category>')
-def category(category):
-    tag_id = query_db("""select tag_id from tag where name=?""", (category,), one=True)[0]
-    products_list = query_db("""select * from product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?""", (tag_id,))
-    # one importance level away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
-        tag
+    tags = query_db("""select distinct tag.* from tag 
         inner join product
         inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?
-        where tag.importance=?+1""", (tag_id, tag_id))
-    if len(tags_list) > 0:
-        return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
+        on ((product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=tag.tag_id
+        and (product.title like ?
+        or product.description like ?))
+        or tag.name like ?)""",
+        ('%' + query + '%','%' + query + '%','%' + query + '%'))
+    overflow=False
+    if len(tags) > 5:
+        overflow=True
+        tags = tags[0:5]
 
-    # multiple importance levels away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
-        tag
-        inner join product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?
-        and tag.tag_id<>?
-        where tag.importance>?""", (tag_id, tag_id, tag_id))
-    return render_template('products_list.html', products_list=products_list,\
-         tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
+    return render_template('products_list.html', products_list=products, message="Search results for \"" + query + "\":", tags_list=tags, overflow=overflow)
 
 
+
+
+
+### Farmer Pages ###
 @app.route('/stories')
 def stories():
     """Display the stories page."""
@@ -740,6 +753,9 @@ def show_farmer(producer_id):
     return render_template('products_list.html',
                             products_list=producer_products, producer=producer)
 
+
+
+### Admin pages ###
 @app.route('/add_product', methods=['GET', 'POST'])
 @admin_required
 def add_product_db():
@@ -834,6 +850,16 @@ def add_product_db():
             errtype = errtype
     return render_template('add_product.html', error=error, errtype=errtype)
 
+@app.route('/del/<int:product_id>')
+@admin_required
+def del_product_db(product_id):
+    product = query_db('select * from product where product_id = ?', [product_id], one=True)
+    #delete photos
+    for i in range(14,21):
+        os.remove(os.path.join(UPLOADED_PHOTOS_DEST, product[i]))
+    db = get_db()
+    db.execute('''delete from product where product_id = ?''', (product_id,))
+    db.commit()
 
 @app.route('/adminauth', methods=['GET', 'POST'])
 def adminauth():
