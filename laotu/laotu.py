@@ -124,7 +124,16 @@ def initdb_command():
     """Creates the database tables."""
     init_db()
     print('Initialized the database.')
-
+    """Creates default admin account
+       user
+       pass: securepassword123"""
+    db = get_db()
+    db.execute('''insert into user (
+        email, pw_hash, name, address, phone) values (
+        'admin@default.com', 'pbkdf2:sha1:1000$zEFlrwdw$a613c128baebdd9d626da88b053e9bc7e3c68a96', 'admin default', '-', '0000000000')''')
+    db.execute('''insert into admin (user_id) values (1)''')
+    db.commit()
+    print('Created default admin account.\n user: admin@default.com \n pass: securepassword123')
 
 def query_db(query, args=(), one=False):
     """Queries the database and returns a list of dictionaries."""
