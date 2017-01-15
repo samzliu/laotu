@@ -91,8 +91,6 @@ create table product (
     FOREIGN KEY (standards_id) REFERENCES standards(standards_id)
 );
 
-
-
 drop table if exists trans;
 create table trans (
     trans_id integer primary key autoincrement,
@@ -101,6 +99,7 @@ create table trans (
     quantity integer not null,
     trans_date date not null,
     amount decimal(7,2) not null,
+    confirmed boolean default 0,
     FOREIGN KEY (product_id) REFERENCES product(producer_id),
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
@@ -118,7 +117,7 @@ drop table if exists tag;
 create table tag (
     tag_id integer primary key autoincrement,
     name text not null,
-    importance integer not null   
+    importance integer not null
 );
 
 drop table if exists product_to_tag;
