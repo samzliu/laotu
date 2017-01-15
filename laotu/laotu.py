@@ -22,6 +22,9 @@ from strings import *
 
 from functools import wraps
 
+from flask_mail import Mail, Message 
+
+
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
@@ -39,6 +42,30 @@ DEFAULT_IMPORTANCE = 100
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('laotu_SETTINGS', silent=True)
+
+# mail config
+# gmail config:
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'natsapptester@gmail.com'
+app.config['MAIL_PASSWORD'] = 'securepassword123'
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
+
+# available config options:
+# MAIL_SERVER : default ‘localhost’
+# MAIL_PORT : default 25
+# MAIL_USE_TLS : default False
+# MAIL_USE_SSL : default False
+# MAIL_DEBUG : default app.debug
+# MAIL_USERNAME : default None
+# MAIL_PASSWORD : default None
+# MAIL_DEFAULT_SENDER : default None
+# MAIL_MAX_EMAILS : default None
+# MAIL_SUPPRESS_SEND : default app.testing
+# MAIL_ASCII_ATTACHMENTS : default False
+
 
 # keys to connect to the Stripe API, specify via command line
 # test keys:
@@ -86,6 +113,42 @@ sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
      title = 'Admin Page', h1 = 'Admin Page',
      decorator = admin_required)
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+
+# mailing functions ...........................................................
+def send_mail(to, subject, message, sender="natsapptester@gmail.com"):
+    """
+    to: a list of strings 
+    subject: a string
+    message: a string 
+    sender: an address string or a touple (name, address)
+
+    """
+    msg = Message(subject=subject, body=message, recipients=to, sender=sender)
+    mail.send(msg)
+
+def send_bulk_mail(to, message, sender=("Laotu Noreply", "noreply@laotu.com")):
+    """
+    Opens connection to email host that is automatically closed once all emails 
+    are sent. 
+
+    https://pythonhosted.org/Flask-Mail/
+
+    to: a list of user objects with 'name' and 'email' attributes
+    message: a string
+    sender: an address string or a touple (name, address)
+
+    """
+
+    with mail.connect() as conn:
+        for user in users:
+            subject = "hello, %s" % user['name']
+            msg = Message(recipients=[user['email']],
+                      body=message,
+                      subject=subject,
+                      sender=sender)
+            conn.send(msg)
+
+# missing implementations: send mail with attachment.
 
 # helper functions ............................................................
 def get_db():
