@@ -47,10 +47,14 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 # mail config
 # gmail config:
+# DEFAULT_EMAIL_SENDER = os.environ['EMAIL_ADDRESS']
+# DEFAULT_EMAIL_PASSWORD = os.environ['EMAIL_PW']
+DEFAULT_EMAIL_SENDER = 'natsapptester@gmail.com'
+DEFAULT_EMAIL_PASSWORD = 'securepassword123'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'natsapptester@gmail.com'
-app.config['MAIL_PASSWORD'] = 'securepassword123'
+app.config['MAIL_USERNAME'] = DEFAULT_EMAIL_SENDER
+app.config['MAIL_PASSWORD'] = DEFAULT_EMAIL_PASSWORD
 app.config['MAIL_USE_SSL'] = True
 
 mail = Mail(app)
@@ -138,7 +142,7 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-def send_mail(to, subject, message, html="", sender="natsapptester@gmail.com"):
+def send_mail(to, subject, message, html="", sender=DEFAULT_EMAIL_SENDER):
     """
     to: a list of strings
     subject: a string
@@ -263,7 +267,6 @@ def hasStandard(product):
 @app.route('/')
 def home():
     """Home page"""
-    send_mail(["nataliamariapt@gmail.com"], "subj", "msg")
     return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
