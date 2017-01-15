@@ -24,6 +24,7 @@ from functools import wraps
 
 from flask_mail import Mail, Message 
 
+from threading import Thread
 
 
 # configuration
@@ -114,8 +115,28 @@ sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
      decorator = admin_required)
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
+# other decorators ............................................................
+def async(f):
+    """
+    runs f asynchronously 
+    https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-email-support
+
+    make f asynchronous by adding @async above definition
+
+    """
+    def wrapper(*args, **kwargs):
+        thr = Thread(target=f, args=args, kwargs=kwargs)
+        thr.start()
+    return wrapper
+
 # mailing functions ...........................................................
-def send_mail(to, subject, message, sender="natsapptester@gmail.com"):
+
+@async
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+def send_mail(to, subject, message, html, sender="natsapptester@gmail.com"):
     """
     to: a list of strings 
     subject: a string
@@ -123,9 +144,12 @@ def send_mail(to, subject, message, sender="natsapptester@gmail.com"):
     sender: an address string or a touple (name, address)
 
     """
-    msg = Message(subject=subject, body=message, recipients=to, sender=sender)
-    mail.send(msg)
+    msg = Message(subject, sender=sender, recipients=to)
+    msg.body = message
+    msg.html = html 
+    send_async_email(app, msg)
 
+# IM NOT SURE IF THIS IS LIKE... ASYNC BUT I HOPE IT IS
 def send_bulk_mail(to, message, sender=("Laotu Noreply", "noreply@laotu.com")):
     """
     Opens connection to email host that is automatically closed once all emails 
@@ -236,6 +260,7 @@ def hasStandard(product):
 @app.route('/')
 def home():
     """Home page"""
+    send_mail(["nataliamariapt@gmail.com"], "subj", "msg", "<p>lol</p>")
     return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
