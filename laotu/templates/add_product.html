@@ -6,24 +6,23 @@
 
   
       <form action="" method="post" class="sleek-form" onload="errorcheck()" enctype=multipart/form-data>
-        <input type="text" maxlength="10" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True> 
+        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True> 
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
         <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)" required=True>
-        <textarea name="description" maxlength="200" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5" required=True></textarea>
-        <input type="text" name="producerid" id="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer" required=True>
-        {% if errtype=="producerid" %}
+        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5" required=True></textarea>
+        {% if error and errtype=="producerid" %}
         <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" placeholder="ID of producer" required=True>
         {% else %}
         <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer" required = True>
         {% endif %}
-        <textarea name="standard_geo" maxlength="200" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Geographic Location and Enviroment" cols="40" rows="5"></textarea>
-        <textarea name="standard_producer" maxlength="200" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Producer" cols="40" rows="5"></textarea>
-        <textarea name="standard_raw" maxlength="200" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Raw Materials" cols="40" rows="5"></textarea>
-        <textarea name="standard_production" maxlength="200" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="Production Method" cols="40" rows="5"></textarea>
-        <textarea name="standard_storage" maxlength="200" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Storage" cols="40" rows="5"></textarea>
-        <textarea name="standard_tech" maxlength="200" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Technologies" cols="40" rows="5"></textarea>
-        <textarea name="standard_package" maxlength="200" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Packaging and Shipping" cols="40" rows="5"></textarea>
-        <textarea name="standard_price" maxlength="200" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Comparative Pricing" cols="40" rows="5"></textarea>
+        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Geographic Location and Enviroment" cols="40" rows="5"></textarea>
+        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Producer" cols="40" rows="5"></textarea>
+        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Raw Materials" cols="40" rows="5"></textarea>
+        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="Production Method" cols="40" rows="5"></textarea>
+        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Storage" cols="40" rows="5"></textarea>
+        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Technologies" cols="40" rows="5"></textarea>
+        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Packaging and Shipping" cols="40" rows="5"></textarea>
+        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Comparative Pricing" cols="40" rows="5"></textarea>
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
         Product Photo 1 (required): 
         <input type=file name=photo_1 required=True><br>

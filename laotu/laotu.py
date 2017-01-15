@@ -80,19 +80,6 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# def login_required(f):
-#     """
-#     Decorate routes to require login.
-
-#     http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
-#     """
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if session.get("user_id") is None:
-#             return redirect(url_for("login", next=request.url))
-#         return f(*args, **kwargs)
-#     return decorated_function
-
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
      tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
      title = 'Admin Page', h1 = 'Admin Page')
@@ -293,7 +280,7 @@ def show_products_list():
 @app.route('/products_list/<category>')
 def show_products_list_category(category):
     return render_template('products_list.html', products_list=query_db('''
-        select * from product where category = ?''', (category, )))
+        select * from product where category = ?''', (category,)))
 
 @app.route('/<int:product_id>')
 def show_product(product_id):
@@ -540,10 +527,26 @@ def search():
 
 @app.route('/search_results/<query>')
 def search_results(query):
-    products = query_db("""select * from product where title like ? or description like ?""",
-        ('%' + query + '%', '%' + query + '%'))
-    results = products # this will be more general later
-    return render_template('products_list.html', products_list=results, message="Search results for " + query + ":")
+    #products = query_db("""select product.* from product 
+    #    where product.title like ? 
+    #    or product.description like ?""",
+    #    ('%' + query + '%', '%' + query + '%'))
+    products = query_db("""select distinct product.* from
+        product
+        inner join tag 
+        inner join product_to_tag
+        on ((product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=tag.tag_id
+        and tag.name like ?)
+        or product.title like ?
+        or product.description like ?)""", 
+        ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
+
+    tags = query_db("""select * from tag where name like ?""",
+        ('%' + query + '%',))
+    print products
+
+    return render_template('products_list.html', products_list=products, message="Search results for \"" + query + "\":", tags_list=tags )
 
 @app.route('/categories')
 def categories():
@@ -575,8 +578,10 @@ def category(category):
         inner join product_to_tag
         on product.product_id=product_to_tag.product_id
         and product_to_tag.tag_id=?
-        where tag.importance>?""", (tag_id, tag_id))
-    return render_template('products_list.html', products_list=products_list, tags_list=tags_list)
+        and tag.tag_id<>?
+        where tag.importance>?""", (tag_id, tag_id, tag_id))
+    return render_template('products_list.html', products_list=products_list,\
+         tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
 
 
 @app.route('/stories')
@@ -667,21 +672,22 @@ def add_product_db():
                 "PRODUCTION_3","PRODUCTION_4","PRODUCTION_5","CRAFT_1","CRAFT_2","CRAFT_3","CRAFT_4"]])
             db.commit()
 
-            tag_list = request.form['tags'].split(';')
-            tag_list = [t.strip() for t in tag_list]
-            for tag in tag_list:
-                if len(query_db('''select * from tag where name=?''', \
-                    (tag,))) == 0:
-                    db.execute('''insert into tag (name, importance)
-                        values (?, ?)''', [tag, DEFAULT_IMPORTANCE])
+            if tag_list.strip() != "":
+                tag_list = request.form['tags'].split(';')
+                tag_list = [t.strip() for t in tag_list]
+                for tag in tag_list:
+                    if len(query_db('''select * from tag where name=?''', \
+                        (tag,))) == 0:
+                        db.execute('''insert into tag (name, importance)
+                            values (?, ?)''', [tag, DEFAULT_IMPORTANCE])
+                        db.commit()
+                    product_id = query_db('''select product_id from product''')[-1][0]
+                    print product_id
+                    tag_id = query_db('''select tag_id from tag where name=?''', (tag,))[0][0]
+                    print tag_id
+                    db.execute('''insert into product_to_tag (product_id, tag_id)
+                        values (?, ?)''', (product_id, tag_id))
                     db.commit()
-                product_id = query_db('''select product_id from product''')[-1][0]
-                print product_id
-                tag_id = query_db('''select tag_id from tag where name=?''', (tag,))[0][0]
-                print tag_id
-                db.execute('''insert into product_to_tag (product_id, tag_id)
-                    values (?, ?)''', (product_id, tag_id))
-                db.commit()
             flash(FLASH_PROD_ADD_SUCCESSFUL)
             error = None
             errtype = errtype
