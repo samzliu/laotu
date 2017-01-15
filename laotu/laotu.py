@@ -239,9 +239,10 @@ def show_products_list_category(category):
 def show_product(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     producer = query_db('select * from producer where producer_id = ?', str(product['producer_id']), one=True)
-    photos = [product['photo1'], product['photo2'], product['photo3']]
-    stories = [product['stand1'], product['stand2'], product['stand3'], product['stand4']] 
-    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product), photos=photo, stories=stories)
+    photos = [product['product_photo_filename_1'], product['product_photo_filename_2'], product['product_photo_filename_3']]
+    print photos
+    stories = [product['laotu_book_photo_filename_1'], product['laotu_book_photo_filename_2'], product['laotu_book_photo_filename_3'], product['laotu_book_photo_filename_4']] 
+    return render_template('product.html', product=product, producer=producer, hasStandard=hasStandard(product), photos=photos, stories=stories)
 
 @app.route('/del/<int:product_id>')
 def del_product(product_id):

@@ -9,10 +9,10 @@
 
     <title>{% block title %}欢迎{% endblock %} | 老土 </title>
 
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" media="screen and (min-width: 400px)"/>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
 
     <!-- CSS Page for a mobile screen -->
-    <link href="{{ url_for('static', filename='css/style-mobile.css') }}" rel="stylesheet" media="screen and (max-width: 400px)"/>
+    <!-- <link href="{{ url_for('static', filename='css/style-mobile.css') }}" rel="stylesheet" media="screen and (max-width: 400px)"/> -->
 
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/sidebar.css')}}" rel="stylesheet">
@@ -28,6 +28,8 @@
 
     <!-- Jgestures -->
     <script type="text/javascript" src="{{ url_for('static', filename='jgestures.js') }}"></script>
+
+
 
 </head>
 
