@@ -105,14 +105,21 @@ a {
         top: 0px;
         background-color: rgba(119,170,68,0.4);
     }
+
+    div.story-container { 
+        width: 90%;
+        height: 350px;
+        position: relative; 
+        margin: 1rem auto;
+    }
 }
 
 @media only screen and (max-width: 480px) {
     div.product_main {
         height: 450px; 
-        width: 80%;
+        width: 75%;
         position: relative; 
-        right: 13%;
+        right: 15%;
         margin: 1rem auto;
     }
 
@@ -146,18 +153,26 @@ a {
         background-color: rgba(119,170,68,0.4);
         position: relative; 
         margin: 1rem auto;
-        width: 90%;
+        width: 75%;
         top: 0px;
-        right: 7%;
+        right: 15%;
     }
 
     div.standards_container {
         position: relative; 
         margin: 1rem auto;
-        width: 90%;
+        width: 75%;
         top: 0px;
-        right: 7%;
+        right: 15%;
         background-color: rgba(119,170,68,0.4);
+    }
+
+    div.story-container { 
+        width: 75%;
+        height: 350px;
+        position: relative; 
+        margin: 1rem auto;
+        right: 15%;
     }
 }
 
@@ -165,41 +180,53 @@ a {
 div.product_main div.product-img div.product-img-main {
     position:relative; 
     width:100%; 
-    height: 80%; 
+    height: 75%; 
 }
 
 #product-image {
     max-width:100%; 
-    max-height:100%
+    max-height:100%;
+    margin: auto;
+    display: block;
 }
 
 #story-image {
     max-width:100%; 
-    max-height:100%
+    max-height:100%;
+    margin: auto;
+    display: block;
 }
 
 div.product_main div.product-img div.product-img-lst {
+    position: relative;
     width: 100%;
     height: 20%;
+    top: 5%;
 }
 
 div.product_main div.product-img div.product-img-lst div.img-lst-element {
     width:30%; 
     height:100%; 
-    display: inline-block
-}
-
-div.story-container { 
-    width: 90%;
-    position: relative; 
-    margin: 1rem auto;
+    display: inline-block;
 }
 
 div.story-container div.story-main {
-    position:relative; 
     width:100%; 
     height: 80%; 
 }
+
+div.story-container div.story-lst {
+    width: 100%;
+    height: 20%;
+}
+
+div.story-container div.story-lst div.img-lst-element {
+    width:25%; 
+    height:100%; 
+    display: inline-block
+}
+
+
 
 h1 {
     font-size: 23px;
