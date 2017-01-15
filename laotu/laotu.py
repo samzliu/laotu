@@ -71,35 +71,20 @@ def admin_required(f):
     Decorate routes to require admin login. Add @admin_required below @app.route 
     for any endpoint that should require admin authentication
 
-    http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+    decorators: http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        #if ADMIN NOT LOGGED IN:
-        # print("REQUEST")
-        # print(request.path)
         if not g.user or 'admin' not in session or not session['admin']:
             return redirect(url_for("adminauth", next=request.path))
         return f(*args, **kwargs)
     return decorated_function
 
-# def login_required(f):
-#     """
-#     Decorate routes to require login.
-
-#     http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
-#     """
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if session.get("user_id") is None:
-#             return redirect(url_for("login", next=request.url))
-#         return f(*args, **kwargs)
-#     return decorated_function
 
 sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
      tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
-     title = 'Admin Page', h1 = 'Admin Page')
-     #decorator = admin_required)
+     title = 'Admin Page', h1 = 'Admin Page',
+     decorator = admin_required)
 app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
 
 # helper functions ............................................................
