@@ -120,20 +120,18 @@
 	</div>
 
 	<div class="story-container">
+		<div id="left-arrow">
+			&#8249;
+		</div>
 		<div class="story-main">
 			<img id="story-image" src='{{ stories[0] }}'>
 		</div>
-		<div class="story-lst">
-			{% for story in stories %}
-			<div class="img-lst-element" onclick="updateMainPic('story', '{{ story }}')"">
-				<img src='{{ story }}' style="max-width:100%; max-height:100%">
-			</div>
-			{% endfor %}
+		<div id="right-arrow">
+			&#8250;
 		</div>
 	</div>
 
 	<script type="text/javascript">
-	var photo_index = 1;
 	var story_index = 0;
 
 	function updateMainPic(type, path) {
@@ -145,13 +143,22 @@
 		}
 	}
 
-	$(document).ready(function() {
-		window.alert('hiiiii');
-		$(document).on('click', '#product-img', function() {
-			window.alert('fuck');
-			//$('#product-img').attr("src", '{{ photos[1] }}');
-		});
-	});
+	function flip_page(index) {
+		switch(index) {
+            case 0:
+                $('#story-image').attr("src", '{{ stories[0] }}');
+                break;
+            case 1:
+                $('#story-image').attr("src", '{{ stories[1] }}');
+                break;
+            case 2:
+                $('#story-image').attr("src", '{{ stories[2] }}');
+                break;
+            case 3:
+                $('#story-image').attr("src", '{{ stories[3] }}');
+                break;
+        }
+	}
 	</script>
 
 
