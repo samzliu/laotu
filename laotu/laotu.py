@@ -259,7 +259,6 @@ def hasStandard(product):
 @app.route('/')
 def home():
     """Home page"""
-    send_mail(["nataliamariapt@gmail.com"], "subj", "msg", "<p>lol</p>")
     return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
