@@ -305,7 +305,7 @@ def show_product(product_id):
                         product['laotu_book_photo_filename_2'], 
                         product['laotu_book_photo_filename_3'], 
                         product['laotu_book_photo_filename_4']] 
-    return render_template('product.html', product=product, producer=producer, 
+    return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=stories)
 
 @app.route('/del/<int:product_id>')
