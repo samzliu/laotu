@@ -356,25 +356,94 @@ def logout():
 
 
 
-### Listing pages ###
+### Product, tag, and miscellaneous pages ###
+
+def render_listing(products_list=None, tags_list=None, specific_tag=None, message=None, 
+        tag_limit=True):
+    overflow = (tags_list and len(tags_list) > 3 and tag_limit)
+    if overflow:
+        tags_list = tags_list[0:3]
+    return render_template('listing.html', \
+        products_list=products_list,\
+        tags_list=tags_list,\
+        overflow=overflow,\
+        specific_tag=specific_tag,\
+        message=message)
+
+
+# show a listing of all products
 @app.route('/products_list')
 def show_products_list():
     """Displays the list of products."""
-    return render_template('products_list.html', products_list=query_db('''
-    select * from product'''), producer=None)
+    products_list=query_db('''select * from product''')
+    message="All products!"
+    return render_listing(products_list=products_list, message=message)
 
-@app.route('/products_list/<category>')
-def show_products_list_category(category):
-    return render_template('products_list.html', products_list=query_db('''
-        select * from product where category = ?''', (category,)))
 
-@app.route('/categories')
-def categories():
+# show a listing of products under tag, and related categories
+@app.route('/products_list/<tag>')
+def show_products_list_tag(tag):
+    tag = query_db("""select * from tag where name=?""", (tag,), one=True)
+    tag_id = tag['tag_id']
+    products_list = query_db("""select * from product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?""", (tag_id,))
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance>?
+        order by importance""", (tag_id, tag_id))
+    message="Products and tags related to \"" + tag['name'] + "\":"
+
+    return render_listing(products_list=products_list, tags_list=tags_list,\
+        specific_tag=tag, message=message)
+
+# show a list of all tags
+@app.route('/tags')
+def show_tags_list():
     tags = query_db("""select * from tag order by importance asc""")
-    return render_template('categories.html', tags=tags)
+    message="All tags!"
+    return render_listing(tags_list=tags, message=message, tag_limit=False)
 
-@app.route('/categories/<category>')
-def specific_categories(category):
+# show a list of tags related to a specific tag
+@app.route('/tags/<tag>')
+def show_tags_list_tag(tag):
+    tag = query_db("""select * from tag where name=?""", (tag,), one=True)
+    tag_id = tag['tag_id']
+    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
+        tag
+        inner join product
+        inner join product_to_tag
+        on product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=?
+        where tag.importance>?
+        order by importance""", (tag_id, tag_id))
+    message="Categories related to \"" + tag['name'] + "\"."
+    return render_listing(tags_list=tags_list, message=message, tag_limit=False)
+
+# search reroute
+@app.route('/search', methods=['POST'])
+def search():
+    print("here")
+    return redirect(url_for('search_results', query=request.form['search']))
+
+# search results page
+@app.route('/search_results/<query>')
+def search_results(query):
+    products = query_db("""select distinct product.* from
+        product
+        inner join tag
+        inner join product_to_tag
+        on ((product.product_id=product_to_tag.product_id
+        and product_to_tag.tag_id=tag.tag_id
+        and tag.name like ?)
+        or product.title like ?
+        or product.description like ?)""",
+        ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
     tags = query_db("""select distinct tag.* from tag 
         inner join product
         inner join product_to_tag
@@ -383,44 +452,13 @@ def specific_categories(category):
         and (product.title like ?
         or product.description like ?))
         or tag.name like ?)""",
-        ('%' + tag + '%','%' + tag + '%','%' + tag + '%'))
-
-    return render_template('categories.html', tags=tags, specific_tag=tag)
-
-@app.route('/category/<category>')
-def category(category):
-    tag_id = query_db("""select tag_id from tag where name=?""", (category,), one=True)[0]
-    products_list = query_db("""select * from product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?""", (tag_id,))
-    # one importance level away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
-        tag
-        inner join product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?
-        where tag.importance=?+1""", (tag_id, tag_id))
-    if len(tags_list) > 0:
-        return render_template('products_list.html', products_list=products_list, tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
-
-    # multiple importance levels away
-    tags_list = query_db("""select distinct tag.tag_id, tag.name, tag.importance from
-        tag
-        inner join product
-        inner join product_to_tag
-        on product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=?
-        and tag.tag_id<>?
-        where tag.importance>?""", (tag_id, tag_id, tag_id))
-    return render_template('products_list.html', products_list=products_list,\
-         tags_list=tags_list, message="Products and tags related to \"" + category + "\":")
+        ('%' + query + '%','%' + query + '%','%' + query + '%'))
+    message="Search results for \"" + query + "\":"
+    return render_listing(products_list=products, tags_list=tags, message=message)
 
 
 
-
-### Individual product pages ###
+### Individual product page ###
 @app.route('/<int:product_id>')
 def show_product(product_id):
     """Displays a single product in detail."""
@@ -689,45 +727,6 @@ def charge():
         # flash message that purchase was succesful
         flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
-
-
-
-
-### Searching functions ###
-@app.route('/search', methods=['POST'])
-def search():
-    print("here")
-    return redirect(url_for('search_results', query=request.form['search']))
-
-@app.route('/search_results/<query>')
-def search_results(query):
-    products = query_db("""select distinct product.* from
-        product
-        inner join tag
-        inner join product_to_tag
-        on ((product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=tag.tag_id
-        and tag.name like ?)
-        or product.title like ?
-        or product.description like ?)""",
-        ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
-
-    tags = query_db("""select distinct tag.* from tag 
-        inner join product
-        inner join product_to_tag
-        on ((product.product_id=product_to_tag.product_id
-        and product_to_tag.tag_id=tag.tag_id
-        and (product.title like ?
-        or product.description like ?))
-        or tag.name like ?)""",
-        ('%' + query + '%','%' + query + '%','%' + query + '%'))
-    overflow=False
-    if len(tags) > 5:
-        overflow=True
-        tags = tags[0:5]
-
-    return render_template('products_list.html', products_list=products, message="Search results for \"" + query + "\":", tags_list=tags, overflow=overflow)
-
 
 
 
