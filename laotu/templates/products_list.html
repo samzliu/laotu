@@ -31,6 +31,13 @@
             <h1>{{ tag.name }}</h1>
             </div>
         {% endfor %}
+        {% if overflow %}
+            <div class="overflow-message" onclick="gotoURL('{{ url_for('specific_category', category=None) }}')">
+            <h1>See more categories</h1>
+            </div>
+        {% else %}
+            <div> No overflow </div>
+        {% endif %}
   {% endif %}
 
   {% if products_list %}
