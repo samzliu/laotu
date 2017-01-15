@@ -682,9 +682,15 @@ def charge():
         timer_on = False
         print "timer_on is now ", timer_on
         db = get_db()
+        itemlist = []
         for trans_id in session['transaction_ids']:
             # confirm the transaction
             db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
+            # product info
+            product = db.execute('get (product_id, quantity, amount) from trans where trans_id=?', [trans_id])
+            # productname = db.execute('get title from product where product_id=?',[product['product_id']])
+            print product
+            # itemlist.append({'name': })
         # empty the cart
         db.execute('''delete from cart where user_id = ?''', [session['user_id']])
         db.commit()
