@@ -48,6 +48,7 @@ ERR_NO_EMAIL =u'您必须输入电子邮件地址'
 ERR_NO_PWD =u'您必须输入密码并确认'
 ERR_MISMATCH =u'这两个密码不匹配'
 ERR_EMAIL_TAKEN =u'电子邮件已被占用'
+ERR_NOT_ADMIN = "User is not an admin"
 
 
 
@@ -69,6 +70,7 @@ FLASH_UPLOAD_SUCCESSFUL =u'上传成功'
 FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购买的%s的数量，或从您的购物车中删除。'
 FLASH_PAYMENT_ERROR =u'付款时发生错误，交易失败。 你没有被起诉。'
 FLASH_PROD_ADD_SUCCESSFUL='Added product to database!'
+FLASH_LOGGED_ADMIN = "Welcome, admin."
 
 #Food Standard Tags
 ORGANIC_CERT_1 = "中国国家有机认证"

@@ -17,6 +17,12 @@ create table producer (
     location text
 );
 
+drop table if exists admin;
+create table admin (
+    admin_id integer primary key,
+    user_id integer not null
+);
+
 drop table if exists standards;
 create table standards (
     standards_id integer primary key autoincrement,

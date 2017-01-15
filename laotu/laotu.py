@@ -20,6 +20,9 @@ from datetime import datetime
 
 from strings import *
 
+from functools import wraps
+
+
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
 DATABASE = '/tmp/laotu.db'
@@ -45,11 +48,12 @@ stripe_keys = {
 }
 stripe.api_key = stripe_keys['secret_key']
 
-# admin page
-sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE, tables = ['user',
-    'producer', 'product', 'standards', 'trans', 'tag', 'product_to_tag'],
-    title = 'Admin Page', h1 = 'Admin Page')
-app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+
+# create our little application :)
+app = Flask(__name__)
+app.config.from_object(__name__)
+app.config.from_envvar('laotu_SETTINGS', silent=True)
+
 
 upload_photos = UploadSet('photos', IMAGES)
 configure_uploads(app, upload_photos)
@@ -57,6 +61,45 @@ configure_uploads(app, upload_photos)
 if __name__ == '__main__':
     app.run()
 
+# admin authentication ........................................................
+
+def admin_required(f):
+    """
+    Decorate routes to require admin login. Add @admin_required below @app.route 
+    for any endpoint that should require admin authentication
+
+    http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        #if ADMIN NOT LOGGED IN:
+        # print("REQUEST")
+        # print(request.path)
+        if not g.user or not session['admin']:
+            return redirect(url_for("adminauth", next=request.path))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# def login_required(f):
+#     """
+#     Decorate routes to require login.
+
+#     http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+#     """
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session.get("user_id") is None:
+#             return redirect(url_for("login", next=request.url))
+#         return f(*args, **kwargs)
+#     return decorated_function
+
+sqliteAdminBP = sqliteAdminBlueprint(dbPath = DATABASE,
+     tables = ['user', 'admin', 'producer', 'product', 'trans', 'tag', 'product_to_tag'], 
+     title = 'Admin Page', h1 = 'Admin Page',
+     decorator = admin_required)
+app.register_blueprint(sqliteAdminBP, url_prefix='/admin')
+
+# helper functions ............................................................
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -89,7 +132,16 @@ def initdb_command():
     """Creates the database tables."""
     init_db()
     print('Initialized the database.')
-
+    """Creates default admin account
+       user
+       pass: securepassword123"""
+    db = get_db()
+    db.execute('''insert into user (
+        email, pw_hash, name, address, phone) values (
+        'admin@default.com', 'pbkdf2:sha1:1000$zEFlrwdw$a613c128baebdd9d626da88b053e9bc7e3c68a96', 'admin default', '-', '0000000000')''')
+    db.execute('''insert into admin (user_id) values (1)''')
+    db.commit()
+    print('Created default admin account.\n user: admin@default.com \n pass: securepassword123')
 
 def query_db(query, args=(), one=False):
     """Queries the database and returns a list of dictionaries."""
@@ -129,14 +181,14 @@ def hasStandard(product):
 
 # pages are below .................................................................
 
+
 @app.route('/')
 def home():
     """Home page"""
     return render_template('home.html')
 
-
-
 @app.route('/products')
+@admin_required
 def products():
     """Displays the products."""
     return render_template('products.html')
@@ -162,6 +214,7 @@ def login():
         else:
             flash(FLASH_LOGGED)
             session['user_id'] = user['user_id']
+            session['admin'] = False
             return redirect(url_for('home'))
     return render_template('login.html', error=error, errtype=errtype)
 
@@ -631,3 +684,35 @@ def add_product_db():
             error = None
             errtype = errtype
     return render_template('add_product.html', error=error, errtype=errtype)
+
+
+@app.route('/adminauth', methods=['GET', 'POST'])
+def adminauth():
+    error = None
+    if request.method == 'POST':
+        user = query_db('''select * from user where
+            email = ?''', [request.form['email']], one=True)
+        # print("NEXT:"),
+        # print(request.args.get('next'))
+        if user is None:
+            error = ERR_INVALID_EMAIL
+        elif not check_password_hash(user['pw_hash'],
+                                     request.form['password']):
+            error = ERR_INVALID_PWD
+        elif query_db('''select * from admin where 
+            user_id = ?''', [user[0]], one=True) is None:
+            error = ERR_NOT_ADMIN
+        else:
+            session['user_id'] = user['user_id']
+            session['admin'] = True
+            # print(url_for('products')+'?adm=1')
+            #alt make a global?
+            flash(FLASH_LOGGED_ADMIN)
+            return redirect(request.args.get('next'))
+    return render_template('adminauth.html', error=error)    
+
+
+
+# add some filters to jinja
+app.jinja_env.filters['datetimeformat'] = format_datetime
+app.jinja_env.filters['gravatar'] = gravatar_url
