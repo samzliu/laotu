@@ -33,12 +33,12 @@ Tasks:
 High prority:
 
     - images (Sam)
-    - translate to Chinese (Nat)
+    - remaining Chinese translation (Nat)
     - product page (Carl)
     - multiple categories (Carl)
     - blog/splashpage (Sam)
-    - admin authentication 
-    - transaction and confirmation emails
+    - anyone wanna give admin autologout a shot? (i.e. setting session['admin'] to False after loading an admin page) here's a ref on func decorators http://thecodeship.com/patterns/guide-to-python-function-decorators/
+    - transaction and confirmation emails (Nat will humbly attempt)
     - add product seperate page 
     
     - formatting
@@ -52,5 +52,7 @@ Low priority:
     - next page 
     - download csv of transactions from admin page 
     - user transaction history 
+
+For mail functionality pip install flask_mail==0.9.0 
 
 

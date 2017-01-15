@@ -50,6 +50,7 @@ ERR_NO_EMAIL =u'您必须输入电子邮件地址'
 ERR_NO_PWD =u'您必须输入密码并确认'
 ERR_MISMATCH =u'这两个密码不匹配'
 ERR_EMAIL_TAKEN =u'电子邮件已被占用'
+ERR_NOT_ADMIN = "User is not an admin"
 
 
 
@@ -72,6 +73,8 @@ FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购
 FLASH_PAYMENT_ERROR =u'付款时发生错误，交易失败。 你没有被起诉。'
 FLASH_NO_PURCHASES =u'您的购物车中没有任何商品，请在付款前先添加商品。'
 FLASH_PROD_ADD_SUCCESSFUL =u'将产品添加到数据库！'
+FLASH_LOGGED_ADMIN = "Welcome, admin."
+
 
 #Food Standard Tags
 ORGANIC_CERT_1 = "中国国家有机认证"
@@ -118,12 +121,7 @@ CRAFT_4 = "传统工艺"
 
 
 # Error messages for adding products
-ERR_NO_PROD_TITLE = "You need to provide a title for this product."
-ERR_NO_PROD_QUANTITY = "You need to provide a quantity for this product."
-ERR_INVALID_PROD_QUANTITY = "Please provide a valid quantity for this product."
-ERR_NO_PROD_PRICE = "You need to provide a price for this product."
-ERR_INVALID_PROD_PRICE = "You need to provide a valid (integer) price for this product."
-ERR_NO_PROD_DESCRIPTION = "You need to provide a description for this product."
 ERR_NO_PROD_PRODUCER_ID = "You need to provide a producer id for this product."
 ERR_INVALID_PROD_PRODUCER_ID = "You need to provide a valid producer id for this product."
+
 

@@ -1,18 +1,18 @@
 .product-list {
     position: relative;
+    left: 5%;
+    width: 95%;
+    margin: auto;
 }
 
 .product-list-item {
     position: relative;
-    float: left;
-    width: 90%;
-    max-width: 90%;
+    max-width: 900px;
     height: 180px;
     border: grey;
     //box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: rgba(119,170,68,0.01);
     transition: 0.3s;    
-    margin: auto;
     list-style: none;
 }
 
@@ -78,7 +78,7 @@
     position: relative;
     left: 2%;
     width: 90%;
-    height: 82%;
+    height: 83%;
     top: 8%;
     font-size: 14pt;
     font-style: italic;
@@ -88,6 +88,38 @@
 
 .product-cart-link {
     position: relative;
-    width: 150px;
+    font-size: 13pt;
+    font-weight: bold;
+    font-style: italic;
+
+    margin: 10px;
 }
 
+.product-list-message {
+    position: relative;
+    font-size: 13pt;
+    font-weight: bold;
+    font-style: italic;
+    margin: 10px;
+}
+
+.product-category {
+    position: relative;
+    height: 50px;
+    width: 40%;    
+    margin: 1rem auto;
+    border-top: 1px solid rgb(119, 170, 68);
+    border-bottom: 1px solid rgb(119, 170, 68);
+    padding: 10px;
+    font-size: 13pt;
+    font-weight: bold;    
+    font-style: italic;
+    transition: 0.3s;
+}
+
+.product-category h1 {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
