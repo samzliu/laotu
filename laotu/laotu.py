@@ -140,6 +140,20 @@ def async(f):
         thr.start()
     return wrapper
 
+def autologout(f):
+    """
+    automatically logs out of the admin account
+
+    make f autologout by adding @autologout above definition
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        session['admin'] = False
+        session.pop('user_id', None)
+        return f(*args, **kwargs)
+    return wrapper
+
+
 # mailing functions ...........................................................
 
 @async
@@ -790,6 +804,7 @@ def show_farmer(producer_id):
 ### Admin pages ###
 @app.route('/add_product', methods=['GET', 'POST'])
 @admin_required
+@autologout
 def add_product_db():
     """Add a product to the database."""
     error = None
@@ -884,6 +899,7 @@ def add_product_db():
 
 @app.route('/del/<int:product_id>')
 @admin_required
+@autologout
 def del_product_db(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     #delete photos
