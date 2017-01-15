@@ -17,7 +17,7 @@ from flask_sqlite_admin.core import sqliteAdminBlueprint
 import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads, UploadNotAllowed
 from datetime import datetime
-from threading import Timer
+from threading import Timer, Lock
 
 from strings import *
 
@@ -40,6 +40,7 @@ SECRET_KEY = 'development key'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
 DEFAULT_IMPORTANCE = 100
+
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -89,8 +90,8 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 upload_photos = UploadSet('photos', IMAGES)
 configure_uploads(app, upload_photos)
-timer_on = False
-
+timer_on_users = []
+mutex = Lock()
 
 if __name__ == '__main__':
     app.run()
@@ -568,7 +569,7 @@ def update_product(product_id, quantity):
 @app.route('/pay')
 def pay():
     """Displays the pay page with the Stripe Checkout Button."""
-    global timer_on
+    global timer_on_users
     # get all the user's purchases
     purchases = query_db('''select cart.product_id, cart.quantity, \
                             product.title, product.price, \
@@ -588,7 +589,7 @@ def pay():
             flash(out_of_stock_message)
             return redirect(url_for('get_cart'))
     # if all items are still in stock, put all items on hold while user pays
-    if not timer_on:
+    if session['user_id'] not in timer_on_users:
         print "Putting on hold"
         db = get_db()
         cursor = db.cursor()
@@ -611,8 +612,14 @@ def pay():
         print "hold complete"
         # store the transaction_ids in the session
         session['transaction_ids'] = transaction_ids
-        timer_on = True
-        Timer(60, undo_hold, [session['transaction_ids']]).start()
+        mutex.acquire()
+        try:
+            timer_on_users.append(session['user_id'])
+        finally:
+            mutex.release()
+        # Timer(1, undo_hold, [session['transaction_ids'], session['user_id']]).start()
+        Timer(1, undo_hold, [session['transaction_ids'], session['user_id']]).start()
+
     # store the amount the user must pay in the session
     session['amount'] = query_db('''select sum(product.price*cart.quantity)
                                     from cart join product on cart.product_id=
@@ -626,10 +633,16 @@ def pay():
                             amount=session['amount'],
                             transaction_ids=session['transaction_ids'])
 
-def undo_hold(transaction_ids):
+def undo_hold(transaction_ids, user_id):
     """Undo the hold on products that was initiated during checkout."""
-    global timer_on
+    global timer_on_users
+    products_put_back = False
     print "in undo_hold"
+    mutex.acquire()
+    try:
+        timer_on_users.remove(user_id)
+    finally:
+        mutex.release()
     with app.app_context():
             db = get_db()
             for trans_id in transaction_ids:
@@ -637,42 +650,21 @@ def undo_hold(transaction_ids):
                 purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
                 # if the purchase was unconfirmed
                 if purchase['confirmed']==0:
+                    products_put_back = True
                     print "product put back"
                     # Put products back into product table
                     db.execute('''update product set quantity=quantity + ? where
                             product_id=?''', (purchase['quantity'], purchase['product_id']))
                 # Do nothing to the transactions (they remain there as uncomfirmed).
             db.commit()
-    timer_on = False
-    print "undo_hold over"
-    # if make_new_context:
-    #     with app.test_request_context():
-    #         db = get_db()
-    #         for trans_id in transaction_ids:
-    #             # get the transaction details
-    #             purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
-    #             # Put products back into product table
-    #             db.execute('''update product set quantity=quantity + ? where
-    #                     product_id=?''', (purchase['quantity'], purchase['product_id']))
-    #             # Do nothing to the transactions (they remain there as uncomfirmed).
-    #         db.commit()
-    # else:
-    #     db = get_db()
-    #     for trans_id in transaction_ids:
-    #         # get the transaction details
-    #         purchase = query_db('select * from trans where trans_id=?',[trans_id])[0]
-    #         # Put products back into product table
-    #         db.execute('''update product set quantity=quantity + ? where
-    #                 product_id=?''', (purchase['quantity'], purchase['product_id']))
-    #         # Do nothing to the transactions (they remain there as uncomfirmed).
-    #     db.commit()
-    # print 'undone'
-    # return False
+            print "undo_hold over"
+            print "after undo_hold timer_on_users is ", timer_on_users
+
 
 @app.route('/charge', methods=['POST'])
 def charge():
     """Charge the user."""
-    global timer_on
+    global timer_on_users
     try:
         charge = stripe.Charge.create(
             amount=session['amount'], # Amount in cents
@@ -681,39 +673,37 @@ def charge():
     # for any exception, undo the hold and flash a message
     except stripe.error.CardError as e:
         # The account has been declined
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.RateLimitError as e:
         # Too many requests made to the API too quickly
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.InvalidRequestError as e:
         # Invalid parameters were supplied to Stripe's API
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.AuthenticationError as e:
         # Authentication with Stripe's API failed
         # (maybe you changed API keys recently)
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.APIConnectionError as e:
         # Network communication with Stripe failed
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_PAYMENT_ERROR)
     except stripe.error.StripeError as e:
         # Display a very generic error to the user, and maybe send
         # yourself an email
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_ERROR)
     except Exception as e:
         # Something else happened, completely unrelated to Stripe
-        undo_hold(session['transaction_ids'])
+        undo_hold(session['transaction_ids'], session['user_id'])
         flash(FLASH_CARD_FAILURE)
 
     # if charge successful, then change the transactions to confirmed
     else:
-        timer_on = False
-        print "timer_on is now ", timer_on
         db = get_db()
         for trans_id in session['transaction_ids']:
             # confirm the transaction
