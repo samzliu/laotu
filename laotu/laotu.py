@@ -26,16 +26,16 @@ import requests
 from bs4 import BeautifulSoup
 
 # configuration
-#DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
+DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
 #DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
-#UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
 #UPLOADED_PHOTOS_DEST = '/tmp/photos'
-UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
+#UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
 
@@ -113,6 +113,7 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not g.user or 'admin' not in session or not session['admin']:
+            print 'hiiiiiii'
             return redirect(url_for("adminauth", next=request.path))
         return f(*args, **kwargs)
     return decorated_function
@@ -137,18 +138,21 @@ def async(f):
         thr.start()
     return wrapper
 
+"""
+Commented out because too complicated
+
 def autologout(f):
-    """
+
     automatically logs out of the admin account
 
     make f autologout by adding @autologout above definition
-    """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         session['admin'] = False
         return f(*args, **kwargs)
     return wrapper
-
+"""
 
 # mailing functions ...........................................................
 
@@ -498,7 +502,6 @@ def show_product(product_id):
     for i in range(0, len(photos)):
         if photos[i] is not None:
             photos[i] = os.path.join(UPLOADED_PHOTOS_DEST, photos[i]) 
-    print photos
     stories = [product['laotu_book_photo_filename_1'],
                         product['laotu_book_photo_filename_2'],
                         product['laotu_book_photo_filename_3'],
@@ -816,7 +819,6 @@ def show_farmer(producer_id):
 ### Admin pages ###
 @app.route('/add_product', methods=['GET', 'POST'])
 @admin_required
-@autologout
 def add_product_db():
     """Add a product to the database."""
     error = None
@@ -830,8 +832,8 @@ def add_product_db():
             return False
 
     if request.method == 'POST':
-        print "hiiiii"
         photos = request.files
+        print photos
         if not request.form['producerid']:
             error = ERR_NO_PROD_PRODUCER_ID
             errtype = 'producerid'
@@ -842,11 +844,22 @@ def add_product_db():
         else:
             try:
                 filenames = [None]*7
-                i = 0
-                for photo in photos:
-                    if len(photos.get(photo).filename) != 0:
-                        filenames[i] = upload_photos.save(photos.get(photo))
-                    i = i + 1
+
+                if 'photo_1' in photos:
+                    filenames[0] = upload_photos.save(photos.get('photo_1'))
+                if 'photo_2' in photos:
+                    filenames[1] = upload_photos.save(photos.get('photo_2'))
+                if 'photo_3' in photos:
+                    filenames[2] = upload_photos.save(photos.get('photo_3'))
+                if 'book_1' in photos:
+                    filenames[3] = upload_photos.save(photos.get('book_1'))
+                if 'book_2' in photos:
+                    filenames[4] = upload_photos.save(photos.get('book_2'))
+                if 'book_3' in photos:
+                    filenames[5] = upload_photos.save(photos.get('book_3'))
+                if 'book_4' in photos:
+                    filenames[6] = upload_photos.save(photos.get('book_4'))
+
             except UploadNotAllowed:
                 error = FLASH_UPLOAD_FORBIDDEN
                 errtype = 'uploaderror'
@@ -912,7 +925,6 @@ def add_product_db():
 
 @app.route('/del/<int:product_id>')
 @admin_required
-@autologout
 def del_product_db(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     #delete photos
