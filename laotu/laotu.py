@@ -496,12 +496,16 @@ def show_product(product_id):
     photos = [product['product_photo_filename_1'],
                         product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
+    for i in range(0, len(photos)):
+        if photos[i] is not None:
+            photos[i] = os.path.join(UPLOADED_PHOTOS_DEST, photos[i]) 
+    print photos
     stories = [product['laotu_book_photo_filename_1'],
                         product['laotu_book_photo_filename_2'],
                         product['laotu_book_photo_filename_3'],
                         product['laotu_book_photo_filename_4']]
     condensed = condenseStory(stories)
-    print condenseStory(stories)
+    #print condenseStory(stories)
     return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=condensed,
         maxPage=len(condensed))
@@ -619,12 +623,12 @@ def pay():
             return redirect(url_for('get_cart'))
     # if all items are still in stock, put all items on hold while user pays
     if session['user_id'] not in timer_on_users:
-        print "Putting on hold"
+        #print "Putting on hold"
         db = get_db()
         cursor = db.cursor()
         transaction_ids = []
         for purchase in purchases:
-            print "going through purchase"
+            #print "going through purchase"
             # add transactions to history, one row for each product
             cursor.execute('''insert into trans (
                             product_id, user_id, quantity, trans_date, amount)
@@ -796,7 +800,7 @@ def stories():
         titles = [i.title.text for i in items]
         descriptions = [i.description.text for i in items]
         stories = zip(titles, descriptions)
-        print stories
+        #print stories
     except:
         print "That failed awfully, get a hold of yourself."
     return render_template('stories.html', stories=stories)
