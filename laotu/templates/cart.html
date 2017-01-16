@@ -8,47 +8,48 @@
   </div>
 
   <br><br>
-  {% for item in items %}
-    <div style="position: relative;
-    width: 90%;
-    max-width: 600px;
-    height: 150px;
-    left: -25px;
-    border-radius: 15px;
-    margin: 1rem auto;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: rgba(119,170,68,0.6);
-    " onclick="gotoURL('{{ url_for('show_product', product_id=item.product_id)}}')">
-
-      <div style="position: absolute;
-      border-radius: 15px 0px 0px 15px;
-      overflow: hidden;
+  {% if items %}
+    {% for item in items %}
+      <div style="position: relative;
+      width: 90%;
+      max-width: 600px;
       height: 150px;
-      width: 30%;
-      background:#fff;
-      ">
-        <span style="display:inline-block;vertical-align:center;"> </span>
-        <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%; vertical-align:center;">
-      </div>
+      left: -25px;
+      border-radius: 15px;
+      margin: 1rem auto;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      background-color: rgba(119,170,68,0.6);
+      " onclick="gotoURL('{{ url_for('show_product', product_id=item.product_id)}}')">
 
-      <div style="height: 100%; position:absolute; right:0; width: 68%;">
-        <h1>{{ item.title }}</h1>
-        <div style="position: absolute; bottom:10px; width: 100%">
-          <h2>数量: {{item.quantity }} &emsp; 价钱: {{ item.price/100 }} &emsp; 你付: &#165 {{ item.price/100 * item.quantity }}</h2>
+        <div style="position: absolute;
+        border-radius: 15px 0px 0px 15px;
+        overflow: hidden;
+        height: 150px;
+        width: 30%;
+        background:#fff;
+        ">
+          <span style="display:inline-block;vertical-align:center;"> </span>
+          <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" style="max-width:100%; max-height:100%; vertical-align:center;">
+        </div>
+
+        <div style="height: 100%; position:absolute; right:0; width: 68%;">
+          <h1>{{ item.title }}</h1>
+          <div style="position: absolute; bottom:10px; width: 100%">
+            <h2>数量: {{item.quantity }} &emsp; 价钱: {{ item.price/100 }} &emsp; 你付: &#165 {{ item.price/100 * item.quantity }}</h2>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div style="position: relative;
-    width: calc(90% - 30px);
-    max-width: 570px;
-    height: 45px;
-    left: -25px;
-    margin-top: -1rem;
-    margin-bottom: 1rem;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgba(119,170,68,0.6);">
+      <div style="position: relative;
+      width: calc(90% - 30px);
+      max-width: 570px;
+      height: 45px;
+      left: -25px;
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: rgba(119,170,68,0.6);">
 
       <a href="{{ url_for('remove_product', product_id=item.product_id)}}" class="dropbtn dropbtn-red" style="text-align:center;"><br>去掉</a>
       <div class="dropdown" style = "background-color: #fff;
@@ -73,14 +74,14 @@
           <a href="{{ url_for('update_product', product_id=item.product_id, quantity=3)}}">3</a>
           <a href="{{ url_for('update_product', product_id=item.product_id, quantity=4)}}">4</a>
           <a href="{{ url_for('update_product', product_id=item.product_id, quantity=5)}}">5</a>
+
         </div>
-      {% endif %}
-      </div>
-  </div>
+    </div>
+    {% endfor %}
 
   {% else %}
     <em>没有产品在购物车里。</em>
-  {% endfor %}
+  {% endif %}
 
   {% if items %}
   <div style="position: relative;
