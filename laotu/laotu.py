@@ -145,7 +145,6 @@ def autologout(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         session['admin'] = False
-        session.pop('user_id', None)
         return f(*args, **kwargs)
     return wrapper
 
@@ -500,7 +499,6 @@ def show_product(product_id):
                         product['laotu_book_photo_filename_3'],
                         product['laotu_book_photo_filename_4']]
     condensed = condenseStory(stories)
-    print condenseStory(stories)
     return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=condensed,
         maxPage=len(condensed))
@@ -827,6 +825,7 @@ def add_product_db():
             return False
 
     if request.method == 'POST':
+        print "hiiiii"
         photos = request.files
         if not request.form['producerid']:
             error = ERR_NO_PROD_PRODUCER_ID
