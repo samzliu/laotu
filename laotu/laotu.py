@@ -387,13 +387,14 @@ def logout():
 
 ### Product, tag, and miscellaneous pages ###
 
-def render_listing(products_list=None, tags_list=None, specific_tag=None, message=None, 
-        tag_limit=True):
+def render_listing(products_list=None, producer= None, tags_list=None, specific_tag=None, message=None, 
+        tag_limit=True, preview_photo=None):
     overflow = (tags_list and len(tags_list) > 3 and tag_limit)
     if overflow:
         tags_list = tags_list[0:3]
     return render_template('listing.html', \
         products_list=products_list,\
+        producer=producer, \
         tags_list=tags_list,\
         overflow=overflow,\
         specific_tag=specific_tag,\
@@ -796,9 +797,7 @@ def show_farmer(producer_id):
                                 [producer_id])
     producer = query_db('select * from producer where producer_id=?',
                         [producer_id], one=True)
-    return render_template('products_list.html',
-                            products_list=producer_products, producer=producer)
-
+    return render_listing(products_list=producer_products, producer=producer)
 
 
 ### Admin pages ###
