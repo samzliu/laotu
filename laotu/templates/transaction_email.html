@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<h2>Dear {{ name }}, </h2>
+
+<p>Thank you for your purchase with Laotu! Your transaction for the following items has been successfull: </p>
+
+<table border="0" style="border:none;">
+<tr>
+	<th align="right" style="text-align:right;">Product</th>
+	<th></th>
+	<th align="left" style="text-align:left;">Cost</th>
+</tr>
+{% for item in items %}
+<tr> 
+	<td align="right" style="text-align:right;">{{item.name}}</td> 
+	<td>...............</td> 
+	<td>{{item.price}}</td>
+</tr>
+{% endfor %}
+<tr style="border-top:1px solid black;">
+	<td align="right" style="text-align:right;">Total</td> 
+	<th></th>
+	<th>{{ purchasetotal }} CNY</th>
+</tr>
+</table>
+
+<p>Have any questions? Contact us at CONTACT EMAIL.</p>
+
+</html>

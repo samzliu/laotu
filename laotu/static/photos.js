@@ -1,3 +1,5 @@
+// THIS FILE CAN BE DELETED
+
 var photo = ['hi'];
 var stories = [];
 var product_index = 0;

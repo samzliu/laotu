@@ -18,27 +18,24 @@ import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads, UploadNotAllowed
 from datetime import datetime
 from threading import Timer, Lock
-
 from strings import *
-
 from functools import wraps
-
 from flask_mail import Mail, Message
-
 from threading import Thread
-
+import requests
+from bs4 import BeautifulSoup
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
-#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
-UPLOADED_PHOTOS_DEST = '/tmp/photos'
-UPLOADED_PHOTOS_DEST = '/tmp/photos'
+#UPLOADED_PHOTOS_DEST = '/tmp/photos'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
 
@@ -48,11 +45,19 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 
 # mail config
 # gmail config:
+# DEFAULT_EMAIL_SENDER = os.environ['EMAIL_ADDRESS']
+# DEFAULT_EMAIL_PASSWORD = os.environ['EMAIL_PW']
+DEFAULT_EMAIL_SENDER = 'natsapptester@gmail.com'
+DEFAULT_EMAIL_PASSWORD = 'securepassword123'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'natsapptester@gmail.com'
-app.config['MAIL_PASSWORD'] = 'securepassword123'
+app.config['MAIL_USERNAME'] = DEFAULT_EMAIL_SENDER
+app.config['MAIL_PASSWORD'] = DEFAULT_EMAIL_PASSWORD
 app.config['MAIL_USE_SSL'] = True
+
+# receives test emails:
+EMAIL_TEST_RECIPIENT = ''
+
 
 mail = Mail(app)
 
@@ -132,6 +137,20 @@ def async(f):
         thr.start()
     return wrapper
 
+def autologout(f):
+    """
+    automatically logs out of the admin account
+
+    make f autologout by adding @autologout above definition
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        session['admin'] = False
+        session.pop('user_id', None)
+        return f(*args, **kwargs)
+    return wrapper
+
+
 # mailing functions ...........................................................
 
 @async
@@ -139,11 +158,12 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
-def send_mail(to, subject, message, html, sender="natsapptester@gmail.com"):
+def send_mail(to, subject, message, html="", sender=DEFAULT_EMAIL_SENDER):
     """
     to: a list of strings
     subject: a string
-    message: a string
+    message: a string or render_template("some jinja formatted .txt here")
+    html: a string of html markup or render_template("some jinja formatted .html here")
     sender: an address string or a touple (name, address)
 
     """
@@ -250,11 +270,16 @@ def isphone(num):
     else:
         return True
 
+# Returns true if the product has any standard category filled
 def hasStandard(product):
     return product['standard_geo'] or product['standard_producer'] or \
             product['standard_raw'] or product['standard_production'] or \
             product['standard_storage'] or product['standard_tech'] or \
             product['standard_package'] or product['standard_price']
+
+# Removes empty strings from the image array
+def condenseStory(stories):
+    return [story for story in stories if story != ""]
 
 
 
@@ -474,8 +499,11 @@ def show_product(product_id):
                         product['laotu_book_photo_filename_2'],
                         product['laotu_book_photo_filename_3'],
                         product['laotu_book_photo_filename_4']]
+    condensed = condenseStory(stories)
+    print condenseStory(stories)
     return render_template('product.html', product=product, producer=producer,
-        hasStandard=hasStandard(product), photos=photos, stories=stories)
+        hasStandard=hasStandard(product), photos=photos, stories=condensed,
+        maxPage=len(condensed))
 
 
 
@@ -665,67 +693,112 @@ def undo_hold(transaction_ids, user_id):
 def charge():
     """Charge the user."""
     global timer_on_users
-    try:
-        charge = stripe.Charge.create(
-            amount=session['amount'], # Amount in cents
-            currency="cny",
-            source=request.form['stripeToken'])
-    # for any exception, undo the hold and flash a message
-    except stripe.error.CardError as e:
-        # The account has been declined
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.RateLimitError as e:
-        # Too many requests made to the API too quickly
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.InvalidRequestError as e:
-        # Invalid parameters were supplied to Stripe's API
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.AuthenticationError as e:
-        # Authentication with Stripe's API failed
-        # (maybe you changed API keys recently)
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.APIConnectionError as e:
-        # Network communication with Stripe failed
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_PAYMENT_ERROR)
-    except stripe.error.StripeError as e:
-        # Display a very generic error to the user, and maybe send
-        # yourself an email
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_ERROR)
-    except Exception as e:
-        # Something else happened, completely unrelated to Stripe
-        undo_hold(session['transaction_ids'], session['user_id'])
-        flash(FLASH_CARD_FAILURE)
+    # try:
+    #     charge = stripe.Charge.create(
+    #         amount=session['amount'], # Amount in cents
+    #         currency="cny",
+    #         source=request.form['stripeToken'])
+    # # for any exception, undo the hold and flash a message
+    # except stripe.error.CardError as e:
+    #     # The account has been declined
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.RateLimitError as e:
+    #     # Too many requests made to the API too quickly
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.InvalidRequestError as e:
+    #     # Invalid parameters were supplied to Stripe's API
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.AuthenticationError as e:
+    #     # Authentication with Stripe's API failed
+    #     # (maybe you changed API keys recently)
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.APIConnectionError as e:
+    #     # Network communication with Stripe failed
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_PAYMENT_ERROR)
+    # except stripe.error.StripeError as e:
+    #     # Display a very generic error to the user, and maybe send
+    #     # yourself an email
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_ERROR)
+    # except Exception as e:
+    #     # Something else happened, completely unrelated to Stripe
+    #     undo_hold(session['transaction_ids'], session['user_id'])
+    #     flash(FLASH_CARD_FAILURE)
 
-    # if charge successful, then change the transactions to confirmed
-    else:
-        db = get_db()
-        for trans_id in session['transaction_ids']:
-            # confirm the transaction
-            db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
-        # empty the cart
-        db.execute('''delete from cart where user_id = ?''', [session['user_id']])
-        db.commit()
-        # remove the variables amount, transaction_ids, and timer from session
-        session.pop('amount', None)
-        session.pop('transaction_ids', None)
-        # flash message that purchase was succesful
-        flash(FLASH_PURCHASE)
+    # # if charge successful, then change the transactions to confirmed
+    # else:
+    db = get_db()
+    itemlist = []
+    totalprice = 0
+    for trans_id in session['transaction_ids']:
+        # confirm the transaction
+        db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
+        # get product info for email
+        product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
+        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0], 
+                         'quantity': product['quantity'],
+                         'price': product['amount']})
+        totalprice += product['amount']        
+    
+    # send order confirmation email
+    send_mail([query_db('select email from user where user_id=?',[session['user_id']])[0][0]], 
+                PURCHASE_CONFIRMATION_EMAIL_SUBJECT, 
+                render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
+                render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
+
+    # empty the cart
+    db.execute('''delete from cart where user_id = ?''', [session['user_id']])
+    db.commit()
+    # remove the variables amount, transaction_ids, and timer from session
+    session.pop('amount', None)
+    session.pop('transaction_ids', None)
+    # flash message that purchase was succesful
+    flash(FLASH_PURCHASE)
     return redirect(url_for('home'))
 
+@app.route('/emailtest')
+@admin_required
+def transaction_email_test():
+    db = get_db()
+    itemlist = []
+    totalprice = 0
+    for trans_id in session['transaction_ids']:
+        product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
+        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0], 
+                         'quantity': product['quantity'],
+                         'price': product['amount']})
+        totalprice += product['amount']
+    # must have an EMAIL_TEST_RECIPIENT to send test email    
+    # send_mail([EMAIL_TEST_RECIPIENT], 'test mail from laotu', 
+                # render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
+                # render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
 
-
+    return render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice)
 
 ### Farmer Pages ###
 @app.route('/stories')
 def stories():
     """Display the stories page."""
-    return render_template('stories.html')
+    #url = "http://xkcd.com/rss.xml"
+    url = "http://laotu.strikingly.com/blog/feed.xml"
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, 'html.parser') 
+        #print soup.prettify()
+        #print soup.item
+        items = soup.find_all('item')
+        titles = [i.title.text for i in items]
+        descriptions = [i.description.text for i in items]
+        stories = zip(titles, descriptions)
+        print stories
+    except:
+        print "That failed awfully, get a hold of yourself."
+    return render_template('stories.html', stories=stories)
 
 @app.route('/<int:producer_id>/show_farmer')
 def show_farmer(producer_id):
@@ -742,6 +815,7 @@ def show_farmer(producer_id):
 ### Admin pages ###
 @app.route('/add_product', methods=['GET', 'POST'])
 @admin_required
+@autologout
 def add_product_db():
     """Add a product to the database."""
     error = None
@@ -836,6 +910,7 @@ def add_product_db():
 
 @app.route('/del/<int:product_id>')
 @admin_required
+@autologout
 def del_product_db(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     #delete photos
