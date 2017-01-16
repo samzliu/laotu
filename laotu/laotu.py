@@ -18,15 +18,12 @@ import re
 from flask.ext.uploads import UploadSet, IMAGES, configure_uploads, UploadNotAllowed
 from datetime import datetime
 from threading import Timer, Lock
-
 from strings import *
-
 from functools import wraps
-
 from flask_mail import Mail, Message
-
 from threading import Thread
-
+import requests
+from bs4 import BeautifulSoup
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
@@ -788,7 +785,21 @@ def transaction_email_test():
 @app.route('/stories')
 def stories():
     """Display the stories page."""
-    return render_template('stories.html')
+    #url = "http://xkcd.com/rss.xml"
+    url = "http://laotu.strikingly.com/blog/feed.xml"
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, 'html.parser') 
+        #print soup.prettify()
+        #print soup.item
+        items = soup.find_all('item')
+        titles = [i.title.text for i in items]
+        descriptions = [i.description.text for i in items]
+        stories = zip(titles, descriptions)
+        print stories
+    except:
+        print "That failed awfully, get a hold of yourself."
+    return render_template('stories.html', stories=stories)
 
 @app.route('/<int:producer_id>/show_farmer')
 def show_farmer(producer_id):

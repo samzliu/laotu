@@ -9,8 +9,8 @@ html, body {
 body {
     background: #fff;
     background: rgba(119, 170, 68, .15);
-    font-family: 'Trebuchet MS', sans-serif;
     font-size: 16px;
+    font-family: "Vollkorn"
 }
 
 a {
@@ -325,7 +325,6 @@ input {
     margin: 1rem auto;
     padding: .5rem;
 
-    font-family: 'Trebuchet MS', sans-serif;
     font-size: 8pt;
 
     background: transparent;
@@ -347,7 +346,6 @@ input {
     margin: 1rem auto;
     padding: .5rem;
 
-    font-family: 'Trebuchet MS', sans-serif;
     font-size: 8pt;
 
     background: #FAE4E4;
