@@ -35,7 +35,6 @@ SECRET_KEY = 'development key'
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
 UPLOADED_PHOTOS_DEST = '/tmp/photos'
-UPLOADED_PHOTOS_DEST = '/tmp/photos'
 DEFAULT_IMPORTANCE = 100
 
 
@@ -887,7 +886,7 @@ def add_product_db():
                 "PRODUCTION_3","PRODUCTION_4","PRODUCTION_5","CRAFT_1","CRAFT_2","CRAFT_3","CRAFT_4"]])
             db.commit()
 
-            if tag_list.strip() != "":
+            if request.form['tags']:
                 tag_list = request.form['tags'].split(';')
                 tag_list = [t.strip() for t in tag_list]
                 for tag in tag_list:
