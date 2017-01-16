@@ -50,7 +50,7 @@
     margin-right: auto;
     background-color: rgba(119,170,68,0.6);">
 
-      <button onclick="handleButtonClick('{{ url_for('remove_product', product_id=item.product_id)}}')" class="dropbtn dropbtn-red">去掉</button>
+      <a href="{{ url_for('remove_product', product_id=item.product_id)}}" class="dropbtn dropbtn-red" style="text-align:center;"><br>去掉</a>
       <div class="dropdown" style = "background-color: #fff;
         position:absolute;
         height: 100%;
@@ -62,7 +62,7 @@
         <button onclick="dropDownQuantity()" class="dropbtn dropbtn-green" style="width:100%;">放在购物车</button>
         <div id="myDropdown" class="dropdown-content">
         {% for number in range(1, item.inventory+1) %}
-          <a href="{{ url_for('add_product', product_id=item.product_id, quantity=number)}}">{{number}}</a>
+          <a href="{{ url_for('add_product', product_id=item.product_id, quantity=number) + '?prev=' + url_for('get_cart')}}">{{number}}</a>
         {% endfor %}
         </div>
       {% else %}
@@ -90,8 +90,12 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
     margin-left: auto;
-    margin-right: auto;">
-    <button onclick="handleButtonClick('{{ url_for('pay')}}')" class="dropbtn" style="width:100%;">
+    margin-right: auto;
+    text-align:center;
+    vertical-align:center;
+    background-color:#4CAF50;
+    padding: 10px;">
+    <a href="{{ url_for('pay') }}" class="dropbtn" style="width:100%;">
       <h1>总价格: {{total}} 元</h1>
       <h1>工资</h1>
     </button>
