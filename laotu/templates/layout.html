@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html><html lang="zh-Hans">
 
 <head>
     <meta charset="utf-8">
@@ -133,8 +133,6 @@
     </script>
 
     <script>
-    var story_index = 0;
-
     $(document).ready(function(){
         $("#flashes").slideDown(function() {
             setTimeout(function() {
@@ -144,7 +142,7 @@
 
         // Handles swiping for the story book
         $(document).on('click', '#right-arrow', function() {
-            if (story_index < 3) {
+            if (story_index < max_page - 1) {
                 story_index++;
                 flip_page(story_index);
             }

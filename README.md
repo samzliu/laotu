@@ -37,7 +37,6 @@ High prority:
     - product page (Carl)
     - multiple categories (Carl)
     - blog/splashpage (Sam)
-    - anyone wanna give admin autologout a shot? (i.e. setting session['admin'] to False after loading an admin page) here's a ref on func decorators http://thecodeship.com/patterns/guide-to-python-function-decorators/
     - add product seperate page 
     
     - formatting

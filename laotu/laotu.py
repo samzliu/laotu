@@ -137,6 +137,20 @@ def async(f):
         thr.start()
     return wrapper
 
+def autologout(f):
+    """
+    automatically logs out of the admin account
+
+    make f autologout by adding @autologout above definition
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        session['admin'] = False
+        session.pop('user_id', None)
+        return f(*args, **kwargs)
+    return wrapper
+
+
 # mailing functions ...........................................................
 
 @async
@@ -256,11 +270,16 @@ def isphone(num):
     else:
         return True
 
+# Returns true if the product has any standard category filled
 def hasStandard(product):
     return product['standard_geo'] or product['standard_producer'] or \
             product['standard_raw'] or product['standard_production'] or \
             product['standard_storage'] or product['standard_tech'] or \
             product['standard_package'] or product['standard_price']
+
+# Removes empty strings from the image array
+def condenseStory(stories):
+    return [story for story in stories if story != ""]
 
 
 
@@ -480,8 +499,11 @@ def show_product(product_id):
                         product['laotu_book_photo_filename_2'],
                         product['laotu_book_photo_filename_3'],
                         product['laotu_book_photo_filename_4']]
+    condensed = condenseStory(stories)
+    print condenseStory(stories)
     return render_template('product.html', product=product, producer=producer,
-        hasStandard=hasStandard(product), photos=photos, stories=stories)
+        hasStandard=hasStandard(product), photos=photos, stories=condensed,
+        maxPage=len(condensed))
 
 
 
@@ -793,6 +815,7 @@ def show_farmer(producer_id):
 ### Admin pages ###
 @app.route('/add_product', methods=['GET', 'POST'])
 @admin_required
+@autologout
 def add_product_db():
     """Add a product to the database."""
     error = None
@@ -887,6 +910,7 @@ def add_product_db():
 
 @app.route('/del/<int:product_id>')
 @admin_required
+@autologout
 def del_product_db(product_id):
     product = query_db('select * from product where product_id = ?', [product_id], one=True)
     #delete photos
