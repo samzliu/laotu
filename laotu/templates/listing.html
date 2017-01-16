@@ -32,19 +32,23 @@
         {% endif %}
   {% endif %}
 
-  {% if products_list %}
+  {% if products_photos %}
   <div class="product-list">
-  {% for product in products_list %}
-    <div class="product-list-item" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
+  {% for p in products_photos %}
+    <div class="product-list-item" onclick="gotoURL('{{ url_for('show_product', product_id=p[0].product_id)}}')">
 
       <div class="product-image">
-        <img src="{{ product.product_photo_filename_1 }}" class="product-image-tag">
+        {% if p[1] and p[1][0] %}
+            <img src="{{ p[1][0] }}" class="product-image-tag">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" class="product-image-tag">
+        {% endif %}
       </div>
 
       <div class="product-info">
-        <div class="product-title"> {{ product.title }} </div>
-        <div class="product-price"> &#165 {{ '%0.2f' | format(product.price/100) }} </div>
-        <div class="product-description"> {{ product.description }} </div>
+        <div class="product-title"> {{ p[0].title }} </div>
+        <div class="product-price"> &#165 {{ '%0.2f' | format(p[0].price/100) }} </div>
+        <div class="product-description"> {{ p[0].description }} </div>
       </div>
     </div>
   {% endfor %}

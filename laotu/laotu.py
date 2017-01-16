@@ -27,15 +27,15 @@ from bs4 import BeautifulSoup
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-#DATABASE = '/tmp/laotu.db'
-DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+DATABASE = '/tmp/laotu.db'
+#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
-#UPLOADED_PHOTOS_DEST = '/tmp/photos'
-UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
+UPLOADED_PHOTOS_DEST = '/static/photos'
+#UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
 
@@ -183,7 +183,6 @@ def send_bulk_mail(to, message, sender=("Laotu Noreply", "noreply@laotu.com")):
     to: a list of user objects with 'name' and 'email' attributes
     message: a string
     sender: an address string or a touple (name, address)
-
     """
 
     with mail.connect() as conn:
@@ -276,11 +275,6 @@ def hasStandard(product):
             product['standard_raw'] or product['standard_production'] or \
             product['standard_storage'] or product['standard_tech'] or \
             product['standard_package'] or product['standard_price']
-
-# Removes empty strings from the image array
-def condenseStory(stories):
-    return [story for story in stories if story != ""]
-
 
 
 ### Basic pages ###
@@ -389,8 +383,15 @@ def render_listing(products_list=None, producer= None, tags_list=None, specific_
     overflow = (tags_list and len(tags_list) > 3 and tag_limit)
     if overflow:
         tags_list = tags_list[0:3]
+    photos = [[product['product_photo_filename_1'],\
+        product['product_photo_filename_2'],\
+        product['product_photo_filename_3']]
+        for product in products_list]
+    photos = [[url_for('static', filename='photos/' + p) for p in photo if p]\
+        for photo in photos]
+    products_photos = zip(products_list, photos)
     return render_template('listing.html', \
-        products_list=products_list,\
+        products_photos=products_photos,\
         producer=producer, \
         tags_list=tags_list,\
         overflow=overflow,\
@@ -496,19 +497,16 @@ def show_product(product_id):
     photos = [product['product_photo_filename_1'],
                         product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
-    for i in range(0, len(photos)):
-        if photos[i] is not None:
-            photos[i] = os.path.join(UPLOADED_PHOTOS_DEST, photos[i]) 
-    print photos
-    stories = [product['laotu_book_photo_filename_1'],
-                        product['laotu_book_photo_filename_2'],
-                        product['laotu_book_photo_filename_3'],
+    photos = [url_for('static', filename='photos/' + photo) for photo in photos if photo] 
+    stories = [product['laotu_book_photo_filename_1'],\
+                        product['laotu_book_photo_filename_2'],\
+                        product['laotu_book_photo_filename_3'],\
                         product['laotu_book_photo_filename_4']]
-    condensed = condenseStory(stories)
-    #print condenseStory(stories)
+    stories = [url_for('static', filename='photos/'+story) for story in stories  if story]
+    
     return render_template('product.html', product=product, producer=producer,
-        hasStandard=hasStandard(product), photos=photos, stories=condensed,
-        maxPage=len(condensed))
+        hasStandard=hasStandard(product), photos=photos, stories=stories,
+        maxPage=len(stories))
 
 
 

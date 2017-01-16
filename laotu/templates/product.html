@@ -7,9 +7,11 @@
 	<div class="product_main">
 		<div class="product-img">
 			<!-- Picture goes here -->
+                        {% if photos %}
 			<div class="product-img-main">
 				<img id="product-image" src='{{ photos[0] }}'>
 			</div>
+                        {% endif %}
 			<div class="product-img-lst">
 			{% for photo in photos %}
 				{% if photo%}
@@ -53,7 +55,6 @@
 						</div>
 					{% endif %}
 				{% endif %}
-
 		</div>
 	</div>
 	{% if stories != [] %}
