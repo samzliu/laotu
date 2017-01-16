@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}
+    Blog
+{% endblock %}
+{% block header %}
+    Blog
+{% endblock %}
+{% block main %}
+<p id="demo"> </p>
+
+{% if stories %}
+    {% for s in stories %}
+        <div font-size="22pt">{{ s[0]|safe }}</div>
+        <div font-size="22pt">{{ s[1]|safe }}</div>
+    {% endfor %}
+{% else %}
+    <h1>No stories available</h1>
+{% endif %}
+
+{% endblock %}
