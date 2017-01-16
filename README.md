@@ -30,27 +30,32 @@ see the tests pass.
 Tasks:
 
 
+Broken
+    - cart: delete, update, add to card even if stuff is already in cart, checkout button
+
+    - add_product photos
+    - heroku
+
 High prority:
 
-    - images (Sam)
-    - remaining Chinese translation (Nat)
-    - product page (Carl)
-    - multiple categories (Carl)
-    - blog/splashpage (Sam)
-    - add product seperate page 
-    
-    - formatting
+
+    - remaining Chinese translation
+    - blog/splashpage
+    - blog formating with images 
+    - better product formating
     - wechat
     - conversion and rollout
-    - Fix up order confirmation email templates (.txt and .html) to look how the laotu people want them to (also maybe include links for the item pages on the .html template)
-    - probably Laotu or the producer should also get an email when someone places an order so they...know...to...proceed...with delivery?
-    - setup the emails to get sent from an actual laotu email address (which one tho)
+    - emails
+    -   Fix up order confirmation email templates (.txt and .html) to look how the laotu people want them to (also maybe include links for the item pages on the .html template)
+    -   probably Laotu or the producer should also get an email when someone places an order so they...know...to...proceed...with delivery?
+    -   setup the emails to get sent from an actual laotu email address (which one tho)
 
 
 Low priority:
+    - 404 page
     - guest checkout
     - producer registration
-    - next page 
+    - next page  over flow 
     - download csv of transactions from admin page 
     - user transaction history 
 

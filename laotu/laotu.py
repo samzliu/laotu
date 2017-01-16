@@ -27,15 +27,15 @@ from bs4 import BeautifulSoup
 
 # configuration
 #DATABASE = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\tmp\\laotu.db'
-DATABASE = '/tmp/laotu.db'
-#DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
+#DATABASE = '/tmp/laotu.db'
+DATABASE = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
-UPLOADED_PHOTOS_DEST = '/tmp/photos'
-UPLOADED_PHOTOS_DEST = '/tmp/photos'
+#UPLOADED_PHOTOS_DEST = '/tmp/photos'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
 
@@ -383,13 +383,14 @@ def logout():
 
 ### Product, tag, and miscellaneous pages ###
 
-def render_listing(products_list=None, tags_list=None, specific_tag=None, message=None, 
-        tag_limit=True):
+def render_listing(products_list=None, producer= None, tags_list=None, specific_tag=None, message=None, 
+        tag_limit=True, preview_photo=None):
     overflow = (tags_list and len(tags_list) > 3 and tag_limit)
     if overflow:
         tags_list = tags_list[0:3]
     return render_template('listing.html', \
         products_list=products_list,\
+        producer=producer, \
         tags_list=tags_list,\
         overflow=overflow,\
         specific_tag=specific_tag,\
@@ -494,12 +495,15 @@ def show_product(product_id):
     photos = [product['product_photo_filename_1'],
                         product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
+    for i in range(0, len(photos)):
+        if photos[i] is not None:
+            photos[i] = os.path.join(UPLOADED_PHOTOS_DEST, photos[i]) 
+    print photos
     stories = [product['laotu_book_photo_filename_1'],
                         product['laotu_book_photo_filename_2'],
                         product['laotu_book_photo_filename_3'],
                         product['laotu_book_photo_filename_4']]
     condensed = condenseStory(stories)
-    print condenseStory(stories)
     return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=condensed,
         maxPage=len(condensed))
@@ -628,12 +632,12 @@ def pay():
             return redirect(url_for('get_cart'))
     # if all items are still in stock, put all items on hold while user pays
     if session['user_id'] not in timer_on_users:
-        print "Putting on hold"
+        #print "Putting on hold"
         db = get_db()
         cursor = db.cursor()
         transaction_ids = []
         for purchase in purchases:
-            print "going through purchase"
+            #print "going through purchase"
             # add transactions to history, one row for each product
             cursor.execute('''insert into trans (
                             product_id, user_id, quantity, trans_date, amount)
@@ -805,7 +809,7 @@ def stories():
         titles = [i.title.text for i in items]
         descriptions = [i.description.text for i in items]
         stories = zip(titles, descriptions)
-        print stories
+        #print stories
     except:
         print "That failed awfully, get a hold of yourself."
     return render_template('stories.html', stories=stories)
@@ -817,9 +821,7 @@ def show_farmer(producer_id):
                                 [producer_id])
     producer = query_db('select * from producer where producer_id=?',
                         [producer_id], one=True)
-    return render_template('products_list.html',
-                            products_list=producer_products, producer=producer)
-
+    return render_listing(products_list=producer_products, producer=producer)
 
 
 ### Admin pages ###
@@ -839,6 +841,7 @@ def add_product_db():
             return False
 
     if request.method == 'POST':
+        print "hiiiii"
         photos = request.files
         if not request.form['producerid']:
             error = ERR_NO_PROD_PRODUCER_ID

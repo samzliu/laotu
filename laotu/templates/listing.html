@@ -38,7 +38,7 @@
     <div class="product-list-item" onclick="gotoURL('{{ url_for('show_product', product_id=product.product_id)}}')">
 
       <div class="product-image">
-        <img src="{{ url_for('static', filename='images/laotu-logo.png') }}" class="product-image-tag">
+        <img src="{{ product.product_photo_filename_1 }}" class="product-image-tag">
       </div>
 
       <div class="product-info">
