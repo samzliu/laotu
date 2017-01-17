@@ -35,8 +35,8 @@ DEBUG = True
 SECRET_KEY = 'development key'
 
 
-#UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\LaotuRepo\\laotu\\tmp\\photos'
-UPLOADED_PHOTOS_DEST = '/static/photos'
+UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
+#UPLOADED_PHOTOS_DEST = 'C://static/photos'
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
@@ -388,13 +388,15 @@ def render_listing(products_list=None, producer= None, tags_list=None, specific_
     overflow = (tags_list and len(tags_list) > 3 and tag_limit)
     if overflow:
         tags_list = tags_list[0:3]
-    photos = [[product['product_photo_filename_1'],\
-        product['product_photo_filename_2'],\
-        product['product_photo_filename_3']]
-        for product in products_list]
-    photos = [[url_for('static', filename='photos/' + p) for p in photo if p]\
-        for photo in photos]
-    products_photos = zip(products_list, photos)
+    products_photos = None
+    if products_list:
+        photos = [[product['product_photo_filename_1'],\
+            product['product_photo_filename_2'],\
+            product['product_photo_filename_3']]
+            for product in products_list]
+        photos = [[url_for('static', filename='photos/' + p) for p in photo if p]\
+            for photo in photos]
+        products_photos = zip(products_list, photos)
     return render_template('listing.html', \
         products_photos=products_photos,\
         producer=producer, \
@@ -523,7 +525,7 @@ def get_cart():
         flash(FLASH_SIGNIN_NEEDED)
         return redirect(url_for('register'))
     items = query_db('''select cart.product_id, cart.quantity, product.title, \
-                        product.price, product.quantity as inventory from cart \
+                        product.price, product.product_photo_filename_1, product.quantity as inventory from cart \
                         join product on cart.product_id=product.product_id \
                         where cart.user_id = ?''',[session['user_id']])
     total = 0
@@ -544,7 +546,7 @@ def add_product(product_id, quantity):
     # if product is already in the user's cart, flash a message
     elif query_db('select 1 from cart where product_id = ?', [product_id], one=True) and not request.args.get('prev'):
         db = get_db()        
-        db.execute('update cart set quantity+=? where product_id=?', [quantity, product_id])
+        db.execute('update cart set quantity = quantity + ? where product_id=?', [quantity, product_id])
         db.commit()
         flash(FLASH_PRODUCT_ALREADY_IN_CART)
         return redirect(url_for('show_products_list'))
