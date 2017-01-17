@@ -146,7 +146,6 @@ def autologout(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         session['admin'] = False
-        session.pop('user_id', None)
         return f(*args, **kwargs)
     return wrapper
 
@@ -503,7 +502,6 @@ def show_product(product_id):
                         product['laotu_book_photo_filename_3'],\
                         product['laotu_book_photo_filename_4']]
     stories = [url_for('static', filename='photos/'+story) for story in stories  if story]
-    
     return render_template('product.html', product=product, producer=producer,
         hasStandard=hasStandard(product), photos=photos, stories=stories,
         maxPage=len(stories))
@@ -538,9 +536,19 @@ def add_product(product_id, quantity):
     if product_id is None:
         abort(404)
     # if product is already in the user's cart, flash a message
-    elif query_db('select 1 from cart where product_id = ?', [product_id], one=True):
-        flash(FLASH_CART_PRODUCT)
-        return redirect(url_for('show_product', product_id=product_id))
+    elif query_db('select 1 from cart where product_id = ?', [product_id], one=True) and not request.args.get('prev'):
+        db = get_db()        
+        db.execute('update cart set quantity+=? where product_id=?', [quantity, product_id])
+        db.commit()
+        flash(FLASH_PRODUCT_ALREADY_IN_CART)
+        return redirect(url_for('show_products_list'))
+    # if the add was accessed from the cart, meaning the user is editing an order
+    elif query_db('select 1 from cart where product_id = ?', [product_id], one=True) and request.args.get('prev') == url_for('get_cart'):
+        db = get_db()    
+        db.execute('update cart set quantity=? where product_id=?', [quantity, product_id])
+        db.commit()
+        flash(FLASH_PRODUCT_EDITED)
+        return redirect(url_for('get_cart'))
     # otherwise add to cart
     else:
         db = get_db()
@@ -553,6 +561,7 @@ def add_product(product_id, quantity):
 @app.route('/<int:product_id>/remove_product')
 def remove_product(product_id):
     """Removes a product to the cart."""
+    print("HEEEYAAAX")
     # user musts be logged in to access cart functionality
     if 'user_id' not in session:
         flash(FLASH_SIGNIN_NEEDED)
@@ -830,6 +839,7 @@ def add_product_db():
             return False
 
     if request.method == 'POST':
+        print "hiiiii"
         photos = request.files
         if not request.form['producerid']:
             error = ERR_NO_PROD_PRODUCER_ID
