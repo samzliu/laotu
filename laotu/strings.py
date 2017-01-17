@@ -60,7 +60,9 @@ FLASH_REGISTERED =u'您已成功注册，可以立即登录'
 FLASH_UNLOGGED =u'您已退出登录'
 FLASH_SIGNIN_NEEDED =u'您必须先登录才能访问此功能'
 FLASH_CARTED =u'产品已添加到购物车'
-FLASH_CART_PRODUCT =u'您已经将此产品添加到您的购物车。您无法添加产品两次。如果您需要更改数量，请编辑您的购物车。'
+FLASH_PRODUCT_ALREADY_IN_CART =u'YOU ALREADY ADDED THIS PRODUCT ONCE, THE AMOUNT HAS BEEN INCREMENTED. TO ALTER THE AMOUNT GO TO YOUR CART'
+# perhaps add the product name and quantity to the flash message
+FLASH_PRODUCT_EDITED= "YOU HAVE EDITED THIS PRODUCT"
 FLASH_UNCARTED =u'产品已从购物车中删除'
 FLASH_CLEARED =u'购物车已清除'
 FLASH_UPDATED =u'购物车已更新'

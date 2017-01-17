@@ -1,0 +1,9 @@
+Flask==0.11
+Flask-Mail==0.9.1
+flask-secure-headers==0.6
+flask-sqlite-admin==0.3
+Flask-Uploads==0.2.1
+Jinja2==2.7.3
+jsonschema==2.4.0
+stripe==1.44.0
+Werkzeug==0.10.1
