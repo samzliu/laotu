@@ -10,7 +10,7 @@ conda create -n yourenvname python=x.x anaconda flask=0.11.1
 
 3. Initialize a python 2.7 virtual environment using
 
-source activate <yourenvname>
+source activate yourenvname
 
 4. Change directory to where you cloned the laotu repo
 
