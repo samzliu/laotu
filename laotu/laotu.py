@@ -35,7 +35,6 @@ PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
 
-UPLOAD_FOLDER = 'C:\\Users\\ericbornstein\\Documents\\College\\D4D\\laotu\\LaotuRepo\\laotu\\static\\photos'
 UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
 #UPLOADED_PHOTOS_DEST = 'C://static/photos'
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
@@ -859,9 +858,8 @@ def add_product_db():
         else:
             try:
                 filenames = [None]*7
-
+                # Consider making the names secure
                 if 'photo_1' in photos:
-                    print ("test")
                     file = request.files['photo_1']
                     if file:
                         filenames[0] = upload_photos.save(photos.get('photo_1'))
