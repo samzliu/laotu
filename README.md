@@ -2,21 +2,35 @@
 
 ~ To use:
 
-2. install the app from the root of the project directory
+1. Install anaconda: https://docs.continuum.io/anaconda/install
+
+2. Create a python 2.7 virtual environment
+
+conda create -n yourenvname python=x.x anaconda flask=0.11.1
+
+3. Initialize a python 2.7 virtual environment using
+
+source activate yourenvname
+
+4. Change directory to where you cloned the laotu repo
+
+5. Install the app from the root of the project directory (don't forget the ".")
 
 pip install --editable .
 
-3. tell flask about the right application:
+6. Tell flask about the right application and keys:
 
 export FLASK_APP=laotu
+export PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh
+export SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7
 
-4. fire up a shell and run this:
+7. Initialize the database:
 
 python -m flask initdb
 
-5. now you can run application in test mode:
+8. Run the application in test mode:
 
-PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7 python -m flask run
+python -m flask run
 
 the application will greet you onhttp://localhost:5000/
 
