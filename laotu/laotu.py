@@ -861,7 +861,7 @@ def add_product_db():
 
                 if 'photo_1' in photos:
                     filenames[0] = upload_photos.save(photos.get('photo_1'))
-                '''if 'photo_2' in photos:
+                if 'photo_2' in photos:
                     filenames[1] = upload_photos.save(photos.get('photo_2'))
                 if 'photo_3' in photos:
                     filenames[2] = upload_photos.save(photos.get('photo_3'))
@@ -872,7 +872,7 @@ def add_product_db():
                 if 'book_3' in photos:
                     filenames[5] = upload_photos.save(photos.get('book_3'))
                 if 'book_4' in photos:
-                    filenames[6] = upload_photos.save(photos.get('book_4'))'''
+                    filenames[6] = upload_photos.save(photos.get('book_4'))
 
             except UploadNotAllowed:
                 error = FLASH_UPLOAD_FORBIDDEN
