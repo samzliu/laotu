@@ -5,7 +5,7 @@
     {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
 
   
-      <form action="" method="post" class="sleek-form" onload="errorcheck()" enctype=multipart/form-data>
+      <form action="" method="post" class="sleek-form" onload="errorcheck()" enctype="multipart/form-data">
         <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True> 
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
         <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)" required=True>
@@ -25,7 +25,7 @@
         <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Comparative Pricing" cols="40" rows="5"></textarea>
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
         Product Photo 1 (required): 
-        <input type=file name=photo_1 required=True><br>
+        <input type=file name=photo_1 required=True accept="image/*"><br>
         Product Photo 2:
         <input type=file name=photo_2><br>
         Product Photo 3:

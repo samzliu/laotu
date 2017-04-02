@@ -11,6 +11,7 @@ from datetime import datetime
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack
 from werkzeug import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 import stripe
 import os
 from flask_sqlite_admin.core import sqliteAdminBlueprint
@@ -33,7 +34,6 @@ DATABASE = '/tmp/laotu.db'
 PER_PAGE = 30
 DEBUG = True
 SECRET_KEY = 'development key'
-
 
 UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
 #UPLOADED_PHOTOS_DEST = 'C://static/photos'
@@ -858,21 +858,35 @@ def add_product_db():
         else:
             try:
                 filenames = [None]*7
-
+                # Consider making the names secure
                 if 'photo_1' in photos:
-                    filenames[0] = upload_photos.save(photos.get('photo_1'))
+                    file = request.files['photo_1']
+                    if file:
+                        filenames[0] = upload_photos.save(photos.get('photo_1'))
                 if 'photo_2' in photos:
-                    filenames[1] = upload_photos.save(photos.get('photo_2'))
+                    file = request.files['photo_2']
+                    if file:
+                        filenames[1] = upload_photos.save(photos.get('photo_2'))
                 if 'photo_3' in photos:
-                    filenames[2] = upload_photos.save(photos.get('photo_3'))
+                    file = request.files['photo_3']
+                    if file:
+                        filenames[2] = upload_photos.save(photos.get('photo_3'))
                 if 'book_1' in photos:
-                    filenames[3] = upload_photos.save(photos.get('book_1'))
+                    file = request.files['book_1']
+                    if file:
+                        filenames[3] = upload_photos.save(photos.get('book_1'))
                 if 'book_2' in photos:
-                    filenames[4] = upload_photos.save(photos.get('book_2'))
+                    file = request.files['book_2']
+                    if file:
+                        filenames[4] = upload_photos.save(photos.get('book_2'))
                 if 'book_3' in photos:
-                    filenames[5] = upload_photos.save(photos.get('book_3'))
+                    file = request.files['book_3']
+                    if file:
+                        filenames[5] = upload_photos.save(photos.get('book_3'))
                 if 'book_4' in photos:
-                    filenames[6] = upload_photos.save(photos.get('book_4'))
+                    file = request.files['book_4']
+                    if file:
+                        filenames[6] = upload_photos.save(photos.get('book_4'))
 
             except UploadNotAllowed:
                 error = FLASH_UPLOAD_FORBIDDEN
