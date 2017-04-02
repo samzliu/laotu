@@ -805,20 +805,21 @@ def transaction_email_test():
 def stories():
     """Display the stories page."""
     #url = "http://xkcd.com/rss.xml"
-    url = "http://laotu.strikingly.com/blog/feed.xml"
-    try:
-        r = requests.get(url)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        #print soup.prettify()
-        #print soup.item
-        items = soup.find_all('item')
-        titles = [i.title.text for i in items]
-        descriptions = [i.description.text for i in items]
-        stories = zip(titles, descriptions)
-        #print stories
-    except:
-        print "That failed awfully, get a hold of yourself."
-    return render_template('stories.html', stories=stories)
+    # url = "http://laotu.strikingly.com/blog/feed.xml"
+    # try:
+    #     r = requests.get(url)
+    #     soup = BeautifulSoup(r.text, 'html.parser')
+    #     #print soup.prettify()
+    #     #print soup.item
+    #     items = soup.find_all('item')
+    #     titles = [i.title.text for i in items]
+    #     descriptions = [i.description.text for i in items]
+    #     stories = zip(titles, descriptions)
+    #     #print stories
+    # except:
+    #     print "That failed awfully, get a hold of yourself."
+    # return render_template('stories.html', stories=stories)
+    return redirect("http://laotu.strikingly.com/")
 
 @app.route('/<int:producer_id>/show_farmer')
 def show_farmer(producer_id):
