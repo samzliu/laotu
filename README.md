@@ -21,7 +21,9 @@ pip install --editable .
 6. Tell flask about the right application and keys:
 
 export FLASK_APP=laotu
+
 export PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh
+
 export SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7
 
 7. Initialize the database:
@@ -34,11 +36,11 @@ python -m flask run
 
 the application will greet you onhttp://localhost:5000/
 
+(Copied from previous readme)
 ~ Is it tested?
 
 You betcha.  Run the `python setup.py test` file to
 see the tests pass.
-
 
 
 Tasks:
