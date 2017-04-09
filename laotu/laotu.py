@@ -866,20 +866,23 @@ def add_product_db():
                 error = FLASH_UPLOAD_FORBIDDEN
                 errtype = 'uploaderror'
                 return render_template('add_product.html', error=error, errtype=errtype)
-            '''
-            if 'photo_2' in photos:
-                filenames[1] = upload_photos.save(photos.get('photo_2'))
-            if 'photo_3' in photos:
-                filenames[2] = upload_photos.save(photos.get('photo_3'))
-            if 'book_1' in photos:
-                filenames[3] = upload_photos.save(photos.get('book_1'))
-            if 'book_2' in photos:
-                filenames[4] = upload_photos.save(photos.get('book_2'))
-            if 'book_3' in photos:
-                filenames[5] = upload_photos.save(photos.get('book_3'))
-            if 'book_4' in photos:
-                filenames[6] = upload_photos.save(photos.get('book_4'))'''
+            try:
+                if 'photo_2' in photos:
+                    print ('photo_2' in photos)
+                    filenames[1] = upload_photos.save(photos.get('photo_2'))
+                if 'photo_3' in photos:
+                    filenames[2] = upload_photos.save(photos.get('photo_3'))
+                if 'book_1' in photos:
+                    filenames[3] = upload_photos.save(photos.get('book_1'))
+                if 'book_2' in photos:
+                    filenames[4] = upload_photos.save(photos.get('book_2'))
+                if 'book_3' in photos:
+                    filenames[5] = upload_photos.save(photos.get('book_3'))
+                if 'book_4' in photos:
+                    filenames[6] = upload_photos.save(photos.get('book_4'))
 
+            except UploadNotAllowed:
+                print ('Missing Extra photos')
 
 
             #store filename database
