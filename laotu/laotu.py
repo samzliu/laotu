@@ -35,8 +35,8 @@ DEBUG = True
 SECRET_KEY = 'development key'
 
 
-UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
-#UPLOADED_PHOTOS_DEST = 'C://static/photos'
+#UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
+UPLOADED_PHOTOS_DEST = 'C://static/photos'
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
@@ -383,7 +383,7 @@ def logout():
 
 ### Product, tag, and miscellaneous pages ###
 
-def render_listing(products_list=None, producer= None, tags_list=None, specific_tag=None, message=None, 
+def render_listing(products_list=None, producer= None, tags_list=None, specific_tag=None, message=None,
         tag_limit=True, preview_photo=None):
     overflow = (tags_list and len(tags_list) > 3 and tag_limit)
     if overflow:
@@ -479,7 +479,7 @@ def search_results(query):
         or product.title like ?
         or product.description like ?)""",
         ('%' + query + '%', '%' + query + '%', '%' + query + '%'))
-    tags = query_db("""select distinct tag.* from tag 
+    tags = query_db("""select distinct tag.* from tag
         inner join product
         inner join product_to_tag
         on ((product.product_id=product_to_tag.product_id
@@ -504,7 +504,7 @@ def show_product(product_id):
     photos = [product['product_photo_filename_1'],
                         product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
-    photos = [url_for('static', filename='photos/' + photo) for photo in photos if photo] 
+    photos = [url_for('static', filename='photos/' + photo) for photo in photos if photo]
     stories = [product['laotu_book_photo_filename_1'],\
                         product['laotu_book_photo_filename_2'],\
                         product['laotu_book_photo_filename_3'],\
@@ -530,7 +530,7 @@ def get_cart():
                         where cart.user_id = ?''',[session['user_id']])
     total = 0
     for item in items:
-        total += float(item['quantity']) * float(item['price'])/float(100)
+        total += float(item['quantity']) * float(item['price'])/float(10)
     return render_template('cart.html', items=items, total=total)
 
 @app.route('/<int:product_id>/<int:quantity>/add_product')
@@ -545,14 +545,14 @@ def add_product(product_id, quantity):
         abort(404)
     # if product is already in the user's cart, flash a message
     elif query_db('select 1 from cart where product_id = ?', [product_id], one=True) and not request.args.get('prev'):
-        db = get_db()        
+        db = get_db()
         db.execute('update cart set quantity = quantity + ? where product_id=?', [quantity, product_id])
         db.commit()
         flash(FLASH_PRODUCT_ALREADY_IN_CART)
         return redirect(url_for('show_products_list'))
     # if the add was accessed from the cart, meaning the user is editing an order
     elif query_db('select 1 from cart where product_id = ?', [product_id], one=True) and request.args.get('prev') == url_for('get_cart'):
-        db = get_db()    
+        db = get_db()
         db.execute('update cart set quantity=? where product_id=?', [quantity, product_id])
         db.commit()
         flash(FLASH_PRODUCT_EDITED)
@@ -673,12 +673,12 @@ def pay():
                                     from cart join product on cart.product_id=
                                     product.product_id''', one=True)[0]
     # if the user is spending less than 5 yuan, flash message
-    if session['amount'] < 500:
+    if session['amount'] < 50:
         flash(FLASH_AMOUNT_TOO_SMALL)
         return redirect(url_for('get_cart'))
     print "before render"
     return render_template('pay.html', key=stripe_keys['publishable_key'],
-                            amount=session['amount'],
+                            amount=session['amount'] * 10,
                             transaction_ids=session['transaction_ids'])
 
 def undo_hold(transaction_ids, user_id):
@@ -760,14 +760,14 @@ def charge():
         db.execute('update trans set confirmed=1 where trans_id=?', [trans_id])
         # get product info for email
         product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
-        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0], 
+        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0],
                          'quantity': product['quantity'],
                          'price': product['amount']})
-        totalprice += product['amount']        
-    
+        totalprice += product['amount']
+
     # send order confirmation email
-    send_mail([query_db('select email from user where user_id=?',[session['user_id']])[0][0]], 
-                PURCHASE_CONFIRMATION_EMAIL_SUBJECT, 
+    send_mail([query_db('select email from user where user_id=?',[session['user_id']])[0][0]],
+                PURCHASE_CONFIRMATION_EMAIL_SUBJECT,
                 render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
                 render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
 
@@ -789,12 +789,12 @@ def transaction_email_test():
     totalprice = 0
     for trans_id in session['transaction_ids']:
         product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
-        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0], 
+        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0],
                          'quantity': product['quantity'],
                          'price': product['amount']})
         totalprice += product['amount']
-    # must have an EMAIL_TEST_RECIPIENT to send test email    
-    # send_mail([EMAIL_TEST_RECIPIENT], 'test mail from laotu', 
+    # must have an EMAIL_TEST_RECIPIENT to send test email
+    # send_mail([EMAIL_TEST_RECIPIENT], 'test mail from laotu',
                 # render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
                 # render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
 
@@ -805,20 +805,22 @@ def transaction_email_test():
 def stories():
     """Display the stories page."""
     #url = "http://xkcd.com/rss.xml"
-    url = "http://laotu.strikingly.com/blog/feed.xml"
-    try:
-        r = requests.get(url)
-        soup = BeautifulSoup(r.text, 'html.parser') 
-        #print soup.prettify()
-        #print soup.item
-        items = soup.find_all('item')
-        titles = [i.title.text for i in items]
-        descriptions = [i.description.text for i in items]
-        stories = zip(titles, descriptions)
-        #print stories
-    except:
-        print "That failed awfully, get a hold of yourself."
-    return render_template('stories.html', stories=stories)
+    # url = "http://laotu.strikingly.com/blog/feed.xml"
+    # try:
+    #     r = requests.get(url)
+    #     soup = BeautifulSoup(r.text, 'html.parser')
+    #     #print soup.prettify()
+    #     #print soup.item
+    #     items = soup.find_all('item')
+    #     titles = [i.title.text for i in items]
+    #     descriptions = [i.description.text for i in items]
+    #     stories = zip(titles, descriptions)
+    #     #print stories
+    # except:
+    #     print "That failed awfully, get a hold of yourself."
+    # return render_template('stories.html', stories=stories)
+    return redirect("http://laotu.strikingly.com/")
+
 
 @app.route('/<int:producer_id>/show_farmer')
 def show_farmer(producer_id):
@@ -856,12 +858,17 @@ def add_product_db():
             error = ERR_INVALID_PROD_PRODUCER_ID
             errtype = 'producerid'
         else:
+            filenames = [None]*7
             try:
-                filenames = [None]*7
+                filenames[0] = upload_photos.save(photos.get('photo_1'))
 
-                if 'photo_1' in photos:
-                    filenames[0] = upload_photos.save(photos.get('photo_1'))
+            except UploadNotAllowed:
+                error = FLASH_UPLOAD_FORBIDDEN
+                errtype = 'uploaderror'
+                return render_template('add_product.html', error=error, errtype=errtype)
+            try:
                 if 'photo_2' in photos:
+                    print ('photo_2' in photos)
                     filenames[1] = upload_photos.save(photos.get('photo_2'))
                 if 'photo_3' in photos:
                     filenames[2] = upload_photos.save(photos.get('photo_3'))
@@ -875,9 +882,8 @@ def add_product_db():
                     filenames[6] = upload_photos.save(photos.get('book_4'))
 
             except UploadNotAllowed:
-                error = FLASH_UPLOAD_FORBIDDEN
-                errtype = 'uploaderror'
-                return render_template('add_product.html', error=error, errtype=errtype)
+                print ('Missing Extra photos')
+
 
             #store filename database
             db = get_db()

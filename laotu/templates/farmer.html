@@ -17,7 +17,7 @@
             <h1>{{ product.title }}</h1>
           </div>
           <div class="product-price">
-            <h2>&#165 {{ product.price/100 }}</h2>
+            <h2>&#165 {{ product.price/10 }}</h2>
           </div>
         </div>
       </div>
@@ -26,7 +26,7 @@
   {% else %}
     <footer class="panel-footer">
       <!-- producer currently has no products -->
-      <em>{{producer.user_name}} 目前没有产品。</em> 
+      <em>{{producer.user_name}} 目前没有产品。</em>
       <a href="{{ url_for('get_cart')}}">去购物车</a>
   </footer>
   {% endif %}
