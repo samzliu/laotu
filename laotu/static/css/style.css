@@ -312,7 +312,7 @@ input {
     border-bottom: 1px solid green;
     color: black;
 
-    display: block;
+    display: run-in;
     width: 70%; 
     max-width: 460px;
 
