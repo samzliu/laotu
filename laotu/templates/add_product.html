@@ -6,8 +6,13 @@
 
   
       <form action="" method="post" class="sleek-form" onload="errorcheck()" enctype=multipart/form-data>
-        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True> 
+         
+        <div style="border:1px solid green">Product title<input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True></div>
+        <div class="form-text" style="border:1px solid green"> Title
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
+        </div>
+
+
         <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)" required=True>
         <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5" required=True></textarea>
         {% if error and errtype=="producerid" %}
@@ -38,6 +43,7 @@
         <input type=file name=book_3><br>
         LaoTu Book Page 4:
         <input type=file name=book_4><br>
+        
 
         <h1>Organic Certifications</h1>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_1" value="{{ request.form.ORGANIC_CERT_1 }}"> 中国国家有机认证 <br>
