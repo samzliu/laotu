@@ -36,7 +36,7 @@ SECRET_KEY = 'development key'
 
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
-UPLOADED_PHOTOS_DEST = 'C://static/photos'
+UPLOADED_PHOTOS_DEST = 'laotu/static/photos'
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
@@ -504,7 +504,7 @@ def show_product(product_id):
     photos = [product['product_photo_filename_1'],
                         product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
-    photos = [url_for('static', filename='photos/' + photo) for photo in photos if photo]
+    photos = [photo for photo in photos if photo]
     stories = [product['laotu_book_photo_filename_1'],\
                         product['laotu_book_photo_filename_2'],\
                         product['laotu_book_photo_filename_3'],\

@@ -14,8 +14,9 @@
 			<div class="product-img-lst">
 			{% for photo in photos %}
 				{% if photo%}
+				{{photo}}
 				<div class="img-lst-element" onclick="updateMainPic('product', '{{ photo }}')">
-					<img src="{{ photo }}" style="max-width:100%; max-height:100%; border: 1px solid green; margin:auto; display: block">
+					<img src="{{ url_for('static', filename=['photos', photo.filename ]|join('/')) }}" style="max-width:100%; max-height:100%; border: 1px solid green; margin:auto; display: block">
 				</div>
 				{% endif %}
 			{% endfor %}
