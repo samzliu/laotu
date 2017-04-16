@@ -300,10 +300,21 @@ input {
     padding: .5rem;
 }
 
+label {
+    display: inline;
+    width: 140px;
+    text-align: right;
+}
+
+.form-title {
+    text-align: center;
+
+}
+
 .form-text, .form-password {
     position: relative;
-    left: -30px;
-    margin: 1rem auto;
+/*    left: -30px;
+*/    margin: 1rem auto;
     padding: .5rem;
 
     background: transparent;
@@ -312,7 +323,7 @@ input {
     border-bottom: 1px solid green;
     color: black;
 
-    display: run-in;
+    display: block;
     width: 70%; 
     max-width: 460px;
 
@@ -321,8 +332,8 @@ input {
 
 .form-paragraph {
     position: relative;
-    left: -30px;
-    margin: 1rem auto;
+/*    left: -30px;
+*/    margin: 1rem auto;
     padding: .5rem;
 
     font-size: 8pt;
