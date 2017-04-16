@@ -504,7 +504,7 @@ def show_product(product_id):
     photos = [product['product_photo_filename_1'],
                         product['product_photo_filename_2'],
                         product['product_photo_filename_3']]
-    photos = [photo for photo in photos if photo]
+    photos = [url_for('static', filename='photos/' + p) for p in photos if p]
     stories = [product['laotu_book_photo_filename_1'],\
                         product['laotu_book_photo_filename_2'],\
                         product['laotu_book_photo_filename_3'],\
