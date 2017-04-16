@@ -11,40 +11,60 @@
         <div class="form-text" style="border:1px solid green"> Title
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
         </div> -->
-        <div class="form-title"> Product title </div>
-        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True>
-        <div class="form-title"> Product quantity</div>
-        <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
-        <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)" required=True>
-        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5" required=True></textarea>
+        <div class="form-title">Product title </div>
+        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}"  required=True>
+        <div class="form-title">Product quantity</div>
+        <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" required=True>
+        <div class="form-title">Product price</div>
+        <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}"  required=True>
+        <div class="form-title">Product description</div>
+        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" cols="40" rows="5" required=True></textarea>
         {% if error and errtype=="producerid" %}
-        <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" placeholder="ID of producer" required=True>
+        <div class="form-title"> Producer ID</div>
+        <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" required=True>
         {% else %}
-        <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer" required = True>
+        <div class="form-title">Producer ID</div>
+        <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" required = True>
         {% endif %}
-        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Geographic Location and Enviroment" cols="40" rows="5"></textarea>
-        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Producer" cols="40" rows="5"></textarea>
-        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Raw Materials" cols="40" rows="5"></textarea>
-        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="Production Method" cols="40" rows="5"></textarea>
-        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Storage" cols="40" rows="5"></textarea>
-        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Technologies" cols="40" rows="5"></textarea>
-        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Packaging and Shipping" cols="40" rows="5"></textarea>
-        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Comparative Pricing" cols="40" rows="5"></textarea>
+        <div class="form-title">Geographic location and environment</div>
+        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" cols="40" rows="5"></textarea>
+        <div class="form-title">Producer</div>
+        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" cols="40" rows="5"></textarea>
+        <div class="form-title">Raw materials</div>
+        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" cols="40" rows="5"></textarea>
+        <div class="form-title">Production method</div>
+        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}"cols="40" rows="5"></textarea>
+        <div class="form-title">Storage</div>
+        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}"  cols="40" rows="5"></textarea>
+        <div class="form-title">Technologies</div>
+        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}"  cols="40" rows="5"></textarea>
+        <div class="form-title">Packaging and shipping</div>
+        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" cols="40" rows="5"></textarea>
+        <div class="form-title">Comparative pricing</div>
+        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" cols="40" rows="5"></textarea>
+        <div class="form-title">Tags</div>
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
+        <div class="form-files">
         Product Photo 1 (required): 
-        <input type=file name=photo_1 class="form-text" required=True><br>
+        <input type=file name=photo_1 required=True><br></div>
+        <div class="form-files">
         Product Photo 2:
-        <input type=file name=photo_2><br>
+        <input type=file name=photo_2><br></div>
+        <div class="form-files">
         Product Photo 3:
-        <input type=file name=photo_3><br>
+        <input type=file name=photo_3><br></div>
+        <div class="form-files">
         LaoTu Book Page 1:
-        <input type=file name=book_1><br>
+        <input type=file name=book_1><br></div>
+        <div class="form-files">
         LaoTu Book Page 2:
-        <input type=file name=book_2><br>
+        <input type=file name=book_2><br></div>
+        <div class="form-files">
         LaoTu Book Page 3:
-        <input type=file name=book_3><br>
+        <input type=file name=book_3><br></div>
+        <div class="form-files">
         LaoTu Book Page 4:
-        <input type=file name=book_4><br>
+        <input type=file name=book_4><br></div>
         
 
         <h1>Organic Certifications</h1>

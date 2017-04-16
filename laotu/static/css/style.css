@@ -330,6 +330,16 @@ label {
     transition: 250ms background ease-in;
 }
 
+.form-files {
+    margin: 1rem auto;
+    padding: .5rem;
+    display: block;
+    width: 70%; 
+    max-width: 460px;
+
+    transition: 250ms background ease-in;
+}
+
 .form-paragraph {
     position: relative;
 /*    left: -30px;
@@ -340,7 +350,7 @@ label {
 
     background: transparent;
     outline: none;
-    border: 0 solid;
+    border: 1px solid green;
     border-bottom: 1px solid green;
     color: black;
 
