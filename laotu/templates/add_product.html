@@ -6,24 +6,43 @@
 
   
       <form action="" method="post" class="sleek-form" onload="errorcheck()" enctype=multipart/form-data>
-         
-        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True>
+<!--         <div style="border:1px solid green">Product title<input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}" placeholder="Product title" required=True></div>
+        <div class="form-text" style="border:1px solid green"> Title
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
-        <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}" placeholder="Product price (in jiao)" required=True>
-        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" placeholder="Product description" cols="40" rows="5" required=True></textarea>
+        </div> -->
+        <div class="form-title">Product title </div>
+        <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}"  required=True>
+        <div class="form-title">Product quantity</div>
+        <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" required=True>
+        <div class="form-title">Product price</div>
+        <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}"  required=True>
+        <div class="form-title">Product description</div>
+        <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" cols="40" rows="5" required=True></textarea>
+
         {% if error and errtype=="producerid" %}
-        <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" placeholder="ID of producer" required=True>
+        <div class="form-title"> Producer ID</div>
+        <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" required=True>
         {% else %}
-        <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" placeholder="ID of producer" required = True>
+        <div class="form-title">Producer ID</div>
+        <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" required = True>
         {% endif %}
-        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" placeholder="Geographic Location and Enviroment" cols="40" rows="5"></textarea>
-        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" placeholder="Producer" cols="40" rows="5"></textarea>
-        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" placeholder="Raw Materials" cols="40" rows="5"></textarea>
-        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}" placeholder="Production Method" cols="40" rows="5"></textarea>
-        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}" placeholder="Storage" cols="40" rows="5"></textarea>
-        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}" placeholder="Technologies" cols="40" rows="5"></textarea>
-        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" placeholder="Packaging and Shipping" cols="40" rows="5"></textarea>
-        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" placeholder="Comparative Pricing" cols="40" rows="5"></textarea>
+        <div class="form-title">Geographic location and environment</div>
+        <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" cols="40" rows="5"></textarea>
+        <div class="form-title">Producer</div>
+        <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" cols="40" rows="5"></textarea>
+        <div class="form-title">Raw materials</div>
+        <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" cols="40" rows="5"></textarea>
+        <div class="form-title">Production method</div>
+        <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}"cols="40" rows="5"></textarea>
+        <div class="form-title">Storage</div>
+        <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}"  cols="40" rows="5"></textarea>
+        <div class="form-title">Technologies</div>
+        <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}"  cols="40" rows="5"></textarea>
+        <div class="form-title">Packaging and shipping</div>
+        <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" cols="40" rows="5"></textarea>
+        <div class="form-title">Comparative pricing</div>
+        <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" cols="40" rows="5"></textarea>
+        <div class="form-title">Tags</div>
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
 
         <div class="add-product-photos">
@@ -51,13 +70,10 @@
             <input type=file id=book_2 accept="image/*" onchange="loadFile(event, 'story', 2)" style="visibility: hidden">
             <input type=file id=book_3 accept="image/*" onchange="loadFile(event, 'story', 3)" style="visibility: hidden">
             <input type=file id=book_4 accept="image/*" onchange="loadFile(event, 'story', 4)" style="visibility: hidden">
-        </div>
-
-        <script>
-            
-        </script>
+        </div>     
         
-        <h1>Organic Certifications</h1>
+        <div class="form-files">
+        <h1>有机认证</h1> <!-- Organic Certifications -->
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_1" value="{{ request.form.ORGANIC_CERT_1 }}"> 中国国家有机认证 <br>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_2" value="{{ request.form.ORGANIC_CERT_2 }}"> 美国有机认证<br>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_3" value="{{ request.form.ORGANIC_CERT_3 }}"> 其他国际有机认证<br>
@@ -67,24 +83,33 @@
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_7" value="{{ request.form.ORGANIC_CERT_7 }}"> PGS体系认证<br>
         <input class="form-checkbox" type="checkbox" name="ORGANIC_CERT_8" value="{{ request.form.ORGANIC_CERT_8 }}"> 欧盟有机认证<br>
         <input class="form-checkbox" type="checkbox" name="QUALITY_CERT_1" value="{{ request.form.QUALITY_CERT_1 }}"> 绿色食品认证<br>
-        <input class="form-checkbox" type="checkbox" name="QUALITY_CERT_2" value="{{ request.form.QUALITY_CERT_2 }}">  无公害食品认证<br>
-        <h1>Producer Benefits</h1>
+        <input class="form-checkbox" type="checkbox" name="QUALITY_CERT_2" value="{{ request.form.QUALITY_CERT_2 }}">  无公害食品认证<br></div>
+
+        <div class="form-files">
+        <h1>生产者利益</h1> <!-- Producer Benefits -->
         <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_1" value="{{ request.form.PRODUCER_BENIFIT_1 }}"> 公平贸易认证<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_2" value="{{ request.form.PRODUCER_BENIFIT_2 }}"> 没有公平贸易认证但是实际操作是公平贸易<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_3" value="{{ request.form.PRODUCER_BENIFIT_3 }}"> 来自女性生产者<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_4" value="{{ request.form.PRODUCER_BENIFIT_4 }}"> 来自残障人士生产者<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_5" value="{{ request.form.PRODUCER_BENIFIT_5 }}"> 来自老年生产者<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_6" value="{{ request.form.PRODUCER_BENIFIT_6 }}"> 来自农民工生产者<br>
-        <h1>Consumer Benefits</h1>
-        <input class="form-checkbox" type="checkbox" name="CONSUMER_BENIFIT_1" value="{{ request.form.CONSUMER_BENIFIT_1 }}"> 实际操作上消费者得到同类产品市场较低价格（公平定价)<br>
-        <h1>Local Certifications</h1>
+        <input class="form-checkbox" type="checkbox" name="PRODUCER_BENIFIT_6" value="{{ request.form.PRODUCER_BENIFIT_6 }}"> 来自农民工生产者<br></div>
+
+        <div class="form-files">
+        <h1>消费者利益</h1> <!-- Consumer Benefits -->
+        <input class="form-checkbox" type="checkbox" name="CONSUMER_BENIFIT_1" value="{{ request.form.CONSUMER_BENIFIT_1 }}"> 实际操作上消费者得到同类产品市场较低价格（公平定价)<br></div>
+
+        <div class="form-files">
+        <h1>本地认证</h1> <!-- Local certifications —-->
         <input class="form-checkbox" type="checkbox" name="LOCAL_1" value="{{ request.form.LOCAL_1 }}"> 本地留种<br>
         <input class="form-checkbox" type="checkbox" name="LOCAL_2" value="{{ request.form.LOCAL_2 }}"> 本地传统物种<br>
-        <input class="form-checkbox" type="checkbox" name="LOCAL_3" value="{{ request.form.LOCAL_3 }}"> 本地生产本地销售<br>
-        <h1>Package stuff</h1>
+        <input class="form-checkbox" type="checkbox" name="LOCAL_3" value="{{ request.form.LOCAL_3 }}"> 本地生产本地销售<br></div>
+
+        <div class="form-files">
+        <h1>打包</h1> <!-- Packaging —-->
         <input class="form-checkbox" type="checkbox" name="PACKAGE_1" value="{{ request.form.PACKAGE_1 }}"> 环保材料包装<br>
-        <input class="form-checkbox" type="checkbox" name="PACKAGE_2" value="{{ request.form.PACKAGE_2 }}"> 废旧材料包装<br>
-        <h1>Ethnic stuff</h1>
+        <input class="form-checkbox" type="checkbox" name="PACKAGE_2" value="{{ request.form.PACKAGE_2 }}"> 废旧材料包装<br></div>
+        <div class="form-files">
+        <h1>种族</h1> <!-- Ethnicity —-->
         <input class="form-checkbox" type="checkbox" name="ETHNIC_1" value="{{ request.form.ETHNIC_1 }}"> 藏区<br>
         <input class="form-checkbox" type="checkbox" name="ETHNIC_2" value="{{ request.form.ETHNIC_2 }}"> 内蒙古少数民族<br>
         <input class="form-checkbox" type="checkbox" name="ETHNIC_3" value="{{ request.form.ETHNIC_3 }}"> 西北少数民族<br>
@@ -94,18 +119,22 @@
         <input class="form-checkbox" type="checkbox" name="ETHNIC_7" value="{{ request.form.ETHNIC_7 }}"> 华北少数民族<br>
         <input class="form-checkbox" type="checkbox" name="ETHNIC_8" value="{{ request.form.ETHNIC_8 }}"> 江浙沪少数民族<br>
         <input class="form-checkbox" type="checkbox" name="ETHNIC_9" value="{{ request.form.ETHNIC_9 }}"> 长江中游少数民族<br>
-        <input class="form-checkbox" type="checkbox" name="ETHNIC_10" value="{{ request.form.ETHNIC_10 }}"> 珠三角少数民族<br>
-        <h1>Production stuff</h1>
+        <input class="form-checkbox" type="checkbox" name="ETHNIC_10" value="{{ request.form.ETHNIC_10 }}"> 珠三角少数民族<br></div>
+
+        <div class="form-files">
+        <h1>生产方式</h1> <!-- Production Method —-->
         <input class="form-checkbox" type="checkbox" name="PRODUCTION_1" value="{{ request.form.PRODUCTION_1 }}"> 安全种子<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCTION_2" value="{{ request.form.PRODUCTION_2 }}"> 无农药<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCTION_3" value="{{ request.form.PRODUCTION_3 }}"> 无化肥<br>
         <input class="form-checkbox" type="checkbox" name="PRODUCTION_4" value="{{ request.form.PRODUCTION_4 }}"> 散养<br>
-        <input class="form-checkbox" type="checkbox" name="PRODUCTION_5" value="{{ request.form.PRODUCTION_5 }}"> 不使用化学饲料<br>
-        <h1>Craft stuff</h1>
+        <input class="form-checkbox" type="checkbox" name="PRODUCTION_5" value="{{ request.form.PRODUCTION_5 }}"> 不使用化学饲料<br></div>
+        <div class="form-files">
+            
+        <h1>工艺信息</h1> <!-- Craft Information -->
         <input class="form-checkbox" type="checkbox" name="CRAFT_1" value="{{ request.form.CRAFT_1 }}"> 本地生产的原料<br>
         <input class="form-checkbox" type="checkbox" name="CRAFT_2" value="{{ request.form.CRAFT_2 }}"> 可降解原料<br>
         <input class="form-checkbox" type="checkbox" name="CRAFT_3" value="{{ request.form.CRAFT_3 }}"> 传统使用的原料<br>
-        <input class="form-checkbox" type="checkbox" name="CRAFT_4" value="{{ request.form.CRAFT_4 }}"> 传统工艺<br>
+        <input class="form-checkbox" type="checkbox" name="CRAFT_4" value="{{ request.form.CRAFT_4 }}"> 传统工艺<br></div>
 
         <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
       </form>  
