@@ -36,7 +36,9 @@ SECRET_KEY = 'development key'
 
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
+
 UPLOADED_PHOTOS_DEST = 'laotu/static/photos'
+
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
@@ -49,7 +51,7 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 # gmail config:
 # DEFAULT_EMAIL_SENDER = os.environ['EMAIL_ADDRESS']
 # DEFAULT_EMAIL_PASSWORD = os.environ['EMAIL_PW']
-DEFAULT_EMAIL_SENDER = 'natsapptester@gmail.com'
+DEFAULT_EMAIL_SENDER = 'laotud4d@gmail.com'
 DEFAULT_EMAIL_PASSWORD = 'securepassword123'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
