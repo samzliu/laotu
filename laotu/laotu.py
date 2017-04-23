@@ -767,7 +767,6 @@ def charge():
                          'price': product['amount']})
         totalprice += product['amount']
 
-    print ([query_db('select email from user where user_id=?',[session['user_id']])[0][0]])
     # send order confirmation email
     send_mail([ADMIN_EMAIL, query_db('select email from user where user_id=?',[session['user_id']])[0][0]],
                 PURCHASE_CONFIRMATION_EMAIL_SUBJECT,
