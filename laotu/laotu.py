@@ -57,8 +57,10 @@ app.config['MAIL_USERNAME'] = DEFAULT_EMAIL_SENDER
 app.config['MAIL_PASSWORD'] = DEFAULT_EMAIL_PASSWORD
 app.config['MAIL_USE_SSL'] = True
 
+ADMIN_EMAIL = "natsapptester@gmail.com"
+
 # receives test emails:
-EMAIL_TEST_RECIPIENT = ''
+EMAIL_TEST_RECIPIENT = 'natsapptester@gmail.com'
 
 
 mail = Mail(app)
@@ -765,12 +767,12 @@ def charge():
                          'price': product['amount']})
         totalprice += product['amount']
 
+    print ([query_db('select email from user where user_id=?',[session['user_id']])[0][0]])
     # send order confirmation email
-    send_mail([query_db('select email from user where user_id=?',[session['user_id']])[0][0]],
+    send_mail([ADMIN_EMAIL, query_db('select email from user where user_id=?',[session['user_id']])[0][0]],
                 PURCHASE_CONFIRMATION_EMAIL_SUBJECT,
                 render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
                 render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
-
     # empty the cart
     db.execute('''delete from cart where user_id = ?''', [session['user_id']])
     db.commit()
@@ -787,16 +789,17 @@ def transaction_email_test():
     db = get_db()
     itemlist = []
     totalprice = 0
-    for trans_id in session['transaction_ids']:
-        product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
-        itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0],
-                         'quantity': product['quantity'],
-                         'price': product['amount']})
-        totalprice += product['amount']
+    if 'transaction_ids' in session:
+        for trans_id in session['transaction_ids']:
+            product=query_db('select product_id, quantity, amount from trans where trans_id=?', [trans_id])[0]
+            itemlist.append({'name': query_db('select title from product where product_id=?',[product['product_id']])[0][0],
+                             'quantity': product['quantity'],
+                             'price': product['amount']})
+            totalprice += product['amount']
     # must have an EMAIL_TEST_RECIPIENT to send test email
-    # send_mail([EMAIL_TEST_RECIPIENT], 'test mail from laotu',
-                # render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
-                # render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
+    send_mail([EMAIL_TEST_RECIPIENT], 'test mail from laotu', 
+        render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice),
+        render_template('transaction_email.html', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice))
 
     return render_template('transaction_email.txt', name=query_db('select name from user where user_id=?', [session['user_id']])[0][0], items=itemlist, purchasetotal=totalprice)
 
