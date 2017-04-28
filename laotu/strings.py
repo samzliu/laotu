@@ -7,82 +7,82 @@
 """
 
 #Error messages ...............................................................
-# ERR_INVALID_EMAIL = 'Invalid email'
-# ERR_INVALID_PWD   = 'Invalid password'
-# ERR_NO_NAME    = 'You have to enter a name'
-# ERR_NO_ADDRESS = 'You have to enter an address'
-# ERR_NO_PHONE   = 'You have to enter a phone number'
-# ERR_INVALID_PHONE = 'Invalid phone number'
-# ERR_NO_EMAIL = 'You have to enter an email address'
-# ERR_NO_PWD   = 'You have to enter a password and confirm it'
-# ERR_MISMATCH = 'The two passwords do not match'
-# ERR_EMAIL_TAKEN = 'The email is already taken'
+ERR_INVALID_EMAIL = 'Invalid email'
+ERR_INVALID_PWD   = 'Invalid password'
+ERR_NO_NAME    = 'You have to enter a name'
+ERR_NO_ADDRESS = 'You have to enter an address'
+ERR_NO_PHONE   = 'You have to enter a phone number'
+ERR_INVALID_PHONE = 'Invalid phone number'
+ERR_NO_EMAIL = 'You have to enter an email address'
+ERR_NO_PWD   = 'You have to enter a password and confirm it'
+ERR_MISMATCH = 'The two passwords do not match'
+ERR_EMAIL_TAKEN = 'The email is already taken'
 
 
 # #Flashes ......................................................................
-# FLASH_LOGGED = 'You were logged in'
-# FLASH_REGISTERED = 'You were succesfully registered and can log in now'
-# FLASH_UNLOGGED = 'You were logged out'
-# FLASH_SIGNIN_NEEDED = 'You must sign in first to access this functionality'
-# FLASH_CARTED = 'The product has been added to the cart'
-# FLASH_CART_PRODUCT = 'You have already added this product to your cart. You cannot add a product twice. If you need to change the quantity, please edit your cart.'
-# FLASH_UNCARTED = 'The product has been removed from the cart'
-# FLASH_CLEARED = 'The cart has been cleared'
-# FLASH_UPDATED = 'The cart has been updated'
-# FLASH_PURCHASE = 'Your purchase was succesful'
-# FLASH_UPLOAD_FIELDS = "You must fill in all the fields"
-# FLASH_UPLOAD_FORBIDDEN = "The upload was not allowed"
-# FLASH_UPLOAD_SUCCESSFUL = "Upload successful"
-# FLASH_OUT_OF_STOCK = "We do not have enough %s in our inventory. Please change the quantity of meat you would like to purchase, or remove the item from your shopping cart."
-# FLASH_PAYMENT_ERROR = 'There was an error during payment and the transaction failed. You were not charged.'
-# FLASH_NO_PURCHASES = "You have nothing in your cart. Please add items before paying."
-# FLASH_PROD_ADD_SUCCESSFUL='Added product to database!'
+FLASH_LOGGED = 'You were logged in'
+FLASH_REGISTERED = 'You were succesfully registered and can log in now'
+FLASH_UNLOGGED = 'You were logged out'
+FLASH_SIGNIN_NEEDED = 'You must sign in first to access this functionality'
+FLASH_CARTED = 'The product has been added to the cart'
+FLASH_CART_PRODUCT = 'You have already added this product to your cart. You cannot add a product twice. If you need to change the quantity, please edit your cart.'
+FLASH_UNCARTED = 'The product has been removed from the cart'
+FLASH_CLEARED = 'The cart has been cleared'
+FLASH_UPDATED = 'The cart has been updated'
+FLASH_PURCHASE = 'Your purchase was succesful'
+FLASH_UPLOAD_FIELDS = "You must fill in all the fields"
+FLASH_UPLOAD_FORBIDDEN = "The upload was not allowed"
+FLASH_UPLOAD_SUCCESSFUL = "Upload successful"
+FLASH_OUT_OF_STOCK = "We do not have enough %s in our inventory. Please change the quantity of meat you would like to purchase, or remove the item from your shopping cart."
+FLASH_PAYMENT_ERROR = 'There was an error during payment and the transaction failed. You were not charged.'
+FLASH_NO_PURCHASES = "You have nothing in your cart. Please add items before paying."
+FLASH_PROD_ADD_SUCCESSFUL='Added product to database!'
 
 
 #Error messages ...............................................................
-ERR_INVALID_EMAIL =u'无效的电子邮件'
-ERR_INVALID_PWD =u'密码无效'
-ERR_NO_NAME =u'您必须输入名称'
-ERR_NO_ADDRESS =u'您必须输入地址'
-ERR_NO_PHONE =u'您必须输入电话号码'
-ERR_INVALID_PHONE =u'电话号码无效'
-ERR_NO_EMAIL =u'您必须输入电子邮件地址'
-ERR_NO_PWD =u'您必须输入密码并确认'
-ERR_MISMATCH =u'这两个密码不匹配'
-ERR_EMAIL_TAKEN =u'电子邮件已被占用'
+# ERR_INVALID_EMAIL =u'无效的电子邮件'
+# ERR_INVALID_PWD =u'密码无效'
+# ERR_NO_NAME =u'您必须输入名称'
+# ERR_NO_ADDRESS =u'您必须输入地址'
+# ERR_NO_PHONE =u'您必须输入电话号码'
+# ERR_INVALID_PHONE =u'电话号码无效'
+# ERR_NO_EMAIL =u'您必须输入电子邮件地址'
+# ERR_NO_PWD =u'您必须输入密码并确认'
+# ERR_MISMATCH =u'这两个密码不匹配'
+# ERR_EMAIL_TAKEN =u'电子邮件已被占用'
 ERR_NOT_ADMIN = "User is not an admin"
 
 
 
-#Flashes ................................................ ......................
-FLASH_LOGGED =u'您已登录'
-FLASH_REGISTERED =u'您已成功注册，可以立即登录'
-FLASH_UNLOGGED =u'您已退出登录'
-FLASH_SIGNIN_NEEDED =u'您必须先登录才能访问此功能'
-FLASH_CARTED =u'产品已添加到购物车'
+# #Flashes ................................................ ......................
+# FLASH_LOGGED =u'您已登录'
+# FLASH_REGISTERED =u'您已成功注册，可以立即登录'
+# FLASH_UNLOGGED =u'您已退出登录'
+# FLASH_SIGNIN_NEEDED =u'您必须先登录才能访问此功能'
+# FLASH_CARTED =u'产品已添加到购物车'
 FLASH_PRODUCT_ALREADY_IN_CART =u'YOU ALREADY ADDED THIS PRODUCT ONCE, THE AMOUNT HAS BEEN INCREMENTED. TO ALTER THE AMOUNT GO TO YOUR CART'
-# perhaps add the product name and quantity to the flash message
+# # perhaps add the product name and quantity to the flash message
 FLASH_PRODUCT_EDITED= "YOU HAVE EDITED THIS PRODUCT"
-FLASH_UNCARTED =u'产品已从购物车中删除'
-FLASH_CLEARED =u'购物车已清除'
-FLASH_UPDATED =u'购物车已更新'
+# FLASH_UNCARTED =u'产品已从购物车中删除'
+# FLASH_CLEARED =u'购物车已清除'
+# FLASH_UPDATED =u'购物车已更新'
 FLASH_AMOUNT_TOO_SMALL =u'我们不能接受5元以下的购买'
-FLASH_PURCHASE =u'您的购买成功'
-FLASH_UPLOAD_FIELDS =u'您必须填写所有字段'
-FLASH_UPLOAD_FORBIDDEN =u'上传不允许'
-FLASH_UPLOAD_SUCCESSFUL =u'上传成功'
-FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购买的%s的数量，或从您的购物车中删除。'
-FLASH_PAYMENT_ERROR =u'付款时发生错误，交易失败。 你没有被起诉。'
-FLASH_NO_PURCHASES =u'您的购物车中没有任何商品，请在付款前先添加商品。'
-FLASH_PROD_ADD_SUCCESSFUL =u'将产品添加到数据库！'
+# FLASH_PURCHASE =u'您的购买成功'
+# FLASH_UPLOAD_FIELDS =u'您必须填写所有字段'
+# FLASH_UPLOAD_FORBIDDEN =u'上传不允许'
+# FLASH_UPLOAD_SUCCESSFUL =u'上传成功'
+# FLASH_OUT_OF_STOCK = u'我们的库存中没有足够的%s。 请更改您要购买的%s的数量，或从您的购物车中删除。'
+# FLASH_PAYMENT_ERROR =u'付款时发生错误，交易失败。 你没有被起诉。'
+# FLASH_NO_PURCHASES =u'您的购物车中没有任何商品，请在付款前先添加商品。'
+# FLASH_PROD_ADD_SUCCESSFUL =u'将产品添加到数据库！'
 FLASH_LOGGED_ADMIN = "Welcome, admin."
 
 
-#Purchase and emails
+# #Purchase and emails
 PURCHASE_CONFIRMATION_EMAIL_SUBJECT = "Purchase Confirmation from Laotu"
 
 
-#Food Standard Tags
+# #Food Standard Tags
 ORGANIC_CERT_1 = "中国国家有机认证"
 ORGANIC_CERT_2 = "美国有机认证"
 ORGANIC_CERT_3 = "其他国际有机认证"
