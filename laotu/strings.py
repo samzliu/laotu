@@ -51,6 +51,7 @@ ERR_NO_PWD =u'您必须输入密码并确认'
 ERR_MISMATCH =u'这两个密码不匹配'
 ERR_EMAIL_TAKEN =u'电子邮件已被占用'
 ERR_NOT_ADMIN = "User is not an admin"
+ERR_NOT_USER = u'未登錄'
 
 
 
@@ -129,5 +130,3 @@ CRAFT_4 = "传统工艺"
 # Error messages for adding products
 ERR_NO_PROD_PRODUCER_ID = "You need to provide a producer id for this product."
 ERR_INVALID_PROD_PRODUCER_ID = "You need to provide a valid producer id for this product."
-
-

@@ -978,3 +978,18 @@ def adminauth():
             flash(FLASH_LOGGED_ADMIN)
             return redirect(request.args.get('next'))
     return render_template('adminauth.html', error=error)
+
+@app.route('/transactions')
+def transactions():
+    user = session['user_id']
+    print(user)
+    if user is None:
+        return render_template('home.html', error= ERR_NOT_USER)
+    else:
+        transactions = query_db('''select * from trans
+                                   inner join product
+                                   on trans.product_id = product.product_id
+                                   where user_id = ?''', [user])
+        if transactions == []:
+            return render_template('home.html', error= ERR_NOT_USER)
+        return render_template('transactions.html', transactions = transactions)
