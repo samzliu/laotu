@@ -981,9 +981,9 @@ def adminauth():
 
 @app.route('/transactions')
 def transactions():
-    user = session['user_id']
-    print(user)
-    if user is None:
+    try:
+        user = session['user_id']
+    except KeyError:
         return render_template('home.html', error= ERR_NOT_USER)
     else:
         transactions = query_db('''select * from trans
