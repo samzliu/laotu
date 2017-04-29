@@ -18,21 +18,9 @@ source activate yourenvname
 
 pip install --editable .
 
-6. Tell flask about the right application and keys:
+6. Initialize the db, tell flask about the app, and run the app on localhost:
 
-export FLASK_APP=laotu
-
-export PUBLISHABLE_KEY=pk_test_haUn12yj5cA394KQd0K37hzh
-
-export SECRET_KEY=sk_test_52QkxEpzwiy1p4bNKTX18Vy7
-
-7. Initialize the database:
-
-python -m flask initdb
-
-8. Run the application in test mode:
-
-python -m flask run
+make
 
 the application will greet you onhttp://localhost:5000/
 
@@ -57,7 +45,7 @@ High prority:
 
     - remaining Chinese translation
     - blog/splashpage
-    - blog formating with images 
+    - blog formating with images
     - better product formating
     - wechat
     - conversion and rollout
@@ -71,13 +59,11 @@ Low priority:
     - 404 page
     - guest checkout
     - producer registration
-    - next page  over flow 
-    - download csv of transactions from admin page 
-    - user transaction history 
+    - next page  over flow
+    - download csv of transactions from admin page
+    - user transaction history
 
 Pending testing:
     - test order confirmation email with an actual transaction? how? idk but
 
-For mail functionality pip install flask_mail==0.9.0 
-
-
+For mail functionality pip install flask_mail==0.9.0

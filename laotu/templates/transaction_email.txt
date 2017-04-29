@@ -3,9 +3,9 @@ Dear {{ name }},
 Thank you for your purchase with Laotu! Your transaction for the following items has been successfull: 
 
 {% for item in items %}
-({{ item.quantity }}) {{item.name}}: {{item.price/100}} CNY
+({{ item.quantity }}) {{item.name}}: {{item.price/10.0}} CNY
 {% endfor %}
 -----------------------------------------
-total: {{ purchasetotal/100 }} CNY
+total: {{ purchasetotal/10.0}} CNY
 
 Have any questions? Contact us at CONTACT EMAIL.

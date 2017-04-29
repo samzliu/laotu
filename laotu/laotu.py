@@ -36,7 +36,7 @@ SECRET_KEY = 'development key'
 
 
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\Milan\\Documents\\Harvard\\fall 2016\\d4d\\LaotuRepo\\laotu\\static\\photos'
-UPLOADED_PHOTOS_DEST = 'C://static/photos'
+UPLOADED_PHOTOS_DEST = 'laotu/static/images'
 #UPLOADED_PHOTOS_DEST = 'C:\\Users\\samzliu\\Desktop\\LaoTu\\LaoTu\\laotu\\tmp\\photos'
 DEFAULT_IMPORTANCE = 100
 
@@ -49,7 +49,7 @@ app.config.from_envvar('laotu_SETTINGS', silent=True)
 # gmail config:
 # DEFAULT_EMAIL_SENDER = os.environ['EMAIL_ADDRESS']
 # DEFAULT_EMAIL_PASSWORD = os.environ['EMAIL_PW']
-DEFAULT_EMAIL_SENDER = 'natsapptester@gmail.com'
+DEFAULT_EMAIL_SENDER = 'laotud4d@gmail.com'
 DEFAULT_EMAIL_PASSWORD = 'securepassword123'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -978,3 +978,18 @@ def adminauth():
             flash(FLASH_LOGGED_ADMIN)
             return redirect(request.args.get('next'))
     return render_template('adminauth.html', error=error)
+
+@app.route('/transactions')
+def transactions():
+    try:
+        user = session['user_id']
+    except KeyError:
+        return render_template('home.html', error= ERR_NOT_USER)
+    else:
+        transactions = query_db('''select * from trans
+                                   inner join product
+                                   on trans.product_id = product.product_id
+                                   where user_id = ?''', [user])
+        if transactions == []:
+            return render_template('home.html', error= ERR_NOT_USER)
+        return render_template('transactions.html', transactions = transactions)

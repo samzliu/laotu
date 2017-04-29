@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}Transactions{% endblock %}
+{% block header %}Transactions{% endblock %}
+
+{% block main %}
+  {% for transaction in transactions %}
+    <h1>{{ transaction.title }}</h1>
+    <p>日期: {{ transaction.trans_date[:10] }}</p>
+    <p>时间 (世界标准时间 0): {{ transaction.trans_date[10:19] }}</p>
+    <p>数量: {{ transaction.quantity }}</p>
+    <p>总数: {{ transaction.amount }}</p>
+    <p>描述: {{ transaction.description }}</p>
+    <p>状态:
+    {% if transaction.confirmed == 1 %}
+      确认</p>
+    {% else %}
+      待定</p>
+    {% endif %}
+    <p>---------------------------------</p>
+  {% endfor %}
+{% endblock %}
