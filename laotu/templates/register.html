@@ -50,6 +50,8 @@
         <input type="password" name="password2" id="password2" class="form-password"   placeholder="证实密码">
         <input type="text" name="address" id="address" class="form-text" value="{{ request.form.address }}" placeholder="地址">
         <input type="text" name="phone" id="phone" class="form-text" value="{{ request.form.phone }}" placeholder="电话号">
+        <input class="form-checkbox" type="checkbox" name="PRODUCER" value="{{request.form.producer}}">Producer
+        <input class="form-checkbox" type="checkbox" name="PRODUCER" value="{{request.form.consumer}}">Consumer<br>
         <div class="actions"><input type="submit" class="form-submit" value="注册"></div>
       </form>  
   {% endif %}

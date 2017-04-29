@@ -6,6 +6,8 @@ create table user (
   name text not null,
   address text not null,
   phone varchar(15) not null
+  producer boolean default 0,
+  consumer boolean default 0
 );
 
 drop table if exists producer;

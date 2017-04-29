@@ -239,8 +239,8 @@ def initdb_command():
        pass: securepassword123"""
     db = get_db()
     db.execute('''insert into user (
-        email, pw_hash, name, address, phone) values (
-        'admin@default.com', 'pbkdf2:sha1:1000$zEFlrwdw$a613c128baebdd9d626da88b053e9bc7e3c68a96', 'admin default', '-', '0000000000')''')
+        email, pw_hash, name, address, phone, producer, consumer) values (
+        'admin@default.com', 'pbkdf2:sha1:1000$zEFlrwdw$a613c128baebdd9d626da88b053e9bc7e3c68a96', 'admin default', '-', '0000000000', 0, 0)''')
     db.execute('''insert into admin (user_id) values (1)''')
     db.commit()
     print('Created default admin account.\n user: admin@default.com \n pass: securepassword123')
@@ -253,7 +253,7 @@ def query_db(query, args=(), one=False):
 
 
 def get_user_id(email):
-    """Convenience method to look up the id for a email."""
+    """Convenience method to look up the id for an email."""
     rv = query_db('select user_id from user where email = ?',
                   [email], one=True)
     return rv[0] if rv else None

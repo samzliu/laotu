@@ -10,6 +10,7 @@ laotu.egg-info/SOURCES.txt
 laotu.egg-info/dependency_links.txt
 laotu.egg-info/requires.txt
 laotu.egg-info/top_level.txt
+laotu/static/.DS_Store
 laotu/static/bootstrap.js
 laotu/static/jgestures.js
 laotu/static/jquery.js
