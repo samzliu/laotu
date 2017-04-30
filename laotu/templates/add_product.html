@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Add Product{% endblock %}
-{% block header %}Add Product to Database{% endblock %}
+{% block header %}将产品添加到数据库{% endblock %}
 {% block main %}
     {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>{% endif %}
 
@@ -10,39 +10,53 @@
         <div class="form-text" style="border:1px solid green"> Title
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" placeholder="Product quantity" required=True>
         </div> -->
-        <div class="form-title">Product title </div>
+        <!-- Title -->
+        <div class="form-title">产品标题</div>
         <input type="text" name="title" id="title" class="form-text" value="{{ request.form.title }}"  required=True>
-        <div class="form-title">Product quantity</div>
+        <!-- Quantity -->
+        <div class="form-title">产品数量</div>
         <input type="number" min="0" name="quantity" id="quantity" class="form-text" value="{{ request.form.quantity }}" required=True>
-        <div class="form-title">Product price</div>
+        <!-- Price -->
+        <div class="form-title">产品价格</div>
         <input type="number" min="0" name="price" id="price" class="form-text" value="{{ request.form.price }}"  required=True>
-        <div class="form-title">Product description</div>
+        <!-- Description -->
+        <div class="form-title">产品描述</div>
         <textarea name="description" id="description" class="form-paragraph" value="{{ request.form.description }}" cols="40" rows="5" required=True></textarea>
 
         {% if error and errtype=="producerid" %}
-        <div class="form-title"> Producer ID</div>
+        <!-- Producer ID -->
+        <div class="form-title">制作人员ID</div>
         <input type="number" name="producerid" class="form-err" value="{{ request.form.producerid }}" required=True>
         {% else %}
-        <div class="form-title">Producer ID</div>
+        <div class="form-title">制作人员ID</div>
         <input type="number" name="producerid" class="form-text" value="{{ request.form.producerid }}" required = True>
         {% endif %}
-        <div class="form-title">Geographic location and environment</div>
+        <!-- Geographic location and environment -->
+        <div class="form-title">地理位置和环境</div>
         <textarea name="standard_geo" id="standard_geo" class="form-paragraph" value="{{ request.form.standard_geo}}" cols="40" rows="5"></textarea>
-        <div class="form-title">Producer</div>
+        <!-- Producer -->
+        <div class="form-title">制作人员</div>
         <textarea name="standard_producer" id="standard_producer" class="form-paragraph" value="{{ request.form.standard_producer }}" cols="40" rows="5"></textarea>
-        <div class="form-title">Raw materials</div>
+        <!-- Raw materials -->
+        <div class="form-title">原料</div>
         <textarea name="standard_raw" id="standard_raw" class="form-paragraph" value="{{ request.form.standard_raw }}" cols="40" rows="5"></textarea>
-        <div class="form-title">Production method</div>
+        <!-- Production method -->
+        <div class="form-title">生产方式</div>
         <textarea name="standard_production" id="standard_production" class="form-paragraph" value="{{ request.form.standard_production }}"cols="40" rows="5"></textarea>
-        <div class="form-title">Storage</div>
+        <!-- Storage -->
+        <div class="form-title">存储</div>
         <textarea name="standard_storage" id="standard_storage" class="form-paragraph" value="{{ request.form.standard_storage }}"  cols="40" rows="5"></textarea>
-        <div class="form-title">Technologies</div>
+        <!-- Technologies -->
+        <div class="form-title">技术</div>
         <textarea name="standard_tech" id="standard_tech" class="form-paragraph" value="{{ request.form.standard_tech }}"  cols="40" rows="5"></textarea>
-        <div class="form-title">Packaging and shipping</div>
+        <!-- Packaging and shipping -->
+        <div class="form-title">包装和运输</div>
         <textarea name="standard_package" id="standard_package" class="form-paragraph" value="{{ request.form.standard_package}}" cols="40" rows="5"></textarea>
-        <div class="form-title">Comparative pricing</div>
+        <!-- Comparative pricing -->
+        <div class="form-title">比较定价</div>
         <textarea name="standard_price" id="standard_price" class="form-paragraph" value="{{ request.form.standard_price }}" cols="40" rows="5"></textarea>
-        <div class="form-title">Tags</div>
+        <!-- Tags -->
+        <div class="form-title">标签</div>
         <textarea name="tags" id="tags" class="form-paragraph" value="{{ request.form.tags }}" placeholder="Add tags separated by semicolons (e.g food; rice; tomato; basket)" cols="40" rows="5"></textarea>
 
         <div class="add-product-photos">
@@ -137,7 +151,7 @@
             <input class="form-checkbox" type="checkbox" name="CRAFT_3" value="{{ request.form.CRAFT_3 }}"> 传统使用的原料<br>
             <input class="form-checkbox" type="checkbox" name="CRAFT_4" value="{{ request.form.CRAFT_4 }}"> 传统工艺<br></div>
             </div>
-        <div class="actions"><input type="submit" class="form-submit" value="Add product"></div>
+        <div class="actions"><input type="submit" class="form-submit" value="添加产品"></div>
       </form>  
 {% endblock %}
 
