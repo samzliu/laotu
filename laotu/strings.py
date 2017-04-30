@@ -55,7 +55,7 @@ ERR_NOT_USER = u'未登錄'
 
 
 
-#Flashes ................................................ ......................
+# #Flashes ................................................ ......................
 FLASH_LOGGED =u'您已登录'
 FLASH_REGISTERED =u'您已成功注册，可以立即登录'
 FLASH_UNLOGGED =u'您已退出登录'
@@ -79,11 +79,11 @@ FLASH_PROD_ADD_SUCCESSFUL =u'将产品添加到数据库！'
 FLASH_LOGGED_ADMIN = "Welcome, admin."
 
 
-#Purchase and emails
+# #Purchase and emails
 PURCHASE_CONFIRMATION_EMAIL_SUBJECT = "Purchase Confirmation from Laotu"
 
 
-#Food Standard Tags
+# #Food Standard Tags
 ORGANIC_CERT_1 = "中国国家有机认证"
 ORGANIC_CERT_2 = "美国有机认证"
 ORGANIC_CERT_3 = "其他国际有机认证"

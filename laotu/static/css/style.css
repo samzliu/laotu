@@ -230,6 +230,37 @@ div.story-container div.story-lst {
     height: 20%;
 }
 
+div.add-product-photos {
+    height: 500px; 
+    width: 70%; 
+    margin: 1rem auto; 
+    padding: .5rem; 
+    position: relative; 
+    left: -30px
+}
+
+div.add-product-photos div.product-photos {
+    border:1px solid green;
+    height: 30%; 
+    width: 100%
+}
+
+div.add-product-photos div.product-photos img.product-photo {
+    max-width:31%; 
+    max-height:100%; 
+    margin:auto; 
+    display: inline-block; 
+    position: relative
+}
+
+div.add-product-photos div.product-photos img.story-photo {
+    max-width:23%; 
+    max-height:100%; 
+    margin:auto; 
+    display: inline-block; 
+    position: relative
+}
+
 #left-arrow {
     height: 60%; 
     width:15%; 
@@ -300,10 +331,21 @@ input {
     padding: .5rem;
 }
 
+label {
+    display: inline;
+    width: 140px;
+    text-align: right;
+}
+
+.form-title {
+    text-align: center;
+
+}
+
 .form-text, .form-password {
     position: relative;
-    left: -30px;
-    margin: 1rem auto;
+/*    left: -30px;
+*/    margin: 1rem auto;
     padding: .5rem;
 
     background: transparent;
@@ -319,17 +361,27 @@ input {
     transition: 250ms background ease-in;
 }
 
+.form-files {
+    margin: 1rem auto;
+    padding: .5rem;
+    display: block;
+    width: 70%; 
+    max-width: 460px;
+
+    transition: 250ms background ease-in;
+}
+
 .form-paragraph {
     position: relative;
-    left: -30px;
-    margin: 1rem auto;
+/*    left: -30px;
+*/    margin: 1rem auto;
     padding: .5rem;
 
     font-size: 8pt;
 
     background: transparent;
     outline: none;
-    border: 0 solid;
+    border: 1px solid green;
     border-bottom: 1px solid green;
     color: black;
 
@@ -394,7 +446,6 @@ input {
 
 .form-submit {
     position: relative;
-    left: -30px;
     margin: 1rem auto;
     padding: .25rem;
     

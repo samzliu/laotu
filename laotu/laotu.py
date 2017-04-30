@@ -654,6 +654,9 @@ def pay():
             # keep track of the transaction id for each product in the cart
             transaction_ids.append(cursor.lastrowid)
             # update product inventory
+
+            print purchase['quantity']
+            print purchase['product_id']
             db.execute('''update product set quantity = quantity - ? where
                 product_id = ?''', (purchase['quantity'], purchase['product_id']))
         db.commit()
@@ -666,7 +669,7 @@ def pay():
         finally:
             mutex.release()
         # Timer(1, undo_hold, [session['transaction_ids'], session['user_id']]).start()
-        Timer(1, undo_hold, [session['transaction_ids'], session['user_id']]).start()
+        Timer(300, undo_hold, [session['transaction_ids'], session['user_id']]).start()
 
     # store the amount the user must pay in the session
     session['amount'] = query_db('''select sum(product.price*cart.quantity)

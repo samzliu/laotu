@@ -25,3 +25,24 @@ window.onclick = function(event) {
   }
 }
 
+var numPhotos = 0
+var numStories = 0
+function addPhoto(event) {
+    event.preventDefault()
+    var photo = 'photo_';
+    photo = photo.concat(String(numPhotos + 1));
+    numPhotos ++;
+  document.getElementById(photo).click();
+}
+function addStory(event) {
+    event.preventDefault()
+    var book = 'book_';
+    book = book.concat(String(numStories + 1));
+    numStories ++;
+  document.getElementById(book).click();
+}
+var loadFile = function(event, output, output_num) {
+    var output_id = output.concat(String(output_num));
+    var output = document.getElementById(output_id);
+    output.src = URL.createObjectURL(event.target.files[0]);
+};
