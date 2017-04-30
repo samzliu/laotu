@@ -822,6 +822,7 @@ def stories():
     # except:
     #     print "That failed awfully, get a hold of yourself."
     # return render_template('stories.html', stories=stories)
+    # webbrowser.open_new_tab('http://laotu.strikingly.com')
     return redirect("http://laotu.strikingly.com/")
 
 

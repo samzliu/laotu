@@ -2,6 +2,7 @@
 {% block title %}
 {% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div>
 {% endif %}
+{% block header %}关于 Laotu{% endblock %}
 Homepage
   <!-- {% if request.endpoint == 'public_timeline' %}
     Public Timeline
@@ -12,5 +13,7 @@ Homepage
   {% endif %} -->
 {% endblock %}
 {% block main %}
-Nothing here. Should this be a splash screen?(is that what it's called?)
+	<h1>欢迎来到老挝!</h1>
+
+	<p>“老土”是一家始于美国芝加哥大学Polsky创新中心的公益性组织，</p><p>致力于通过连接城乡来改善中国农村生态和经济、</p><p>传承和激活传统乡土文化。</p>
 {% endblock %}

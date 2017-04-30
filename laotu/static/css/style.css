@@ -331,15 +331,18 @@ input {
     padding: .5rem;
 }
 
-label {
-    display: inline;
-    width: 140px;
-    text-align: right;
+.centered_checkboxes {
+    text-align:center;
 }
 
-.form-title {
-    text-align: center;
+.form-files {
+    margin: 1rem auto;
+    padding: .5rem;
+    display:inline-block;
+    width: 70%; 
+    max-width: 460px;
 
+    transition: 250ms background ease-in;
 }
 
 .form-text, .form-password {
