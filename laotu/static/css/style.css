@@ -300,6 +300,20 @@ input {
     padding: .5rem;
 }
 
+.centered_checkboxes {
+    text-align:center;
+}
+
+.form-files {
+    margin: 1rem auto;
+    padding: .5rem;
+    display:inline-block;
+    width: 70%; 
+    max-width: 460px;
+
+    transition: 250ms background ease-in;
+}
+
 .form-text, .form-password {
     position: relative;
     left: -30px;
