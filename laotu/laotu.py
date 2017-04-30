@@ -819,8 +819,8 @@ def stories():
     # except:
     #     print "That failed awfully, get a hold of yourself."
     # return render_template('stories.html', stories=stories)
-    return webbrowser.open_new_tab('http://laotu.strikingly.com')
-    # return redirect("http://laotu.strikingly.com/")
+    # webbrowser.open_new_tab('http://laotu.strikingly.com')
+    return redirect("http://laotu.strikingly.com/")
 
 
 @app.route('/<int:producer_id>/show_farmer')
