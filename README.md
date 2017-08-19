@@ -22,7 +22,7 @@ pip install --editable .
 
 make
 
-the application will greet you onhttp://localhost:5000/
+the application will greet you on http://localhost:5000/
 
 (Copied from previous readme)
 ~ Is it tested?
@@ -32,38 +32,22 @@ see the tests pass.
 
 
 Tasks:
-
-
-Broken
     - cart: delete, update, add to card even if stuff is already in cart, checkout button
-
     - add_product photos
-    - heroku
+    - deploy to heroku
 
 High prority:
-
-
     - remaining Chinese translation
-    - blog/splashpage
-    - blog formating with images
-    - better product formating
     - wechat
     - conversion and rollout
-    - emails
     -   Fix up order confirmation email templates (.txt and .html) to look how the laotu people want them to (also maybe include links for the item pages on the .html template)
-    -   probably Laotu or the producer should also get an email when someone places an order so they...know...to...proceed...with delivery?
-    -   setup the emails to get sent from an actual laotu email address (which one tho)
-
+    -   Laotu and producer should receive email after a user makes a purchase
+    -   setup the emails to get sent from a laotu email address
 
 Low priority:
     - 404 page
     - guest checkout
-    - producer registration
     - next page  over flow
     - download csv of transactions from admin page
-    - user transaction history
-
-Pending testing:
-    - test order confirmation email with an actual transaction? how? idk but
 
 For mail functionality pip install flask_mail==0.9.0
