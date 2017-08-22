@@ -1,4 +1,4 @@
-# laotu
+# Laotu
 
 ~ To use:
 
@@ -24,30 +24,14 @@ make
 
 the application will greet you on http://localhost:5000/
 
-(Copied from previous readme)
-~ Is it tested?
+### Tasks
+High prority:   
+    - deploy to heroku  
+    - Laotu and producer should receive email after a user makes a purchase    
+    - setup the emails to get sent from a laotu email address   
 
-You betcha.  Run the `python setup.py test` file to
-see the tests pass.
-
-
-Tasks:
-    - cart: delete, update, add to card even if stuff is already in cart, checkout button
-    - add_product photos
-    - deploy to heroku
-
-High prority:
-    - remaining Chinese translation
-    - wechat
-    - conversion and rollout
-    -   Fix up order confirmation email templates (.txt and .html) to look how the laotu people want them to (also maybe include links for the item pages on the .html template)
-    -   Laotu and producer should receive email after a user makes a purchase
-    -   setup the emails to get sent from a laotu email address
-
-Low priority:
-    - 404 page
-    - guest checkout
-    - next page  over flow
-    - download csv of transactions from admin page
+Low priority:   
+    - guest checkout    
+    - download csv of transactions from admin page  
 
 For mail functionality pip install flask_mail==0.9.0
